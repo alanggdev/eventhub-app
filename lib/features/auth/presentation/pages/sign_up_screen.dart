@@ -169,7 +169,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                             ],
                           ),
-                          formButton(context, 'Crear Cuenta', '/home')
+                          formButtonSignUp(context, userType),
                         ],
                       ),
                     ),

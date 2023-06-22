@@ -115,7 +115,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ],
                         ),
-                        formButton(context, 'Iniciar sesión', '/home'),
+                        formButtonSignIn(context),
                       ],
                     ),
                   ),
