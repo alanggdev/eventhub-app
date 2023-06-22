@@ -1,4 +1,4 @@
-import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screnn.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';

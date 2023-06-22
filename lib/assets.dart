@@ -10,15 +10,15 @@ class ColorStyles {
   static const Color primaryGrayBlue = Color(0xff606172);
   static const Color primaryDarkBlue = Color(0xff404374);
 
-  static const Color secondaryColor1 = Color(0xffE0A6B0);
-  static const Color secondaryColor2 = Color(0xffCC9BAC);
-  static const Color secondaryColor3 = Color(0xffCCCCCC);
+  static const Color secondaryColor1 = Color(0xff8C6C96);
+  static const Color secondaryColor2 = Color(0xff9A7DA2);
+  static const Color secondaryColor3 = Color(0xffBBA9C1);
 
   static const Color textPrimary1 = Color(0xff4F5496);
   static const Color textPrimary2 = Color(0xff606172);
-  static const Color textSecondary1 = Color(0xffE0A6B0);
-  static const Color textSecondary2 = Color(0xffCC9BAC);
-  static const Color textSecondary3 = Color(0xffE1CACD);
+  static const Color textSecondary1 = Color(0xff8C6C96);
+  static const Color textSecondary2 = Color(0xff9A7DA2);
+  static const Color textSecondary3 = Color(0xffBBA9C1);
 
   static const Color logoBlue = Color(0xff4F5496);
   static const Color logoLightBlue = Color.fromARGB(127, 248, 244, 251);
@@ -28,4 +28,16 @@ class ColorStyles {
 class Images {
   static const String logoURL = 'assets/images/logo.png';
   static const String welcomeAuth = 'assets/images/auth/welcome.png';
+  static const String emptyEvents = 'assets/images/event/empty.png';
+}
+
+class CustomIcons {
+  static const String homeFilled = 'assets/icons/home_filled.png';
+  static const String homeOutlined = 'assets/icons/home_outlined.png';
+  static const String providersFilled = 'assets/icons/providers_filled.png';
+  static const String providersOutlined = 'assets/icons/providers_outlined.png';
+  static const String messagesFilled = 'assets/icons/messages_filled.png';
+  static const String messagesOutlined = 'assets/icons/messages_outlined.png';
+  static const String notificationsFilled = 'assets/icons/notifications_filled.png';
+  static const String notificationsOutlined = 'assets/icons/notifications_outlined.png';
 }

@@ -1,5 +1,7 @@
-import 'package:eventhub_app/welcome.dart';
 import 'package:flutter/material.dart';
+
+import 'package:eventhub_app/home.dart';
+import 'package:eventhub_app/welcome.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +16,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      routes: {
+        '/home' : ((context) => const HomeScreen())
+      },
       home: const WelcomePage(),
     );
   }
