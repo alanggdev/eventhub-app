@@ -46,7 +46,7 @@ Padding textFieldForm(BuildContext context, IconData icon, String label,
 Padding textFieldFormCompany(BuildContext context, String label,
     TextEditingController fieldContoller) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    padding: const EdgeInsets.symmetric(vertical: 10),
     child: SizedBox(
       width: double.infinity,
       child: Container(

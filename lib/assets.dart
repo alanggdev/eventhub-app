@@ -29,6 +29,7 @@ class Images {
   static const String logoURL = 'assets/images/logo.png';
   static const String welcomeAuth = 'assets/images/auth/welcome.png';
   static const String emptyEvents = 'assets/images/event/empty.png';
+  static const String emptyImage = 'assets/images/auth/empty_image.png';
 }
 
 class CustomIcons {
