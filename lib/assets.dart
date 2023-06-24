@@ -10,15 +10,15 @@ class ColorStyles {
   static const Color primaryGrayBlue = Color(0xff606172);
   static const Color primaryDarkBlue = Color(0xff404374);
 
-  static const Color secondaryColor1 = Color(0xff8C6C96);
-  static const Color secondaryColor2 = Color(0xff9A7DA2);
-  static const Color secondaryColor3 = Color(0xffBBA9C1);
+  static const Color secondaryColor1 = Color(0xff746C96);
+  static const Color secondaryColor2 = Color(0xff857CAB);
+  static const Color secondaryColor3 = Color(0xffB8B0E1);
 
   static const Color textPrimary1 = Color(0xff4F5496);
   static const Color textPrimary2 = Color(0xff606172);
-  static const Color textSecondary1 = Color(0xff8C6C96);
-  static const Color textSecondary2 = Color(0xff9A7DA2);
-  static const Color textSecondary3 = Color(0xffBBA9C1);
+  static const Color textSecondary1 = Color(0xff746C96);
+  static const Color textSecondary2 = Color(0xff857CAB);
+  static const Color textSecondary3 = Color(0xffB8B0E1);
 
   static const Color logoBlue = Color(0xff4F5496);
   static const Color logoLightBlue = Color.fromARGB(127, 248, 244, 251);

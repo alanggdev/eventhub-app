@@ -1,11 +1,11 @@
-import 'package:eventhub_app/features/auth/presentation/pages/create_company_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/home.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/create_company_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dart';
 
 Padding authButton(BuildContext context, String buttonType) {
   return Padding(
@@ -50,8 +50,7 @@ Padding authButton(BuildContext context, String buttonType) {
   );
 }
 
-TextButton formButtonSignUp(
-    BuildContext context, UserTypes? userType) {
+TextButton formButtonSignUp(BuildContext context, UserTypes? userType) {
   return TextButton(
     style: OutlinedButton.styleFrom(
       foregroundColor: Colors.white,
@@ -65,10 +64,10 @@ TextButton formButtonSignUp(
     ),
     onPressed: () {
       if (userType == UserTypes.normal) {
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+          (route) => false);
       } else if (userType == UserTypes.supplier) {
         Navigator.push(
           context,
@@ -101,16 +100,43 @@ TextButton formButtonSignIn(BuildContext context) {
       elevation: 6,
     ),
     onPressed: () {
-      // Verification data
-      // Login proccess
-      // Confirmation proccess
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          (route) => false);
     },
     child: const Text(
       'Iniciar sesión',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        fontFamily: 'Inter',
+      ),
+    ),
+  );
+}
+
+TextButton formButtonCreateCompany(BuildContext context) {
+  return TextButton(
+    style: OutlinedButton.styleFrom(
+      foregroundColor: Colors.white,
+      backgroundColor: ColorStyles.primaryBlue,
+      minimumSize: const Size(double.infinity, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      shadowColor: Colors.black,
+      elevation: 6,
+    ),
+    onPressed: () {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          (route) => false);
+    },
+    child: const Text(
+      'Crear cuenta',
       style: TextStyle(
         color: Colors.white,
         fontSize: 20,

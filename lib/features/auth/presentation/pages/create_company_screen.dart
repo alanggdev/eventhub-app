@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:image_cropper/image_cropper.dart';
+// import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text.dart';
+import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 
 class CreateCompanyScreen extends StatefulWidget {
   const CreateCompanyScreen({super.key});
@@ -22,9 +23,8 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
   final phoneController = TextEditingController();
   final companyEmailController = TextEditingController();
   final addressController = TextEditingController();
-  final webpageController = TextEditingController();
   List<String> selectedCategories = [];
-  List<String> _selectedDays = [];
+  final List<String> _selectedDays = [];
   TimeOfDay? selectedFirstTime, selectedLastime;
   List<File> companyImages = [];
 
@@ -47,37 +47,37 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
     'Domingo'
   ];
 
-  Future _pickImage(ImageSource source) async {
-    final image = await ImagePicker().pickImage(source: source);
-    if (image == null) return;
-    File? img = File(image.path);
-    img = await _cropImage(imageFile: img);
-    setState(() {
-      // _image = img;
-      if (img != null) {
-        companyImages.add(img);
-      }
-    });
-  }
+  // Future _pickImage(ImageSource source) async {
+  //   final image = await ImagePicker().pickImage(source: source);
+  //   if (image == null) return;
+  //   File? img = File(image.path);
+  //   img = await _cropImage(imageFile: img);
+  //   setState(() {
+  //     // _image = img;
+  //     if (img != null) {
+  //       companyImages.add(img);
+  //     }
+  //   });
+  // }
 
-  Future<File?> _cropImage({required File imageFile}) async {
-    CroppedFile? croppedImage = await ImageCropper().cropImage(
-      sourcePath: imageFile.path,
-      aspectRatioPresets: [CropAspectRatioPreset.ratio4x3],
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarWidgetColor: ColorStyles.baseLightBlue,
-          toolbarColor: ColorStyles.primaryBlue,
-          statusBarColor: ColorStyles.primaryBlue,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: true,
-          hideBottomControls: true,
-        ),
-      ],
-    );
-    if (croppedImage == null) return null;
-    return File(croppedImage.path);
-  }
+  // Future<File?> _cropImage({required File imageFile}) async {
+  //   CroppedFile? croppedImage = await ImageCropper().cropImage(
+  //     sourcePath: imageFile.path,
+  //     aspectRatioPresets: [CropAspectRatioPreset.ratio4x3],
+  //     uiSettings: [
+  //       AndroidUiSettings(
+  //         toolbarWidgetColor: ColorStyles.baseLightBlue,
+  //         toolbarColor: ColorStyles.primaryBlue,
+  //         statusBarColor: ColorStyles.primaryBlue,
+  //         initAspectRatio: CropAspectRatioPreset.original,
+  //         lockAspectRatio: true,
+  //         hideBottomControls: true,
+  //       ),
+  //     ],
+  //   );
+  //   if (croppedImage == null) return null;
+  //   return File(croppedImage.path);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -130,120 +130,111 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      textInterW600('Empresa'),
+                      textInterW600('Información'),
                       textFieldFormCompany(context, 'Nombre de la empresa',
                           companyNameController),
                       textFieldFormCompany(context, 'Descripción general',
                           descriptionController),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: ColorStyles.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 3)),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Text(
-                                    'Categorías:',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'Inter',
-                                      color: ColorStyles.secondaryColor3,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      value: dropdownValue,
-                                      underline: const SizedBox(),
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          if (!selectedCategories
-                                              .contains(newValue)) {
-                                            dropdownValue = newValue;
-                                            selectedCategories.add(newValue!);
-                                          }
-                                        });
-                                      },
-                                      items: <String>[
-                                        'Alimentos',
-                                        'Audio',
-                                        'Entretenimiento',
-                                        'Vestuario',
-                                        'Locación',
-                                      ].map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Wrap(
-                        spacing: 8.0,
-                        children: selectedCategories.map((option) {
-                          return Chip(
-                            backgroundColor: ColorStyles.primaryBlue,
-                            labelStyle: const TextStyle(
-                              color: ColorStyles.baseLightBlue,
-                              fontFamily: 'Inter',
-                            ),
-                            label: Text(option),
-                            deleteIcon: const Icon(
-                              Icons.delete,
-                              color: ColorStyles.baseLightBlue,
-                              size: 16,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  10.0), // Cambia el radio de los bordes
-                            ),
-                            onDeleted: () {
-                              setState(() {
-                                selectedCategories.remove(option);
-                              });
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      textInterW600('Información'),
                       textFieldFormCompany(
                           context, 'Teléfono de la empresa', phoneController),
                       textFieldFormCompany(context, 'Email de la empresa',
                           companyEmailController),
                       textFieldFormCompany(context, 'Dirección de la empresa',
                           addressController),
-                      textFieldFormCompany(context, 'Página web de la empresa',
-                          webpageController),
+                      // textFieldFormCompany(context, 'Página web de la empresa',
+                      //     webpageController),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 10),
+                      //   child: Container(
+                      //     decoration: BoxDecoration(
+                      //       color: ColorStyles.white,
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       boxShadow: [
+                      //         BoxShadow(
+                      //             color: Colors.grey.withOpacity(0.5),
+                      //             spreadRadius: 1,
+                      //             blurRadius: 4,
+                      //             offset: const Offset(0, 3)),
+                      //       ],
+                      //     ),
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.symmetric(horizontal: 10),
+                      //       child: Row(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //         children: [
+                      //           const Padding(
+                      //             padding: EdgeInsets.only(right: 10),
+                      //             child: Text(
+                      //               'Categorías:',
+                      //               style: TextStyle(
+                      //                 fontSize: 16,
+                      //                 fontFamily: 'Inter',
+                      //                 color: ColorStyles.secondaryColor3,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           Expanded(
+                      //             child: DropdownButtonHideUnderline(
+                      //               child: DropdownButton<String>(
+                      //                 value: dropdownValue,
+                      //                 underline: const SizedBox(),
+                      //                 onChanged: (String? newValue) {
+                      //                   setState(() {
+                      //                     if (!selectedCategories
+                      //                         .contains(newValue)) {
+                      //                       dropdownValue = newValue;
+                      //                       selectedCategories.add(newValue!);
+                      //                     }
+                      //                   });
+                      //                 },
+                      //                 items: <String>[
+                      //                   'Alimentos',
+                      //                   'Audio',
+                      //                   'Entretenimiento',
+                      //                   'Vestuario',
+                      //                   'Locación',
+                      //                 ].map<DropdownMenuItem<String>>(
+                      //                     (String value) {
+                      //                   return DropdownMenuItem<String>(
+                      //                     value: value,
+                      //                     child: Text(value),
+                      //                   );
+                      //                 }).toList(),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // Wrap(
+                      //   spacing: 8.0,
+                      //   children: selectedCategories.map((option) {
+                      //     return Chip(
+                      //       backgroundColor: ColorStyles.primaryBlue,
+                      //       labelStyle: const TextStyle(
+                      //         color: ColorStyles.baseLightBlue,
+                      //         fontFamily: 'Inter',
+                      //       ),
+                      //       label: Text(option),
+                      //       deleteIcon: const Icon(
+                      //         Icons.delete,
+                      //         color: ColorStyles.baseLightBlue,
+                      //         size: 16,
+                      //       ),
+                      //       shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(
+                      //             10.0), // Cambia el radio de los bordes
+                      //       ),
+                      //       onDeleted: () {
+                      //         setState(() {
+                      //           selectedCategories.remove(option);
+                      //         });
+                      //       },
+                      //     );
+                      //   }).toList(),
+                      // ),
                     ],
                   ),
                 ),
@@ -283,7 +274,7 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                                     decoration: BoxDecoration(
                                       color: isSelected
                                           ? ColorStyles.primaryBlue
-                                          : Colors.grey,
+                                          : ColorStyles.secondaryColor3,
                                       borderRadius: BorderRadius.circular(50),
                                       boxShadow: [
                                         BoxShadow(
@@ -326,151 +317,138 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                                 selectHour(context, 'A:', selectedLastime),
                               ],
                             ),
-                            // OutlinedButton(
-                            //   onPressed: () async {
-
-                            //   },
-                            //   child: Text(
-                            //     selectedTime == null
-                            //         ? 'De: Seleccionar'
-                            //         : selectedTime.toString(),
-                            //     style: const TextStyle(
-                            //       fontSize: 14,
-                            //       color: ColorStyles.secondaryColor3,
-                            //       fontFamily: 'Inter',
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(vertical: 10),
+                //   child: Column(
+                //     children: [
+                //       Row(
+                //         children: [
+                //           const Text(
+                //             'Imágenes',
+                //             style: TextStyle(
+                //                 color: ColorStyles.textPrimary2,
+                //                 fontFamily: 'Inter',
+                //                 fontWeight: FontWeight.w600,
+                //                 fontSize: 25),
+                //           ),
+                //           Padding(
+                //             padding: const EdgeInsets.symmetric(horizontal: 10),
+                //             child: GestureDetector(
+                //               onTap: () {
+                //                 _pickImage(ImageSource.gallery);
+                //               },
+                //               child: Container(
+                //                 height: 28,
+                //                 width: 28,
+                //                 decoration: const BoxDecoration(
+                //                   color: ColorStyles.primaryBlue,
+                //                   borderRadius:
+                //                       BorderRadius.all(Radius.circular(15)),
+                //                 ),
+                //                 child: const Icon(
+                //                   Icons.add,
+                //                   color: ColorStyles.baseLightBlue,
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //       const Divider(
+                //         color: ColorStyles.baseLightBlue,
+                //       ),
+                //       if (companyImages.isNotEmpty)
+                //         CarouselSlider(
+                //           options: CarouselOptions(
+                //             aspectRatio: 4 / 3,
+                //             enableInfiniteScroll: false,
+                //           ),
+                //           items: [
+                //             for (int index = 0;
+                //                 index < companyImages.length;
+                //                 index++)
+                //               Builder(
+                //                 builder: (BuildContext context) {
+                //                   // return Image.file(i);
+                //                   return Stack(
+                //                     children: <Widget>[
+                //                       Padding(
+                //                         padding: const EdgeInsets.symmetric(horizontal: 5),
+                //                         child: Container(
+                //                           decoration: BoxDecoration(
+                //                             color: ColorStyles.white,
+                //                             borderRadius:
+                //                                 BorderRadius.circular(8),
+                //                             boxShadow: [
+                //                               BoxShadow(
+                //                                   color: Colors.black
+                //                                       .withOpacity(0.5),
+                //                                   spreadRadius: 1,
+                //                                   blurRadius: 4,
+                //                                   offset: const Offset(0, 3)),
+                //                             ],
+                //                           ),
+                //                           child: Padding(
+                //                             padding: const EdgeInsets.all(3),
+                //                             child: ClipRRect(
+                //                               borderRadius: BorderRadius.circular(8),
+                //                               child: Image.file(
+                //                                   companyImages[index]),
+                //                             ),
+                //                           ),
+                //                         ),
+                //                       ),
+                //                       GestureDetector(
+                //                         onTap: () {
+                //                           setState(() {
+                //                             companyImages.removeAt(index);
+                //                           });
+                //                         },
+                //                         child: Align(
+                //                           alignment: Alignment.topLeft,
+                //                           child: Container(
+                //                             alignment: Alignment.center,
+                //                             height: 28,
+                //                             width: 28,
+                //                             decoration: const BoxDecoration(
+                //                               color: ColorStyles.primaryBlue,
+                //                               borderRadius: BorderRadius.all(
+                //                                   Radius.circular(15)),
+                //                             ),
+                //                             child: const Icon(
+                //                               Icons.delete,
+                //                               color: ColorStyles.baseLightBlue,
+                //                               size: 18,
+                //                             ),
+                //                           ),
+                //                         ),
+                //                       )
+                //                     ],
+                //                   );
+                //                 },
+                //               ),
+                //           ],
+                //         ),
+                //       if (companyImages.isEmpty)
+                //         Stack(
+                //           alignment: Alignment.center,
+                //           children: <Widget>[
+                //             textInterW500('Agregar imagenes'),
+                //             Image.asset(Images.emptyImage),
+                //           ],
+                //         )
+                //     ],
+                //   ),
+                // ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const Text(
-                            'Imagenes',
-                            style: TextStyle(
-                                color: ColorStyles.textPrimary2,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 25),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: GestureDetector(
-                              onTap: () {
-                                _pickImage(ImageSource.gallery);
-                              },
-                              child: Container(
-                                height: 28,
-                                width: 28,
-                                decoration: const BoxDecoration(
-                                  color: ColorStyles.primaryBlue,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: ColorStyles.baseLightBlue,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Divider(
-                        color: ColorStyles.baseLightBlue,
-                      ),
-                      if (companyImages.isNotEmpty)
-                        CarouselSlider(
-                          options: CarouselOptions(
-                            aspectRatio: 4 / 3,
-                            enableInfiniteScroll: false,
-                          ),
-                          items: [
-                            for (int index = 0;
-                                index < companyImages.length;
-                                index++)
-                              Builder(
-                                builder: (BuildContext context) {
-                                  // return Image.file(i);
-                                  return Stack(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Image.file(companyImages[index]),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            companyImages.removeAt(index);
-                                          });
-                                        },
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            height: 28,
-                                            width: 28,
-                                            decoration: const BoxDecoration(
-                                              color: ColorStyles.primaryBlue,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15)),
-                                            ),
-                                            child: const Icon(Icons.delete, color: ColorStyles.baseLightBlue, size: 18,),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                },
-                              ),
-                          ],
-                          // items: companyImages.map((i) {
-                          //   int index = 1;
-                          //   return Builder(
-                          //     builder: (BuildContext context) {
-                          //       // return Image.file(i);
-                          //       return Stack(
-                          //         children: <Widget>[
-                          //           Image.file(i),
-                          //           GestureDetector(
-                          //             onTap: () {
-                          //               setState(() {
-                          //                 companyImages.remove(img!);
-                          //               });
-                          //             },
-                          //             child: Align(
-                          //               alignment: Alignment.topLeft,
-                          //               child: Container(
-                          //                 alignment: Alignment.center,
-                          //                 height: 28,
-                          //                 width: 28,
-                          //                 decoration: const BoxDecoration(
-                          //                   color: Color.fromARGB(
-                          //                       119, 244, 67, 54),
-                          //                   borderRadius: BorderRadius.all(
-                          //                       Radius.circular(15)),
-                          //                 ),
-                          //                 child: const Icon(Icons.delete),
-                          //               ),
-                          //             ),
-                          //           )
-                          //         ],
-                          //       );
-                          //     },
-                          //   );
-                          // }).toList(),
-                        ),
-                      if (companyImages.isEmpty) Image.asset(Images.emptyImage)
-                    ],
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: formButtonCreateCompany(context),
                 ),
               ],
             ),

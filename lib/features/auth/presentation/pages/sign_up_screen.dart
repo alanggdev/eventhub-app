@@ -14,7 +14,8 @@ class SignUpScreen extends StatefulWidget {
 enum UserTypes { normal, supplier }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final nameController = TextEditingController();
+  final usernameController = TextEditingController();
+  final fullnameController = TextEditingController();
   final emailController = TextEditingController();
   final passController = TextEditingController();
   final passConfirmController = TextEditingController();
@@ -31,7 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.25,
+                  height: MediaQuery.of(context).size.height * 0.2,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.all(15),
@@ -73,12 +74,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.55,
                   width: double.infinity,
                   child: Column(
                     children: [
                       textFieldForm(
-                          context, Icons.person, 'Nombre', nameController),
+                          context, Icons.person, 'Nombre completo', usernameController),
+                      textFieldForm(
+                          context, Icons.person, 'Nombre completo', fullnameController),
                       textFieldForm(context, Icons.email, 'Correo electrónico',
                           emailController),
                       textFieldForm(
