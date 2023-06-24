@@ -70,9 +70,6 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
               children: [
                 eventWidget(),
                 eventWidget(),
-                eventWidget(),
-                eventWidget(),
-                eventWidget(),
               ],
             ),
           ],

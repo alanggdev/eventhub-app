@@ -225,7 +225,7 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                       //       ),
                       //       shape: RoundedRectangleBorder(
                       //         borderRadius: BorderRadius.circular(
-                      //             10.0), // Cambia el radio de los bordes
+                      //             10.0),
                       //       ),
                       //       onDeleted: () {
                       //         setState(() {

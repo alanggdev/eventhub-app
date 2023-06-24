@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
+import 'package:eventhub_app/features/provider/presentation/pages/explore_categories_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     MyEventsScreen(),
-    MyEventsScreen(),
+    ExploreCategoriesScreen(),
     MyEventsScreen(),
     MyEventsScreen(),
   ];
@@ -154,9 +155,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: Color(0xff3B47B6),
                                     ),
                                     menuOption(context, 'Mi perfil',
-                                        CustomIcons.profilePlaceholder),
+                                        Images.profilePlaceholder),
                                     menuOption(context, 'Mi empresa',
-                                        CustomIcons.companyPlaceholder),
+                                        Images.companyPlaceholder),
                                     logoutButton(context)
                                   ],
                                 ),

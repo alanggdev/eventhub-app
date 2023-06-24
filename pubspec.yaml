@@ -63,6 +63,7 @@ flutter:
     - assets/images/
     - assets/images/auth/
     - assets/images/event/
+    - assets/images/provider/
     - assets/fonts/
     - assets/icons/
 
