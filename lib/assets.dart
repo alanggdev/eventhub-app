@@ -27,9 +27,11 @@ class ColorStyles {
 
 class Images {
   static const String logoURL = 'assets/images/logo.png';
+
   static const String welcomeAuth = 'assets/images/auth/welcome.png';
-  static const String emptyEvents = 'assets/images/event/empty.png';
   static const String emptyImage = 'assets/images/auth/empty_image.png';
+  
+  static const String emptyEvents = 'assets/images/event/empty.png';
 }
 
 class CustomIcons {
@@ -41,4 +43,7 @@ class CustomIcons {
   static const String messagesOutlined = 'assets/icons/messages_outlined.png';
   static const String notificationsFilled = 'assets/icons/notifications_filled.png';
   static const String notificationsOutlined = 'assets/icons/notifications_outlined.png';
+
+  static const String profilePlaceholder = 'assets/icons/profile_placeholder.png';
+  static const String companyPlaceholder = 'assets/icons/company_placeholder.png';
 }

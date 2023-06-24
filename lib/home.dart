@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -71,7 +72,100 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.menu,
                       size: 25,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet<void>(
+                        barrierColor: const Color.fromARGB(127, 79, 84, 150),
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(15),
+                          ),
+                        ),
+                        builder: (BuildContext context) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              height: 310,
+                              child: Center(
+                                child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  // mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 10),
+                                      child: Row(
+                                        children: [
+                                          Center(
+                                            child: Container(
+                                              width: 60,
+                                              height: 60,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                    blurRadius: 5,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ],
+                                                image: const DecorationImage(
+                                                    fit: BoxFit.fill,
+                                                    image: AssetImage(
+                                                        Images.logoURL)),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 20),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: const [
+                                                Text(
+                                                  'Alan Gómez Gómez',
+                                                  style: TextStyle(
+                                                    fontSize: 23,
+                                                    color: Color(0xff242C71),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      EdgeInsets.only(top: 12),
+                                                  child: Text(
+                                                    '@IzLightG',
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Color(0xff242C71),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Divider(
+                                      color: Color(0xff3B47B6),
+                                    ),
+                                    menuOption(context, 'Mi perfil',
+                                        CustomIcons.profilePlaceholder),
+                                    menuOption(context, 'Mi empresa',
+                                        CustomIcons.companyPlaceholder),
+                                    logoutButton(context)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
               ],
@@ -184,6 +278,80 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Padding logoutButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: TextButton(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: ColorStyles.secondaryColor1,
+          minimumSize: const Size(double.infinity, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          shadowColor: Colors.black,
+          elevation: 6,
+        ),
+        onPressed: () {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const AuthScreen()),
+              (route) => false);
+        },
+        child: const Text(
+          'Cerrar Sesión',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding menuOption(
+      BuildContext context, String label, String profilePlaceholder) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: Row(
+        children: [
+          Center(
+            child: Container(
+              width: 45,
+              height: 45,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 5,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+                image: DecorationImage(
+                    fit: BoxFit.fill, image: AssetImage(profilePlaceholder)),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 23,
+                color: Color(0xff242C71),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
