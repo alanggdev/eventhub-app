@@ -17,8 +17,10 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     MyEventsScreen(),
     ExploreCategoriesScreen(),
-    MyEventsScreen(),
-    MyEventsScreen(),
+    Center(child: Text('Messages Screen', style: TextStyle(color: Colors.white),)),
+    Center(child: Text('Notifications Screen', style: TextStyle(color: Colors.white),))
+    // MyEventsScreen(),
+    // MyEventsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -31,11 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorStyles.primaryBlue,
-      // body: SafeArea(
-      //   child: Center(
-      //     child: _widgetOptions.elementAt(_selectedIndex),
-      //   ),
-      // ),
       body: SafeArea(
         child: NestedScrollView(
           floatHeaderSlivers: true,
