@@ -65,9 +65,9 @@ TextButton formButtonSignUp(BuildContext context, UserTypes? userType) {
     onPressed: () {
       if (userType == UserTypes.normal) {
         Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-          (route) => false);
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            (route) => false);
       } else if (userType == UserTypes.supplier) {
         Navigator.push(
           context,
@@ -117,6 +117,36 @@ TextButton formButtonSignIn(BuildContext context) {
   );
 }
 
+TextButton formButtonNextCompany(BuildContext context) {
+  return TextButton(
+    style: OutlinedButton.styleFrom(
+      foregroundColor: Colors.white,
+      backgroundColor: ColorStyles.primaryBlue,
+      minimumSize: const Size(double.infinity, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      shadowColor: Colors.black,
+      elevation: 6,
+    ),
+    onPressed: () {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const AddInfoCompanyScreen()));
+    },
+    child: const Text(
+      'Siguiente',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        fontFamily: 'Inter',
+      ),
+    ),
+  );
+}
+
 TextButton formButtonCreateCompany(BuildContext context) {
   return TextButton(
     style: OutlinedButton.styleFrom(
@@ -136,7 +166,7 @@ TextButton formButtonCreateCompany(BuildContext context) {
           (route) => false);
     },
     child: const Text(
-      'Crear cuenta',
+      'Registrar empresa',
       style: TextStyle(
         color: Colors.white,
         fontSize: 20,

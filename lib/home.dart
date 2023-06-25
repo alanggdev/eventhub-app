@@ -17,8 +17,10 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     MyEventsScreen(),
     ExploreCategoriesScreen(),
-    MyEventsScreen(),
-    MyEventsScreen(),
+    Center(child: Text('Messages Screen', style: TextStyle(color: Colors.white),)),
+    Center(child: Text('Notifications Screen', style: TextStyle(color: Colors.white),))
+    // MyEventsScreen(),
+    // MyEventsScreen(),
   ];
 
   void _onItemTapped(int index) {
