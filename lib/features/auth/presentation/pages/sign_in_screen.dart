@@ -142,13 +142,15 @@ class _SignInScreenState extends State<SignInScreen> {
               else if (state is UserLoggedIn)
                 if (state.user.userinfo == 'error')
                   errorAlert(context, 'Verifique las credenciales de acceso')
+                else if (state.user.userinfo == 'unload')
+                  Container()
                 else if ((state.user.userinfo != 'error'))
                   FutureBuilder(
                     future: Future.delayed(Duration.zero, () async {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const HomeScreen()));
+                              builder: (context) => HomeScreen(state.user)));
                     }),
                     builder: (context, snapshot) {
                       return Container();

@@ -30,10 +30,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        routes: {
-          '/authScreen': ((context) => const AuthScreen()),
-          '/home': ((context) => const HomeScreen())
-        },
+        routes: {'/authScreen': ((context) => const AuthScreen())},
         home: const WelcomePage(),
       ),
     );

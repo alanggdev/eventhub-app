@@ -17,7 +17,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.registerUserUseCase, required this.loginUserUseCase}) : super(InitialState()) {
     on<AuthEvent>(
       (event, emit) async {
-        if (event is SignInUser) {
+        if (event is UnloadState){
+          emit(UserLoggedIn(user: event.unload));
+        } else if (event is SignInUser) {
           try {
             emit(LoggingInUser());
             LoginUser loginUserData = LoginUser(email: event.email, password: event.password);

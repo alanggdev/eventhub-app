@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
 import 'package:eventhub_app/features/provider/presentation/pages/explore_categories_screen.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final User userinfo;
+  const HomeScreen(this.userinfo, {super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -14,13 +18,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    unloadLoginState();
+  }
+
+  void unloadLoginState() {
+    final authbloc = context.read<AuthBloc>();
+    User userUnload = User(access: 'unload', refresh: 'unload', userinfo: 'unload');
+    authbloc.add(UnloadState(unload: userUnload));
+  }
+
   static const List<Widget> _widgetOptions = <Widget>[
     MyEventsScreen(),
     ExploreCategoriesScreen(),
     Center(child: Text('Messages Screen', style: TextStyle(color: Colors.white),)),
     Center(child: Text('Notifications Screen', style: TextStyle(color: Colors.white),))
-    // MyEventsScreen(),
-    // MyEventsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -86,8 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 310,
                               child: Center(
                                 child: Column(
-                                  // mainAxisAlignment: MainAxisAlignment.center,
-                                  // mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -122,10 +135,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
-                                              children: const [
+                                              children: [
                                                 Text(
-                                                  'Alan Gómez Gómez',
-                                                  style: TextStyle(
+                                                  widget.userinfo.userinfo['full_name'],
+                                                  style: const TextStyle(
                                                     fontSize: 23,
                                                     color: Color(0xff242C71),
                                                     fontWeight: FontWeight.bold,
@@ -133,10 +146,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 Padding(
                                                   padding:
-                                                      EdgeInsets.only(top: 12),
+                                                      const EdgeInsets.only(top: 12),
                                                   child: Text(
-                                                    '@IzLightG',
-                                                    style: TextStyle(
+                                                    '@${widget.userinfo.userinfo['username']}',
+                                                    style: const TextStyle(
                                                       fontSize: 15,
                                                       color: Color(0xff242C71),
                                                     ),

@@ -212,10 +212,10 @@ TextButton formButtonCreateCompany(BuildContext context) {
       elevation: 6,
     ),
     onPressed: () {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-          (route) => false);
+      // Navigator.pushAndRemoveUntil(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const HomeScreen()),
+      //     (route) => false);
     },
     child: const Text(
       'Registrar empresa',
