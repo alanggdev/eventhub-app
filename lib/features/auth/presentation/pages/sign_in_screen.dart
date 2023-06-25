@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
+import 'package:eventhub_app/home.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -18,113 +22,140 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorStyles.baseLightBlue,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            Images.logoURL,
-                            width: MediaQuery.of(context).size.width * 0.15,
-                          ),
-                          const Text(
-                            'eventhub',
-                            style: TextStyle(
-                              color: ColorStyles.textPrimary1,
-                              fontSize: 42,
-                              fontFamily: 'Righteous',
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 45, vertical: 10),
-                        child: Text(
-                          'Bienvenido, por favor, ingresa tus datos para iniciar sesión.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: ColorStyles.textPrimary2,
-                            fontSize: 18,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
+        backgroundColor: ColorStyles.baseLightBlue,
+        body: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+          return SafeArea(
+            child: Stack(children: [
+              Padding(
+                padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
-                    textFieldForm(context, Icons.email, 'Correo electrónico',
-                        emailController),
-                    textFieldForm(
-                        context, Icons.lock, 'Contraseña', passController),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const Text(
-                              '¿No tienes una cuenta?',
-                              style: TextStyle(
-                                color: Color(0xffCC9BAC),
-                                fontFamily: 'Inter',
-                                fontSize: 16,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  Images.logoURL,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.15,
+                                ),
+                                const Text(
+                                  'eventhub',
+                                  style: TextStyle(
+                                    color: ColorStyles.textPrimary1,
+                                    fontSize: 42,
+                                    fontFamily: 'Righteous',
+                                  ),
+                                ),
+                              ],
                             ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const SignUpScreen()),
-                                );
-                              },
-                              child: const Text(
-                                'Regístrate',
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 45, vertical: 10),
+                              child: Text(
+                                'Bienvenido, por favor, ingresa tus datos para iniciar sesión.',
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    // color: Colors.black,
-                                    color: ColorStyles.textPrimary2,
-                                    fontFamily: 'Inter',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500),
+                                  color: ColorStyles.textPrimary2,
+                                  fontSize: 18,
+                                  fontFamily: 'Inter',
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        formButtonSignIn(context),
-                      ],
+                      ),
                     ),
-                  ),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: [
+                          textFieldForm(context, Icons.email,
+                              'Correo electrónico', emailController),
+                          textFieldForm(context, Icons.lock, 'Contraseña',
+                              passController),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    '¿No tienes una cuenta?',
+                                    style: TextStyle(
+                                      color: Color(0xffCC9BAC),
+                                      fontFamily: 'Inter',
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SignUpScreen()),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Regístrate',
+                                      style: TextStyle(
+                                          // color: Colors.black,
+                                          color: ColorStyles.textPrimary2,
+                                          fontFamily: 'Inter',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              formButtonSignIn(
+                                context,
+                                emailController,
+                                passController,
+                                context.read<AuthBloc>()),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+              if (state is LoggingInUser)
+                loadingWidget(context)
+              else if (state is UserLoggedIn)
+                if (state.user.userinfo == 'error')
+                  errorAlert(context, 'Verifique las credenciales de acceso')
+                else if ((state.user.userinfo != 'error'))
+                  FutureBuilder(
+                    future: Future.delayed(Duration.zero, () async {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()));
+                    }),
+                    builder: (context, snapshot) {
+                      return Container();
+                    },
+                  )
+            ]),
+          );
+        }));
   }
 }

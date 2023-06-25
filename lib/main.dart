@@ -21,8 +21,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (BuildContext context) =>
-              AuthBloc(registerUserUseCase: usecaseConfig.registerUserUseCase!),
+          create: (BuildContext context) => AuthBloc(
+              registerUserUseCase: usecaseConfig.registerUserUseCase!,
+              loginUserUseCase: usecaseConfig.loginUserUseCase!),
         )
       ],
       child: MaterialApp(

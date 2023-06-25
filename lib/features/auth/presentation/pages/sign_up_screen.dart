@@ -1,11 +1,12 @@
-import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -200,67 +201,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 if (state is CreatingUser)
-                  Stack(
-                    children: [
-                      Container(
-                        color: Colors.black54,
-                      ),
-                      Center(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.75,
-                          height: 175,
-                          decoration: BoxDecoration(
-                            color: ColorStyles.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 3)),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.all(15),
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                          Text(
-                            'Espera un momento...',
-                            style: TextStyle(
-                                // color: Colors.black,
-                                color: ColorStyles.textPrimary2,
-                                fontFamily: 'Inter',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                    ],
-                  )
+                  loadingWidget(context)
                 else if (state is UserCreated)
                   if (state.userCreationStatus != 'User created')
-                    Builder(
-                      builder: (context) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.userCreationStatus),
-                              duration: const Duration(seconds: 3),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        });
-                        return Container();
-                      },
-                    )
+                    errorAlert(context, state.userCreationStatus)
                   else if (state.userCreationStatus == 'User created')
                     FutureBuilder(
                       future: Future.delayed(Duration.zero, () async {

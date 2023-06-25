@@ -91,7 +91,12 @@ TextButton formButtonSignUp(
             passConfirm.isNotEmpty) {
           // Verify if password fields
           if (pass == passConfirm) {
-            authBloc.add(CreateUser(username: username, fullname: fullname, email: email, password: pass, isprovider: isprovider));
+            authBloc.add(CreateUser(
+                username: username,
+                fullname: fullname,
+                email: email,
+                password: pass,
+                isprovider: isprovider));
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               snackBar('Verifique la contraseña'),
@@ -121,7 +126,11 @@ TextButton formButtonSignUp(
   );
 }
 
-TextButton formButtonSignIn(BuildContext context) {
+TextButton formButtonSignIn(
+    BuildContext context,
+    TextEditingController emailController,
+    TextEditingController passController,
+    AuthBloc authBloc) {
   return TextButton(
     style: OutlinedButton.styleFrom(
       foregroundColor: Colors.white,
@@ -134,10 +143,19 @@ TextButton formButtonSignIn(BuildContext context) {
       elevation: 6,
     ),
     onPressed: () {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-          (route) => false);
+      // Unfocus keyboard
+      FocusManager.instance.primaryFocus?.unfocus();
+      // Verify login credentials
+      String email = emailController.text.trim();
+      String pass = passController.text.trim();
+      // Verify if credentials are not empty
+      if (email.isNotEmpty && pass.isNotEmpty) {
+        authBloc.add(SignInUser(email: email, password: pass));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          snackBar('No se permiten cambios vacios'),
+        );
+      }
     },
     child: const Text(
       'Iniciar sesión',
