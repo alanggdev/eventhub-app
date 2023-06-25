@@ -68,8 +68,8 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
             // ),
             Column(
               children: [
-                eventWidget(),
-                eventWidget(),
+                eventWidget(context),
+                eventWidget(context),
               ],
             ),
           ],

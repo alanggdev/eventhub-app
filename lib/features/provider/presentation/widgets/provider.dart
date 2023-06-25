@@ -24,43 +24,45 @@ Padding providerWidget(BuildContext context) {
                 offset: const Offset(0, 3)),
           ],
         ),
-        child: Column(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                ),
+                child: Image.asset(Images.providerPlaceholder),
               ),
-              child: Image.asset(Images.providerPlaceholder),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Proveedor',
-                    style: TextStyle(
-                      color: ColorStyles.primaryGrayBlue,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Proveedor',
+                      style: TextStyle(
+                        color: ColorStyles.primaryGrayBlue,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
                     ),
-                  ),
-                  const Text(
-                    'Breve descripción o eslogan de la empresa, organización o proveedor',
-                    style: TextStyle(
-                      color: ColorStyles.primaryGrayBlue,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Inter',
+                    const Text(
+                      'Breve descripción o eslogan de la empresa, organización o proveedor',
+                      style: TextStyle(
+                        color: ColorStyles.primaryGrayBlue,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Inter',
+                      ),
                     ),
-                  ),
-                  providerCategoryLabel(),
-                ],
+                    providerCategoryLabel(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ),
