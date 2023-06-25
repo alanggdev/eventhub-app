@@ -31,11 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorStyles.primaryBlue,
-      // body: SafeArea(
-      //   child: Center(
-      //     child: _widgetOptions.elementAt(_selectedIndex),
-      //   ),
-      // ),
       body: SafeArea(
         child: NestedScrollView(
           floatHeaderSlivers: true,

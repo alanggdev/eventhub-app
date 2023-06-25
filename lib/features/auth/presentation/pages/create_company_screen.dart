@@ -8,6 +8,7 @@ import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
+import 'package:eventhub_app/features/provider/presentation/widgets/category.dart';
 
 class CreateCompanyScreen extends StatefulWidget {
   const CreateCompanyScreen({super.key});
@@ -35,6 +36,7 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
   TextDirection textDirection = TextDirection.ltr;
   MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
   bool use24HourTime = false;
+  List<String> categoriesList = allCategories.map((category) => category['name'].toString()).toList();
 
   // Dropdown lists
   List<String> days = [

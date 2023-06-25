@@ -7,55 +7,55 @@ List<Map<String, dynamic>> allCategories = [
   {
     'id': 1,
     'image': Images.categoryPlaceholder,
-    'category': 'Locación',
+    'name': 'Locación',
     'description': 'Lugares, salones y espacios'
   },
   {
     'id': 2,
     'image': Images.categoryPlaceholder,
-    'category': 'Ambiente y Decoración',
+    'name': 'Ambiente y Decoración',
     'description': 'Ambiente temático y decoración creativa'
   },
   {
     'id': 3,
     'image': Images.categoryPlaceholder,
-    'category': 'Comunicación y Promoción',
+    'name': 'Comunicación y Promoción',
     'description': 'Publicidad y promoción del evento'
   },
   {
     'id': 4,
     'image': Images.categoryPlaceholder,
-    'category': 'Vestuario y Estilo',
+    'name': 'Vestuario y Estilo',
     'description': 'Ropa y estilo de los participantes'
   },
   {
     'id': 5,
     'image': Images.categoryPlaceholder,
-    'category': 'Alimentos y Bebidas',
+    'name': 'Alimentos y Bebidas',
     'description': 'Catering y opciones de bebidas'
   },
   {
     'id': 6,
     'image': Images.categoryPlaceholder,
-    'category': 'Entretenimiento',
+    'name': 'Entretenimiento',
     'description': 'Actividades y shows para los asistentes'
   },
   {
     'id': 7,
     'image': Images.categoryPlaceholder,
-    'category': 'Organización',
+    'name': 'Organización',
     'description': 'Planificación y logística del evento'
   },
   {
     'id': 8,
     'image': Images.categoryPlaceholder,
-    'category': 'Seguridad y Emergencias',
+    'name': 'Seguridad y Emergencias',
     'description': 'Medidas de seguridad y protocolos de emergencia'
   },
   {
     'id': 9,
     'image': Images.categoryPlaceholder,
-    'category': 'Fotografía y video',
+    'name': 'Fotografía y video',
     'description': 'Cobertura fotográfica y videográfica del evento'
   },
 ];

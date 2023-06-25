@@ -63,7 +63,7 @@ class _ExploreCategoriesScreenState extends State<ExploreCategoriesScreen> {
             ),
             Wrap(
               children: categoryList.map((category) {
-                return categoryWidget(context, category['image'], category['category'], category['description']);
+                return categoryWidget(context, category['image'], category['name'], category['description']);
               },).toList(),
             ),
           ],

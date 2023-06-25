@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/event/presentation/widgets/event.dart';
+import 'package:eventhub_app/features/event/presentation/pages/create_event_screen.dart';
 
 class MyEventsScreen extends StatefulWidget {
   const MyEventsScreen({super.key});
@@ -76,7 +77,10 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const CreateEventScreen()));
+        },
         backgroundColor: ColorStyles.primaryBlue,
         child: const Icon(
           Icons.add,
