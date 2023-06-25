@@ -1,0 +1,15 @@
+import 'package:eventhub_app/features/auth/data/datasources/auth_user_remote.dart';
+import 'package:eventhub_app/features/auth/data/repositories/auth_user_repository_impl.dart';
+import 'package:eventhub_app/features/auth/domain/usecases/register_user.dart';
+
+class UseCaseConfig {
+  AuthUserDataSourceImpl? authUserDataSourceImpl;
+  AuthUserRepositoryImpl? authUserRepositoryImpl;
+  RegisterUserUseCase? registerUserUseCase;
+
+  UseCaseConfig() {
+    authUserDataSourceImpl = AuthUserDataSourceImpl();
+    authUserRepositoryImpl = AuthUserRepositoryImpl(authUserDataSource: authUserDataSourceImpl!);
+    registerUserUseCase = RegisterUserUseCase(authUserRepositoryImpl!);
+  }
+}

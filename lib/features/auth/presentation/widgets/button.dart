@@ -1,3 +1,4 @@
+import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -6,6 +7,7 @@ import 'package:eventhub_app/home.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/create_company_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 
 Padding authButton(BuildContext context, String buttonType) {
   return Padding(
@@ -50,7 +52,15 @@ Padding authButton(BuildContext context, String buttonType) {
   );
 }
 
-TextButton formButtonSignUp(BuildContext context, UserTypes? userType) {
+TextButton formButtonSignUp(
+    BuildContext context,
+    UserTypes? userType,
+    TextEditingController usernameController,
+    TextEditingController fullnameController,
+    TextEditingController emailController,
+    TextEditingController passController,
+    TextEditingController passConfirmController,
+    AuthBloc authBloc) {
   return TextButton(
     style: OutlinedButton.styleFrom(
       foregroundColor: Colors.white,
@@ -64,10 +74,34 @@ TextButton formButtonSignUp(BuildContext context, UserTypes? userType) {
     ),
     onPressed: () {
       if (userType == UserTypes.normal) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-            (route) => false);
+        // Unfocus keyboard
+        FocusManager.instance.primaryFocus?.unfocus();
+        // Verify register credentials
+        String username = usernameController.text.trim();
+        String fullname = fullnameController.text.trim();
+        String email = emailController.text.trim();
+        String pass = passController.text.trim();
+        String passConfirm = passConfirmController.text.trim();
+        bool isprovider = false;
+        // Verify if credentials are not empty
+        if (username.isNotEmpty &&
+            fullname.isNotEmpty &&
+            email.isNotEmpty &&
+            pass.isNotEmpty &&
+            passConfirm.isNotEmpty) {
+          // Verify if password fields
+          if (pass == passConfirm) {
+            authBloc.add(CreateUser(username: username, fullname: fullname, email: email, password: pass, isprovider: isprovider));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              snackBar('Verifique la contraseña'),
+            );
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            snackBar('No se permiten cambios vacios'),
+          );
+        }
       } else if (userType == UserTypes.supplier) {
         Navigator.push(
           context,
