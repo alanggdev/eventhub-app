@@ -8,35 +8,30 @@ import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
 import 'package:eventhub_app/features/provider/presentation/pages/explore_categories_screen.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
-class HomeScreen extends StatefulWidget {
-  final User userinfo;
-  const HomeScreen(this.userinfo, {super.key});
+  class HomeScreen extends StatefulWidget {
+    final User userinfo;
+    const HomeScreen(this.userinfo, {super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    unloadLoginState();
+    @override
+    State<HomeScreen> createState() => _HomeScreenState();
   }
 
-  void unloadLoginState() {
-    final authbloc = context.read<AuthBloc>();
-    User userUnload = User(access: 'unload', refresh: 'unload', userinfo: 'unload');
-    authbloc.add(UnloadState(unload: userUnload));
-  }
+  class _HomeScreenState extends State<HomeScreen> {
+    int _selectedIndex = 0;
+    List<Widget> _widgetOptions = [];
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    MyEventsScreen(),
-    ExploreCategoriesScreen(),
-    Center(child: Text('Messages Screen', style: TextStyle(color: Colors.white),)),
-    Center(child: Text('Notifications Screen', style: TextStyle(color: Colors.white),))
-  ];
+    @override
+    void initState() {
+      super.initState();
+      unloadLoginState();
+      print('loaded');
+    }
+
+    void unloadLoginState() {
+      final authbloc = context.read<AuthBloc>();
+      User userUnload = User(access: 'unload', refresh: 'unload', userinfo: 'unload');
+      authbloc.add(UnloadState(unload: userUnload));
+    }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -46,6 +41,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _widgetOptions = <Widget>[
+      MyEventsScreen(widget.userinfo),
+      const ExploreCategoriesScreen(),
+      const Center(child: Text('Messages Screen', style: TextStyle(color: Colors.white),)),
+      const Center(child: Text('Notifications Screen', style: TextStyle(color: Colors.white),))
+    ];
+
     return Scaffold(
       backgroundColor: ColorStyles.primaryBlue,
       body: SafeArea(

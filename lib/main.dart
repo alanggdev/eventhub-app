@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:eventhub_app/home.dart';
 import 'package:eventhub_app/welcome.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/usecase_config.dart';
+
+import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
 
 UseCaseConfig usecaseConfig = UseCaseConfig();
 
@@ -24,6 +25,10 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => AuthBloc(
               registerUserUseCase: usecaseConfig.registerUserUseCase!,
               loginUserUseCase: usecaseConfig.loginUserUseCase!),
+        ),
+        BlocProvider<EventBloc>(
+          create: (BuildContext context) =>
+              EventBloc(createEventUseCase: usecaseConfig.createEventUseCase!),
         )
       ],
       child: MaterialApp(

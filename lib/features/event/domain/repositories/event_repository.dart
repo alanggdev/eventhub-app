@@ -1,0 +1,5 @@
+import 'package:eventhub_app/features/event/domain/entities/event.dart';
+
+abstract class EventRepository {
+  Future<String> createEvent(Event eventData);
+}

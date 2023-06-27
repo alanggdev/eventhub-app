@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:eventhub_app/assets.dart';
-import 'package:eventhub_app/home.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/create_company_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dart';
@@ -76,7 +75,7 @@ TextButton formButtonSignUp(
       if (userType == UserTypes.normal) {
         // Unfocus keyboard
         FocusManager.instance.primaryFocus?.unfocus();
-        // Verify register credentials
+        // Get register data
         String username = usernameController.text.trim();
         String fullname = fullnameController.text.trim();
         String email = emailController.text.trim();

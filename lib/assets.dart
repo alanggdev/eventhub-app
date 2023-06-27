@@ -34,6 +34,7 @@ class Images {
   static const String companyPlaceholder = 'assets/images/auth/company_placeholder.png';
   
   static const String emptyEvents = 'assets/images/event/empty.png';
+  static const String eventPlaceholder = 'assets/images/event/placeholder_event.png';
 
   static const String categoryPlaceholder = 'assets/images/provider/category_placeholder.png';
   static const String providerPlaceholder = 'assets/images/provider/provider_placeholder.png';

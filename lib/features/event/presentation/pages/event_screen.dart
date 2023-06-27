@@ -118,6 +118,7 @@ class _EventScreenState extends State<EventScreen> {
                           options: CarouselOptions(
                             enableInfiniteScroll: false,
                             viewportFraction: 1,
+                            height: 250
                           ),
                           items: [
                             for (int index = 0; index < 3; index++)

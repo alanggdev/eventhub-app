@@ -52,11 +52,27 @@ Padding eventWidget(BuildContext context) {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Image.asset('assets/images/event/test_event.png'),
+                child: AspectRatio(
+                  aspectRatio: 64 / 25,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: const FadeInImage(
+                      fit: BoxFit.fitWidth,
+                      alignment: FractionalOffset.center,
+                      image: NetworkImage(
+                          'http://54.157.159.108/uploads/1687838498070.jpg'),
+                      placeholder: AssetImage(Images.eventPlaceholder),
+                    ),
+                  ),
                 ),
-              )
+              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 10),
+              //   child: ClipRRect(
+              //     borderRadius: BorderRadius.circular(5),
+              //     child: Image.network('http://54.157.159.108/uploads/1687838498070.jpg')//Image.asset('assets/images/event/test_event.png'),
+              //   ),
+              // )
             ],
           ),
         ),
