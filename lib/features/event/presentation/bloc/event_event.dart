@@ -2,6 +2,12 @@ part of 'event_bloc.dart';
 
 abstract class EventEvent {}
 
+class GetUserEvents extends EventEvent {
+  final int userid;
+
+  GetUserEvents({required this.userid});
+}
+
 class CreateEvent extends EventEvent {
   final String name, description, date;
   final List<String> categories;

@@ -1,18 +1,20 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 
+import 'package:eventhub_app/features/event/data/models/event_model.dart';
 import 'package:eventhub_app/features/event/domain/entities/event.dart';
 import 'package:eventhub_app/keys.dart';
 
 abstract class EventDataSource {
   Future<String> createEvent(Event eventData);
+  Future<List<Event>> getUserEvents(int userid);
 }
 
 class EventDataSourceImpl extends EventDataSource {
+  final dio = Dio();
+
   @override
   Future<String> createEvent(Event eventData) async {
-    final dio = Dio();
-
     List<MultipartFile> imageMultipartFiles = [];
     for (File file in eventData.filesToUpload!) {
       MultipartFile multipartFile = await MultipartFile.fromFile(file.path);
@@ -29,10 +31,33 @@ class EventDataSourceImpl extends EventDataSource {
     });
 
     final response =
-        await dio.post('http://$eventServerURI/events/', data: formData);
+        await dio.post('http://$serverURI/events/', data: formData);
 
     if (response.statusCode == 200) {
       return 'Success';
+    } else {
+      throw Exception('Server error');
+    }
+  }
+
+  @override
+  Future<List<Event>> getUserEvents(int userid) async {
+    Response response;
+    response = await dio.get('http://$serverURI/events/list/$userid');
+
+    if (response.statusCode == 200) {
+      List<Event> userEvents = [];
+      List<dynamic> data = response.data;
+
+      if (response.data.isNotEmpty) {
+        for (var eventData in data) {
+          Event eventModel = EventModel.fromJson(eventData);
+          userEvents.add(eventModel);
+        }
+        return userEvents;
+      } else {
+        return userEvents;
+      }
     } else {
       throw Exception('Server error');
     }

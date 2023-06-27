@@ -5,8 +5,8 @@ class Event {
   final String name;
   final String description;
   final String date;
-  final List<String> categories;
-  final List<String>? imagePaths;
+  final List<dynamic> categories;
+  final List<dynamic>? imagePaths;
   final int userID;
   final dynamic providersID; //
 
@@ -23,4 +23,11 @@ class Event {
     this.providersID,
     this.filesToUpload,
   });
+
+  @override
+  String toString() {
+    return 'Event(id: $id, name: $name, description: $description, date: $date, '
+        'categories: $categories, imagePaths: $imagePaths, userID: $userID, '
+        'providersID: $providersID, filesToUpload: $filesToUpload)';
+  }
 }

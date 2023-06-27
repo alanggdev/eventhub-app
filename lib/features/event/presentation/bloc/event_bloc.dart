@@ -3,17 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/features/event/domain/usecases/create_event.dart';
 import 'package:eventhub_app/features/event/domain/entities/event.dart';
+import 'package:eventhub_app/features/event/domain/usecases/get_user_events.dart';
 
 part 'event_event.dart';
 part 'event_state.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
   final CreateEventUseCase createEventUseCase;
+  final GetUserEventsUseCase getUserEventsUseCase;
 
-  EventBloc({required this.createEventUseCase}) : super(InitialState()) {
+  EventBloc({required this.createEventUseCase, required this.getUserEventsUseCase}) : super(InitialState()) {
     on<EventEvent>(
       (event, emit) async {
-        if (event is CreateEvent) {
+        if (event is GetUserEvents) {
+          try {
+            emit(GettingUserEvents());
+            List<Event> userEvents = await getUserEventsUseCase.execute(event.userid);
+            emit(UserEventGotten(userEvents: userEvents));
+          } catch (error) {
+            emit(Error(error: error.toString()));
+          }
+        } else if (event is CreateEvent) {
           try {
             emit(CreatingEvent());
             Event eventData = Event(

@@ -45,7 +45,7 @@ Stack loadingWidget(BuildContext context) {
             ),
           ),
           Text(
-            'Espera un momento...',
+            'Espere un momento...',
             style: TextStyle(
                 // color: Colors.black,
                 color: ColorStyles.textPrimary2,

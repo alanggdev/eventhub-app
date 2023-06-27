@@ -4,6 +4,13 @@ abstract class EventState {}
 
 class InitialState extends EventState {}
 
+class GettingUserEvents extends EventState {}
+class UserEventGotten extends EventState {
+  final List<Event> userEvents;
+
+  UserEventGotten({required this.userEvents});
+}
+
 class CreatingEvent extends EventState {}
 class EventCreated extends EventState {
   final String eventCreationStatus;

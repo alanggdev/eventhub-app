@@ -8,8 +8,8 @@ class EventModel extends Event {
     required String name,
     required String description,
     required String date,
-    required List<String> categories,
-    List<String>? imagePaths,
+    required List<dynamic> categories,
+    List<dynamic>? imagePaths,
     required int userID,
     dynamic providersID,
     List<File>? filesToUpload,
@@ -35,5 +35,18 @@ class EventModel extends Event {
       'userid': data.userID,
       'providersId': data.providersID,
     };
+  }
+
+  factory EventModel.fromJson(Map<String, dynamic> json) {
+    return EventModel(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      date: json['date'],
+      categories: json['categories'],
+      imagePaths: json['images'],
+      userID: json['userId'],
+      providersID: json['providersId'],
+    );
   }
 }

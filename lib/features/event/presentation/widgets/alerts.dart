@@ -45,9 +45,9 @@ Stack loadingEventWidget(BuildContext context) {
             ),
           ),
           Text(
-            'Espera un momento...',
+            'Espere un momento...',
             style: TextStyle(
-                // color: Colors.black,
+                decoration: TextDecoration.none,
                 color: ColorStyles.textPrimary2,
                 fontFamily: 'Inter',
                 fontSize: 16,
@@ -76,3 +76,52 @@ Builder errorEventAlert(BuildContext context, String error) {
   );
 }
 
+Padding emptyEventWidget(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 30),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          Images.emptyEvents,
+          width: MediaQuery.of(context).size.width * 0.8,
+        ),
+        const Text(
+          'No tienes eventos próximos',
+          style: TextStyle(
+            color: ColorStyles.primaryGrayBlue,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Inter',
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class LoadingOverlay extends StatefulWidget {
+  final Widget child;
+  final bool isLoading;
+
+  const LoadingOverlay({
+    Key? key,
+    required this.child,
+    required this.isLoading,
+  }) : super(key: key);
+
+  @override
+  LoadingOverlayState createState() => LoadingOverlayState();
+}
+
+class LoadingOverlayState extends State<LoadingOverlay> {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        widget.child, // Widget principal
+        if (widget.isLoading) loadingEventWidget(context)
+      ],
+    );
+  }
+}

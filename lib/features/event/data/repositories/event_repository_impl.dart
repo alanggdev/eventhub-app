@@ -11,4 +11,9 @@ class EventRepositoryImpl implements EventRepository {
   Future<String> createEvent(Event eventData) async {
     return await eventDataSource.createEvent(eventData);
   }
+
+  @override
+  Future<List<Event>> getUserEvents(int userid) async {
+    return await eventDataSource.getUserEvents(userid);
+  }
 }

@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/event/presentation/pages/event_screen.dart';
+import 'package:eventhub_app/features/event/domain/entities/event.dart';
+import 'package:eventhub_app/keys.dart';
 
-Padding eventWidget(BuildContext context) {
+Padding eventWidget(BuildContext context, Event userEvent) {
   return Padding(
     padding: const EdgeInsets.all(15),
     child: GestureDetector(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const EventScreen()));
+            MaterialPageRoute(builder: (context) => EventScreen(userEvent)));
       },
       child: Container(
         width: double.infinity,
@@ -30,10 +32,10 @@ Padding eventWidget(BuildContext context) {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
-                    'Boda Test',
-                    style: TextStyle(
+                    userEvent.name,
+                    style: const TextStyle(
                       color: ColorStyles.primaryGrayBlue,
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
@@ -41,8 +43,8 @@ Padding eventWidget(BuildContext context) {
                     ),
                   ),
                   Text(
-                    '12/06/23',
-                    style: TextStyle(
+                    userEvent.date,
+                    style: const TextStyle(
                       color: ColorStyles.primaryGrayBlue,
                       fontSize: 12,
                       fontFamily: 'Inter',
@@ -56,23 +58,19 @@ Padding eventWidget(BuildContext context) {
                   aspectRatio: 64 / 25,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(5),
-                    child: const FadeInImage(
+                    child: FadeInImage(
                       fit: BoxFit.fitWidth,
                       alignment: FractionalOffset.center,
                       image: NetworkImage(
-                          'http://54.157.159.108/uploads/1687838498070.jpg'),
-                      placeholder: AssetImage(Images.eventPlaceholder),
+                          'http://$serverURI${userEvent.imagePaths![0]}'),
+                      placeholder: const AssetImage(Images.eventPlaceholder),
+                      imageErrorBuilder: (context, error, stackTrace) {
+                        return const Center(child: Text('event image'));
+                      },
                     ),
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(vertical: 10),
-              //   child: ClipRRect(
-              //     borderRadius: BorderRadius.circular(5),
-              //     child: Image.network('http://54.157.159.108/uploads/1687838498070.jpg')//Image.asset('assets/images/event/test_event.png'),
-              //   ),
-              // )
             ],
           ),
         ),
@@ -81,7 +79,7 @@ Padding eventWidget(BuildContext context) {
   );
 }
 
-Chip eventCategoryLabel() {
+Chip eventCategoryLabel(dynamic category) {
   return Chip(
     backgroundColor: ColorStyles.secondaryColor1,
     labelStyle: const TextStyle(
@@ -89,9 +87,30 @@ Chip eventCategoryLabel() {
       fontFamily: 'Inter',
       fontSize: 12,
     ),
-    label: const Text('Categoria'),
+    label: Text(category),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(4),
+    ),
+  );
+}
+
+AspectRatio eventImage(dynamic image) {
+  return AspectRatio(
+    aspectRatio: 64 / 25,
+    child: Padding(
+      padding: const EdgeInsets.all(4),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: FadeInImage(
+          fit: BoxFit.fitWidth,
+          alignment: FractionalOffset.center,
+          image: NetworkImage('http://$serverURI$image'),
+          placeholder: const AssetImage(Images.eventPlaceholder),
+          imageErrorBuilder: (context, error, stackTrace) {
+            return const Center(child: Text('event image'));
+          },
+        ),
+      ),
     ),
   );
 }

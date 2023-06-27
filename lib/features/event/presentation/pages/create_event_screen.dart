@@ -16,8 +16,8 @@ import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/home.dart';
 
 class CreateEventScreen extends StatefulWidget {
-  final User userinfo;
-  const CreateEventScreen(this.userinfo, {super.key});
+  final User user;
+  const CreateEventScreen(this.user, {super.key});
 
   @override
   State<CreateEventScreen> createState() => _CreateEventScreenState();
@@ -473,7 +473,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                   eventDate,
                                   selectedCategories,
                                   eventImages,
-                                  widget.userinfo,
+                                  widget.user,
                                   context.read<EventBloc>()),
                             ],
                           ),
@@ -491,7 +491,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HomeScreen(widget.userinfo)),
+                            builder: (context) => HomeScreen(widget.user)),
                         (route) => false);
                   }),
                   builder: (context, snapshot) {
