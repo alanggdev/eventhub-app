@@ -2,6 +2,12 @@ part of 'event_bloc.dart';
 
 abstract class EventEvent {}
 
+class DeleteUserEvent extends EventEvent {
+  final int eventid;
+
+  DeleteUserEvent({required this.eventid});
+}
+
 class GetUserEvents extends EventEvent {
   final int userid;
 

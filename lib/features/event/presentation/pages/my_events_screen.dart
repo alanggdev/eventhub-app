@@ -68,7 +68,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                         if (state.userEvents.isNotEmpty)
                           Column(
                             children: state.userEvents.map((userEvent) {
-                              return eventWidget(context, userEvent);
+                              return eventWidget(context, userEvent, widget.user);
                             }).toList(),
                           )
                         else
@@ -127,8 +127,6 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
               ],
             ),
           ),
-          // if (state is GettingUserEvents)
-          //   const Center(child: CircularProgressIndicator()),
         ],
       );
     });

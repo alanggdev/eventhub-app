@@ -8,6 +8,7 @@ import 'package:eventhub_app/keys.dart';
 abstract class EventDataSource {
   Future<String> createEvent(Event eventData);
   Future<List<Event>> getUserEvents(int userid);
+  Future<String> deleteEvent(int eventid);
 }
 
 class EventDataSourceImpl extends EventDataSource {
@@ -58,6 +59,17 @@ class EventDataSourceImpl extends EventDataSource {
       } else {
         return userEvents;
       }
+    } else {
+      throw Exception('Server error');
+    }
+  }
+
+  @override
+  Future<String> deleteEvent(int eventid) async {
+    Response response;
+    response = await dio.delete('http://$serverURI/events/$eventid');
+    if (response.statusCode == 200) {
+      return 'Deleted';
     } else {
       throw Exception('Server error');
     }

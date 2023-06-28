@@ -6,7 +6,8 @@ import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
-Padding eventOptionButton(BuildContext context, String label) {
+Padding eventOptionButton(
+    BuildContext context, String label, int eventid, EventBloc eventBloc) {
   return Padding(
     padding: const EdgeInsets.all(10),
     child: TextButton(
@@ -20,7 +21,37 @@ Padding eventOptionButton(BuildContext context, String label) {
         shadowColor: Colors.black,
         elevation: 6,
       ),
-      onPressed: () {},
+      onPressed: () {
+        Widget cancelButton = TextButton(
+          child: const Text("Cancelar"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        );
+        Widget continueButton = TextButton(
+          child: const Text("Eliminar"),
+          onPressed: () {
+            Navigator.pop(context);
+            eventBloc.add(DeleteUserEvent(eventid: eventid));
+          },
+        );
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: const Text("Eliminar contenido"),
+          content: const Text("¿Está seguro de eliminar este evento?"),
+          actions: [
+            cancelButton,
+            continueButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      },
       child: Text(
         label,
         style: const TextStyle(

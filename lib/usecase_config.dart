@@ -6,6 +6,7 @@ import 'package:eventhub_app/features/auth/domain/usecases/register_user.dart';
 import 'package:eventhub_app/features/event/data/datasources/event_remote.dart';
 import 'package:eventhub_app/features/event/data/repositories/event_repository_impl.dart';
 import 'package:eventhub_app/features/event/domain/usecases/create_event.dart';
+import 'package:eventhub_app/features/event/domain/usecases/delete_event.dart';
 import 'package:eventhub_app/features/event/domain/usecases/get_user_events.dart';
 
 class UseCaseConfig {
@@ -18,6 +19,7 @@ class UseCaseConfig {
   EventRepositoryImpl? eventRepositoryImpl;
   CreateEventUseCase? createEventUseCase;
   GetUserEventsUseCase? getUserEventsUseCase;
+  DeleteEventUseCase? deleteEventUseCase;
 
   UseCaseConfig() {
     authUserDataSourceImpl = AuthUserDataSourceImpl();
@@ -29,5 +31,6 @@ class UseCaseConfig {
     eventRepositoryImpl = EventRepositoryImpl(eventDataSource: eventDataSourceImpl!);
     createEventUseCase = CreateEventUseCase(eventRepositoryImpl!);
     getUserEventsUseCase = GetUserEventsUseCase(eventRepositoryImpl!);
+    deleteEventUseCase = DeleteEventUseCase(eventRepositoryImpl!);
   }
 }

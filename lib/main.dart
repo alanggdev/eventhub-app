@@ -29,7 +29,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<EventBloc>(
           create: (BuildContext context) => EventBloc(
               createEventUseCase: usecaseConfig.createEventUseCase!,
-              getUserEventsUseCase: usecaseConfig.getUserEventsUseCase!),
+              getUserEventsUseCase: usecaseConfig.getUserEventsUseCase!,
+              deleteEventUseCase: usecaseConfig.deleteEventUseCase!),
         )
       ],
       child: MaterialApp(

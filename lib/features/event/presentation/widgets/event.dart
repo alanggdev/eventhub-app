@@ -4,14 +4,15 @@ import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/event/presentation/pages/event_screen.dart';
 import 'package:eventhub_app/features/event/domain/entities/event.dart';
 import 'package:eventhub_app/keys.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
-Padding eventWidget(BuildContext context, Event userEvent) {
+Padding eventWidget(BuildContext context, Event userEvent, User user) {
   return Padding(
     padding: const EdgeInsets.all(15),
     child: GestureDetector(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EventScreen(userEvent)));
+            MaterialPageRoute(builder: (context) => EventScreen(userEvent, user)));
       },
       child: Container(
         width: double.infinity,
