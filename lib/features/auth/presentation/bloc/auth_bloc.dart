@@ -1,8 +1,10 @@
+import 'package:eventhub_app/features/auth/domain/usecases/register_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/login_user.dart';
+import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
 
 import 'package:eventhub_app/features/auth/domain/usecases/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/usecases/login_user.dart';
@@ -11,13 +13,29 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final RegisterProviderUseCase registerProviderUseCase;
   final LoginUserUseCase loginUserUseCase;
   final RegisterUserUseCase registerUserUseCase;
 
-  AuthBloc({required this.registerUserUseCase, required this.loginUserUseCase}) : super(InitialState()) {
+  AuthBloc(
+      {required this.registerUserUseCase,
+      required this.loginUserUseCase,
+      required this.registerProviderUseCase})
+      : super(InitialState()) {
     on<AuthEvent>(
       (event, emit) async {
-        if (event is UnloadState){
+        if (event is CreateProvider) {
+          try {
+            emit(CreatingProvider());
+            await registerUserUseCase.execute(event.registerUserData).then((value) async {
+                String providerCreationStatus = await registerProviderUseCase.execute(event.registerProviderData);
+                emit(ProviderCreated(providerCreationStatus: providerCreationStatus));
+              }
+            );
+          } catch (error) {
+            emit(Error(error: error.toString()));
+          }
+        } else if (event is UnloadState) {
           emit(UserLoggedIn(user: event.unload));
         } else if (event is SignInUser) {
           try {

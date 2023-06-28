@@ -3,15 +3,22 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/category.dart';
+import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
+import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
+import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
 
 class CreateCompanyScreen extends StatefulWidget {
-  const CreateCompanyScreen({super.key});
+  final RegisterUser registerUserData;
+  const CreateCompanyScreen(this.registerUserData, {super.key});
 
   @override
   State<CreateCompanyScreen> createState() => _CreateCompanyScreenState();
@@ -19,12 +26,14 @@ class CreateCompanyScreen extends StatefulWidget {
 
 class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
   final companyNameController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final phoneController = TextEditingController();
+  final companyDescriptionController = TextEditingController();
+  final companyPhoneController = TextEditingController();
   final companyEmailController = TextEditingController();
-  final addressController = TextEditingController();
+  final companyAddressController = TextEditingController();
   final List<String> _selectedDays = [];
   TimeOfDay? selectedFirstTime, selectedLastime;
+  String openTime = 'Seleccionar';
+  String closeTime = 'Seleccionar';
 
   TimePickerEntryMode entryMode = TimePickerEntryMode.dialOnly;
   TextDirection textDirection = TextDirection.ltr;
@@ -95,13 +104,13 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                       textFieldFormCompany(context, 'Nombre de la empresa',
                           companyNameController),
                       textFieldFormCompany(context, 'Descripción general',
-                          descriptionController),
-                      textFieldFormCompany(
-                          context, 'Teléfono de la empresa', phoneController),
+                          companyDescriptionController),
+                      textFieldFormCompany(context, 'Teléfono de la empresa',
+                          companyPhoneController),
                       textFieldFormCompany(context, 'Email de la empresa',
                           companyEmailController),
                       textFieldFormCompany(context, 'Dirección de la empresa',
-                          addressController),
+                          companyAddressController),
                     ],
                   ),
                 ),
@@ -192,7 +201,17 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: formButtonNextCompany(context),
+                  child: formButtonNextCompany(
+                      context,
+                      widget.registerUserData,
+                      companyNameController,
+                      companyDescriptionController,
+                      companyPhoneController,
+                      companyEmailController,
+                      companyAddressController,
+                      _selectedDays,
+                      openTime,
+                      closeTime),
                 ),
               ],
             ),
@@ -249,18 +268,20 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                     );
                     setState(() {
                       label == 'De:'
-                          ? selectedFirstTime = time
-                          : selectedLastime = time;
+                          ? openTime = time!.format(context)
+                          : closeTime = time!.format(context);
+                      // ? selectedFirstTime = time
+                      // : selectedLastime = time;
                     });
                   },
                   child: Text(
-                    label == 'De:'
-                        ? selectedFirstTime == null
-                            ? 'Seleccionar'
-                            : selectedFirstTime!.format(context)
-                        : selectedLastime == null
-                            ? 'Seleccionar'
-                            : selectedLastime!.format(context),
+                    label == 'De:' ? openTime : closeTime,
+                    // ? selectedFirstTime == null
+                    //     ? 'Seleccionar'
+                    //     : selectedFirstTime!.format(context)
+                    // : selectedLastime == null
+                    //     ? 'Seleccionar'
+                    //     : selectedLastime!.format(context),
                     style: const TextStyle(
                       // fontSize: 18,
                       fontFamily: 'Inter',
@@ -278,7 +299,10 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
 }
 
 class AddInfoCompanyScreen extends StatefulWidget {
-  const AddInfoCompanyScreen({super.key});
+  final RegisterUser registerUserData;
+  final RegisterProvider registerProviderData;
+  const AddInfoCompanyScreen(this.registerUserData, this.registerProviderData,
+      {super.key});
 
   @override
   State<AddInfoCompanyScreen> createState() => _AddInfoCompanyScreenState();
@@ -325,279 +349,320 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorStyles.baseLightBlue,
-      appBar: AppBar(
-        backgroundColor: ColorStyles.baseLightBlue,
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        toolbarHeight: 60,
-        title: Padding(
-          padding: const EdgeInsets.all(15),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.35,
-            height: MediaQuery.of(context).size.height * 0.05,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Row(
-                children: const [
-                  Icon(
-                    Icons.arrow_back_ios,
-                    color: ColorStyles.primaryGrayBlue,
-                    size: 15,
-                  ),
-                  Text(
-                    'Regresar',
-                    style: TextStyle(
-                      fontSize: 15,
-                      // fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
-                      color: ColorStyles.primaryGrayBlue,
+    return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+      return Stack(
+        children: [
+          Scaffold(
+            backgroundColor: ColorStyles.baseLightBlue,
+            appBar: AppBar(
+              backgroundColor: ColorStyles.baseLightBlue,
+              automaticallyImplyLeading: false,
+              elevation: 0,
+              toolbarHeight: 60,
+              title: Padding(
+                padding: const EdgeInsets.all(15),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.35,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.arrow_back_ios,
+                          color: ColorStyles.primaryGrayBlue,
+                          size: 15,
+                        ),
+                        Text(
+                          'Regresar',
+                          style: TextStyle(
+                            fontSize: 15,
+                            // fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                            color: ColorStyles.primaryGrayBlue,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      textInterW600('Categorías que brindas'),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: ColorStyles.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 3)),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Text(
-                                    'Categorías:',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'Inter',
-                                      color: ColorStyles.secondaryColor3,
-                                    ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            textInterW600('Categorías que brindas'),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: ColorStyles.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 3)),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 10),
+                                        child: Text(
+                                          'Categorías:',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'Inter',
+                                            color: ColorStyles.secondaryColor3,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton<String>(
+                                            value: dropdownValue,
+                                            underline: const SizedBox(),
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                if (!selectedCategories
+                                                    .contains(newValue)) {
+                                                  dropdownValue = newValue;
+                                                  selectedCategories
+                                                      .add(newValue!);
+                                                }
+                                              });
+                                            },
+                                            items: categoriesList
+                                                .map<DropdownMenuItem<String>>(
+                                                    (String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Expanded(
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      value: dropdownValue,
-                                      underline: const SizedBox(),
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          if (!selectedCategories
-                                              .contains(newValue)) {
-                                            dropdownValue = newValue;
-                                            selectedCategories.add(newValue!);
-                                          }
-                                        });
-                                      },
-                                      items: categoriesList
-                                          .map<DropdownMenuItem<String>>(
-                                              (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
+                              ),
+                            ),
+                            Wrap(
+                              spacing: 8.0,
+                              children: selectedCategories.map((option) {
+                                return Chip(
+                                  backgroundColor: ColorStyles.primaryBlue,
+                                  labelStyle: const TextStyle(
+                                    color: ColorStyles.baseLightBlue,
+                                    fontFamily: 'Inter',
+                                  ),
+                                  label: Text(option),
+                                  deleteIcon: const Icon(
+                                    Icons.delete,
+                                    color: ColorStyles.baseLightBlue,
+                                    size: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  onDeleted: () {
+                                    setState(() {
+                                      selectedCategories.remove(option);
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  'Imágenes de portada',
+                                  style: TextStyle(
+                                      color: ColorStyles.textPrimary2,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 25),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      _pickImage(ImageSource.gallery);
+                                    },
+                                    child: Container(
+                                      height: 28,
+                                      width: 28,
+                                      decoration: const BoxDecoration(
+                                        color: ColorStyles.primaryBlue,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(15)),
+                                      ),
+                                      child: const Icon(
+                                        Icons.add,
+                                        color: ColorStyles.baseLightBlue,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
+                            const Divider(
+                              color: ColorStyles.baseLightBlue,
+                            ),
+                            if (companyImages.isNotEmpty)
+                              CarouselSlider(
+                                options: CarouselOptions(
+                                  aspectRatio: 4 / 3,
+                                  enableInfiniteScroll: false,
+                                ),
+                                items: [
+                                  for (int index = 0;
+                                      index < companyImages.length;
+                                      index++)
+                                    Builder(
+                                      builder: (BuildContext context) {
+                                        // return Image.file(i);
+                                        return Stack(
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: ColorStyles.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
+                                                        spreadRadius: 1,
+                                                        blurRadius: 4,
+                                                        offset:
+                                                            const Offset(0, 3)),
+                                                  ],
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(3),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    child: Image.file(
+                                                        companyImages[index]),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  companyImages.removeAt(index);
+                                                });
+                                              },
+                                              child: Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  height: 28,
+                                                  width: 28,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color:
+                                                        ColorStyles.primaryBlue,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                15)),
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.delete,
+                                                    color: ColorStyles
+                                                        .baseLightBlue,
+                                                    size: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                ],
+                              ),
+                            if (companyImages.isEmpty)
+                              Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  textInterW500('Agregar imagenes'),
+                                  Image.asset(Images.emptyImage),
+                                ],
+                              )
+                          ],
                         ),
                       ),
-                      Wrap(
-                        spacing: 8.0,
-                        children: selectedCategories.map((option) {
-                          return Chip(
-                            backgroundColor: ColorStyles.primaryBlue,
-                            labelStyle: const TextStyle(
-                              color: ColorStyles.baseLightBlue,
-                              fontFamily: 'Inter',
-                            ),
-                            label: Text(option),
-                            deleteIcon: const Icon(
-                              Icons.delete,
-                              color: ColorStyles.baseLightBlue,
-                              size: 16,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            onDeleted: () {
-                              setState(() {
-                                selectedCategories.remove(option);
-                              });
-                            },
-                          );
-                        }).toList(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        child: formButtonCreateCompany(
+                            context,
+                            widget.registerUserData,
+                            widget.registerProviderData,
+                            selectedCategories,
+                            companyImages,
+                            context.read<AuthBloc>()),
                       ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const Text(
-                            'Imágenes de portada',
-                            style: TextStyle(
-                                color: ColorStyles.textPrimary2,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 25),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: GestureDetector(
-                              onTap: () {
-                                _pickImage(ImageSource.gallery);
-                              },
-                              child: Container(
-                                height: 28,
-                                width: 28,
-                                decoration: const BoxDecoration(
-                                  color: ColorStyles.primaryBlue,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: ColorStyles.baseLightBlue,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Divider(
-                        color: ColorStyles.baseLightBlue,
-                      ),
-                      if (companyImages.isNotEmpty)
-                        CarouselSlider(
-                          options: CarouselOptions(
-                            aspectRatio: 4 / 3,
-                            enableInfiniteScroll: false,
-                          ),
-                          items: [
-                            for (int index = 0;
-                                index < companyImages.length;
-                                index++)
-                              Builder(
-                                builder: (BuildContext context) {
-                                  // return Image.file(i);
-                                  return Stack(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: ColorStyles.white,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 1,
-                                                  blurRadius: 4,
-                                                  offset: const Offset(0, 3)),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(3),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: Image.file(
-                                                  companyImages[index]),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            companyImages.removeAt(index);
-                                          });
-                                        },
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            height: 28,
-                                            width: 28,
-                                            decoration: const BoxDecoration(
-                                              color: ColorStyles.primaryBlue,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15)),
-                                            ),
-                                            child: const Icon(
-                                              Icons.delete,
-                                              color: ColorStyles.baseLightBlue,
-                                              size: 18,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                },
-                              ),
-                          ],
-                        ),
-                      if (companyImages.isEmpty)
-                        Stack(
-                          alignment: Alignment.center,
-                          children: <Widget>[
-                            textInterW500('Agregar imagenes'),
-                            Image.asset(Images.emptyImage),
-                          ],
-                        )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: formButtonCreateCompany(context),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+          if (state is CreatingProvider)
+            loadingWidget(context)
+          else if (state is ProviderCreated)
+            FutureBuilder(
+              future: Future.delayed(Duration.zero, () async {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SignInScreen()));
+              }),
+              builder: (context, snapshot) {
+                return Container();
+              },
+            )
+          else if (state is Error)
+            errorAlert(context, state.error)
+        ],
+      );
+    });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:eventhub_app/features/auth/domain/entities/login_user.dart';
+import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
@@ -19,5 +20,10 @@ class AuthUserRepositoryImpl implements AuthUserRepository {
   @override
   Future<User> loginUser(LoginUser loginUserData) async {
     return await authUserDataSource.loginUser(loginUserData);
+  }
+
+  @override
+  Future<String> registerProvider(RegisterProvider registerProviderData) async {
+    return await authUserDataSource.registerProvider(registerProviderData);
   }
 }

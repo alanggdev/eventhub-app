@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthBloc>(
           create: (BuildContext context) => AuthBloc(
               registerUserUseCase: usecaseConfig.registerUserUseCase!,
-              loginUserUseCase: usecaseConfig.loginUserUseCase!),
+              loginUserUseCase: usecaseConfig.loginUserUseCase!,
+              registerProviderUseCase: usecaseConfig.registerProviderUseCase!),
         ),
         BlocProvider<EventBloc>(
           create: (BuildContext context) => EventBloc(

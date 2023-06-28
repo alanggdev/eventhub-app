@@ -65,7 +65,12 @@ Builder errorAlert(BuildContext context, String error) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(error),
+            content: Text(
+              error,
+              style: const TextStyle(
+                decoration: TextDecoration.none,
+              ),
+            ),
             duration: const Duration(seconds: 3),
             backgroundColor: Colors.red,
           ),

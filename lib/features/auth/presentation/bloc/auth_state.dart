@@ -4,6 +4,13 @@ abstract class AuthState {}
 
 class InitialState extends AuthState {}
 
+class CreatingProvider extends AuthState {}
+class ProviderCreated extends AuthState {
+  final String providerCreationStatus;
+
+  ProviderCreated({required this.providerCreationStatus});
+}
+
 class LoggingInUser extends AuthState {}
 class UserLoggedIn extends AuthState {
   final User user;

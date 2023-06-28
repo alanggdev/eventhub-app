@@ -203,20 +203,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 if (state is CreatingUser)
                   loadingWidget(context)
                 else if (state is UserCreated)
-                  if (state.userCreationStatus != 'User created')
-                    errorAlert(context, state.userCreationStatus)
-                  else if (state.userCreationStatus == 'User created')
-                    FutureBuilder(
-                      future: Future.delayed(Duration.zero, () async {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SignInScreen()));
-                      }),
-                      builder: (context, snapshot) {
-                        return Container();
-                      },
-                    )
+                  FutureBuilder(
+                    future: Future.delayed(Duration.zero, () async {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignInScreen()));
+                    }),
+                    builder: (context, snapshot) {
+                      return Container();
+                    },
+                  )
+                else if (state is Error)
+                  errorAlert(context, state.error)
               ]),
             );
           },
