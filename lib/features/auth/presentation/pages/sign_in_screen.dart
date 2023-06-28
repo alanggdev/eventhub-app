@@ -26,66 +26,67 @@ class _SignInScreenState extends State<SignInScreen> {
         body: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           return SafeArea(
             child: Stack(children: [
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  Images.logoURL,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.15,
-                                ),
-                                const Text(
-                                  'eventhub',
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    Images.logoURL,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.15,
+                                  ),
+                                  const Text(
+                                    'eventhub',
+                                    style: TextStyle(
+                                      color: ColorStyles.textPrimary1,
+                                      fontSize: 42,
+                                      fontFamily: 'Righteous',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 45, vertical: 10),
+                                child: Text(
+                                  'Bienvenido, por favor, ingresa tus datos para iniciar sesión.',
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: ColorStyles.textPrimary1,
-                                    fontSize: 42,
-                                    fontFamily: 'Righteous',
+                                    color: ColorStyles.textPrimary2,
+                                    fontSize: 18,
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
-                              ],
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 45, vertical: 10),
-                              child: Text(
-                                'Bienvenido, por favor, ingresa tus datos para iniciar sesión.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: ColorStyles.textPrimary2,
-                                  fontSize: 18,
-                                  fontFamily: 'Inter',
-                                ),
                               ),
-                            ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.45,
+                        child: Column(
+                          children: [
+                            textFieldForm(context, Icons.email,
+                                'Correo electrónico', emailController),
+                            textFieldForm(context, Icons.lock, 'Contraseña',
+                                passController),
                           ],
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: [
-                          textFieldForm(context, Icons.email,
-                              'Correo electrónico', emailController),
-                          textFieldForm(context, Icons.lock, 'Contraseña',
-                              passController),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
+                      Padding(
                         padding: const EdgeInsets.all(15),
                         child: SizedBox(
                           width: double.infinity,
@@ -98,7 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   const Text(
                                     '¿No tienes una cuenta?',
                                     style: TextStyle(
-                                      color: Color(0xffCC9BAC),
+                                      color: ColorStyles.secondaryColor3,
                                       fontFamily: 'Inter',
                                       fontSize: 16,
                                     ),
@@ -124,17 +125,14 @@ class _SignInScreenState extends State<SignInScreen> {
                                   ),
                                 ],
                               ),
-                              formButtonSignIn(
-                                context,
-                                emailController,
-                                passController,
-                                context.read<AuthBloc>()),
+                              formButtonSignIn(context, emailController,
+                                  passController, context.read<AuthBloc>()),
                             ],
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               if (state is LoggingInUser)
@@ -147,10 +145,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 else if ((state.user.userinfo != 'error'))
                   FutureBuilder(
                     future: Future.delayed(Duration.zero, () async {
-                      Navigator.pushReplacement(
+                      Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => HomeScreen(state.user)));
+                              builder: (context) => HomeScreen(state.user)),
+                          (route) => false);
                     }),
                     builder: (context, snapshot) {
                       return Container();

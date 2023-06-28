@@ -11,7 +11,7 @@ SnackBar snackBar(String alert) {
   );
 }
 
-Stack loadingWidget(BuildContext context) {
+Stack loadingEventWidget(BuildContext context) {
   return Stack(
     children: [
       Container(
@@ -47,7 +47,7 @@ Stack loadingWidget(BuildContext context) {
           Text(
             'Espere un momento...',
             style: TextStyle(
-                // color: Colors.black,
+                decoration: TextDecoration.none,
                 color: ColorStyles.textPrimary2,
                 fontFamily: 'Inter',
                 fontSize: 16,
@@ -59,7 +59,7 @@ Stack loadingWidget(BuildContext context) {
   );
 }
 
-Builder errorAlert(BuildContext context, String error) {
+Builder errorEventAlert(BuildContext context, String error) {
   return Builder(
     builder: (context) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -74,4 +74,54 @@ Builder errorAlert(BuildContext context, String error) {
       return Container();
     },
   );
+}
+
+Padding emptyEventWidget(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 30),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          Images.emptyEvents,
+          width: MediaQuery.of(context).size.width * 0.8,
+        ),
+        const Text(
+          'No tienes eventos próximos',
+          style: TextStyle(
+            color: ColorStyles.primaryGrayBlue,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Inter',
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class LoadingOverlay extends StatefulWidget {
+  final Widget child;
+  final bool isLoading;
+
+  const LoadingOverlay({
+    Key? key,
+    required this.child,
+    required this.isLoading,
+  }) : super(key: key);
+
+  @override
+  LoadingOverlayState createState() => LoadingOverlayState();
+}
+
+class LoadingOverlayState extends State<LoadingOverlay> {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        widget.child, // Widget principal
+        if (widget.isLoading) loadingEventWidget(context)
+      ],
+    );
+  }
 }

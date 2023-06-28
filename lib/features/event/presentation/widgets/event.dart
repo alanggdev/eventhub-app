@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/event/presentation/pages/event_screen.dart';
+import 'package:eventhub_app/features/event/domain/entities/event.dart';
+import 'package:eventhub_app/keys.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
-Padding eventWidget(BuildContext context) {
+Padding eventWidget(BuildContext context, Event userEvent, User user) {
   return Padding(
     padding: const EdgeInsets.all(15),
     child: GestureDetector(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const EventScreen()));
+            MaterialPageRoute(builder: (context) => EventScreen(userEvent, user)));
       },
       child: Container(
         width: double.infinity,
@@ -30,10 +33,10 @@ Padding eventWidget(BuildContext context) {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
-                    'Boda Test',
-                    style: TextStyle(
+                    userEvent.name,
+                    style: const TextStyle(
                       color: ColorStyles.primaryGrayBlue,
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
@@ -41,8 +44,8 @@ Padding eventWidget(BuildContext context) {
                     ),
                   ),
                   Text(
-                    '12/06/23',
-                    style: TextStyle(
+                    userEvent.date,
+                    style: const TextStyle(
                       color: ColorStyles.primaryGrayBlue,
                       fontSize: 12,
                       fontFamily: 'Inter',
@@ -52,11 +55,23 @@ Padding eventWidget(BuildContext context) {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Image.asset('assets/images/event/test_event.png'),
+                child: AspectRatio(
+                  aspectRatio: 64 / 25,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: FadeInImage(
+                      fit: BoxFit.fitWidth,
+                      alignment: FractionalOffset.center,
+                      image: NetworkImage(
+                          '$serverURL${userEvent.imagePaths![0]}'),
+                      placeholder: const AssetImage(Images.eventPlaceholder),
+                      imageErrorBuilder: (context, error, stackTrace) {
+                        return const Center(child: Text('event image'));
+                      },
+                    ),
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -65,7 +80,7 @@ Padding eventWidget(BuildContext context) {
   );
 }
 
-Chip eventCategoryLabel() {
+Chip eventCategoryLabel(dynamic category) {
   return Chip(
     backgroundColor: ColorStyles.secondaryColor1,
     labelStyle: const TextStyle(
@@ -73,9 +88,30 @@ Chip eventCategoryLabel() {
       fontFamily: 'Inter',
       fontSize: 12,
     ),
-    label: const Text('Categoria'),
+    label: Text(category),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(4),
+    ),
+  );
+}
+
+AspectRatio eventImage(dynamic image) {
+  return AspectRatio(
+    aspectRatio: 64 / 25,
+    child: Padding(
+      padding: const EdgeInsets.all(4),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: FadeInImage(
+          fit: BoxFit.fitWidth,
+          alignment: FractionalOffset.center,
+          image: NetworkImage('$serverURL$image'),
+          placeholder: const AssetImage(Images.eventPlaceholder),
+          imageErrorBuilder: (context, error, stackTrace) {
+            return const Center(child: Text('event image'));
+          },
+        ),
+      ),
     ),
   );
 }

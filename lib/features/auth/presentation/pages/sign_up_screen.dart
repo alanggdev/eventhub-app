@@ -161,7 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       const Text(
                                         '¿Ya tienes una cuenta?',
                                         style: TextStyle(
-                                          color: Color(0xffCC9BAC),
+                                          color: ColorStyles.secondaryColor3,
                                           fontFamily: 'Inter',
                                           fontSize: 16,
                                         ),
