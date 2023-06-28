@@ -32,7 +32,7 @@ class EventDataSourceImpl extends EventDataSource {
     });
 
     final response =
-        await dio.post('http://$serverURI/events/', data: formData);
+        await dio.post('$serverURL/events/', data: formData);
 
     if (response.statusCode == 200) {
       return 'Success';
@@ -44,7 +44,7 @@ class EventDataSourceImpl extends EventDataSource {
   @override
   Future<List<Event>> getUserEvents(int userid) async {
     Response response;
-    response = await dio.get('http://$serverURI/events/list/$userid');
+    response = await dio.get('$serverURL/events/list/$userid');
 
     if (response.statusCode == 200) {
       List<Event> userEvents = [];
@@ -67,7 +67,7 @@ class EventDataSourceImpl extends EventDataSource {
   @override
   Future<String> deleteEvent(int eventid) async {
     Response response;
-    response = await dio.delete('http://$serverURI/events/$eventid');
+    response = await dio.delete('$serverURL/events/$eventid');
     if (response.statusCode == 200) {
       return 'Deleted';
     } else {

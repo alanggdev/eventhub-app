@@ -63,7 +63,7 @@ Padding eventWidget(BuildContext context, Event userEvent, User user) {
                       fit: BoxFit.fitWidth,
                       alignment: FractionalOffset.center,
                       image: NetworkImage(
-                          'http://$serverURI${userEvent.imagePaths![0]}'),
+                          '$serverURL${userEvent.imagePaths![0]}'),
                       placeholder: const AssetImage(Images.eventPlaceholder),
                       imageErrorBuilder: (context, error, stackTrace) {
                         return const Center(child: Text('event image'));
@@ -105,7 +105,7 @@ AspectRatio eventImage(dynamic image) {
         child: FadeInImage(
           fit: BoxFit.fitWidth,
           alignment: FractionalOffset.center,
-          image: NetworkImage('http://$serverURI$image'),
+          image: NetworkImage('$serverURL$image'),
           placeholder: const AssetImage(Images.eventPlaceholder),
           imageErrorBuilder: (context, error, stackTrace) {
             return const Center(child: Text('event image'));

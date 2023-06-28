@@ -18,7 +18,8 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
   @override
   Future<String> registerUser(RegisterUser registerUserData) async {
     var headers = {'Content-Type': 'application/json'};
-    var url = Uri.http(serverURI, '/auth/register/');
+    // var url = Uri.http(serverURI, '/auth/register/');
+    var url = Uri.parse('$serverURL/auth/register/');
 
     dynamic body = RegisterUserModel.fromEntityToJson(registerUserData);
 
@@ -65,7 +66,8 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
   @override
   Future<User> loginUser(LoginUser loginUserData) async {
     var headers = {'Content-Type': 'application/json'};
-    var url = Uri.http(serverURI, '/auth/login/');
+    // var url = Uri.http(serverURI, '/auth/login/');
+    var url = Uri.parse('$serverURL/auth/login/');
     
     dynamic body = LoginUserModel.fromEntityToJson(loginUserData);
 
