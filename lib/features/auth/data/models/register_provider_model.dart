@@ -32,7 +32,7 @@ class RegisterProviderModel extends RegisterProvider {
   static FormData fromEntityToJson(RegisterProvider data, List<MultipartFile> imageMultipartFiles, int userid) {
     String daysAvailability = data.companySelectedDays.join(', ');
     String hoursAvailability = '${data.openTime},${data.closeTime}';
-    String categories = data.categoriesList!.join(', ');
+    String categories = data.categoriesList!.join(',');
     final formData = FormData.fromMap({
       'name': data.companyName,
       'description': data.companyDescription,
