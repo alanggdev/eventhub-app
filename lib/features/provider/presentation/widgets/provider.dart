@@ -1,18 +1,21 @@
-import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'package:eventhub_app/keys.dart';
 import 'package:eventhub_app/assets.dart';
+import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
+import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
 
-Padding providerWidget(BuildContext context) {
+Padding providerWidget(BuildContext context, Provider provider) {
   return Padding(
     padding: const EdgeInsets.all(15),
     child: GestureDetector(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const ProviderScreen()));
+            MaterialPageRoute(builder: (context) => ProviderScreen(provider)));
       },
       child: Container(
         width: double.infinity,
+        height: 245,
         decoration: BoxDecoration(
           color: ColorStyles.white,
           borderRadius: BorderRadius.circular(8),
@@ -26,38 +29,59 @@ Padding providerWidget(BuildContext context) {
         ),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
+              AspectRatio(
+                aspectRatio: 64 / 25,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                  ),
+                  child: FadeInImage(
+                    fit: BoxFit.fitWidth,
+                    alignment: FractionalOffset.center,
+                    image: NetworkImage('$serverURL${provider.urlImages[0]}'),
+                    placeholder: const AssetImage(Images.eventPlaceholder),
+                    imageErrorBuilder: (context, error, stackTrace) {
+                      return const Center(child: Text('provider image'));
+                    },
+                  ),
                 ),
-                child: Image.asset(Images.providerPlaceholder),
               ),
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Proveedor',
-                      style: TextStyle(
+                    Text(
+                      provider.companyName,
+                      style: const TextStyle(
                         color: ColorStyles.primaryGrayBlue,
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter',
                       ),
                     ),
-                    const Text(
-                      'Breve descripción o eslogan de la empresa, organización o proveedor',
-                      style: TextStyle(
+                    Text(
+                      provider.companyDescription,
+                      style: const TextStyle(
                         color: ColorStyles.primaryGrayBlue,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Inter',
                       ),
                     ),
-                    providerCategoryLabel(),
+                    Wrap(
+                      spacing: 8,
+                      children: provider.categories.map((category) {
+                        return providerCategoryLabel(category);
+                      }).toList(),
+                      //
+                    ),
+                    // children: [
+                    //   providerCategoryLabel(),
+                    // ],
                   ],
                 ),
               ),
@@ -69,7 +93,7 @@ Padding providerWidget(BuildContext context) {
   );
 }
 
-Chip providerCategoryLabel() {
+Chip providerCategoryLabel(dynamic category) {
   return Chip(
     backgroundColor: ColorStyles.secondaryColor1,
     labelStyle: const TextStyle(
@@ -77,7 +101,7 @@ Chip providerCategoryLabel() {
       fontFamily: 'Inter',
       fontSize: 12,
     ),
-    label: const Text('Categoria'),
+    label: Text(category),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(4),
     ),
@@ -133,6 +157,27 @@ Padding providerOptionButton(BuildContext context, String label) {
           color: Colors.white,
           fontWeight: FontWeight.w500,
           fontFamily: 'Inter',
+        ),
+      ),
+    ),
+  );
+}
+
+AspectRatio providerImage(dynamic image) {
+  return AspectRatio(
+    aspectRatio: 64 / 25,
+    child: Padding(
+      padding: const EdgeInsets.all(4),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: FadeInImage(
+          fit: BoxFit.fitWidth,
+          alignment: FractionalOffset.center,
+          image: NetworkImage('$serverURL$image'),
+          placeholder: const AssetImage(Images.providerDetailPlaceholder),
+          imageErrorBuilder: (context, error, stackTrace) {
+            return const Center(child: Text('event image'));
+          },
         ),
       ),
     ),

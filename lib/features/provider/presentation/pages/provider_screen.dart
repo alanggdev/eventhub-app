@@ -3,9 +3,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/provider.dart';
+import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
+import 'package:eventhub_app/keys.dart';
 
 class ProviderScreen extends StatefulWidget {
-  const ProviderScreen({super.key});
+  final Provider provider;
+  const ProviderScreen(this.provider, {super.key});
 
   @override
   State<ProviderScreen> createState() => _ProviderScreenState();
@@ -65,11 +68,20 @@ class _ProviderScreenState extends State<ProviderScreen> {
                         color: ColorStyles.primaryBlue,
                         child: ClipRRect(
                           borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                            ),
-                          child: Image.asset(
-                            Images.providerDetailPlaceholder,
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                          child: FadeInImage(
+                            fit: BoxFit.fitWidth,
+                            alignment: FractionalOffset.center,
+                            image: NetworkImage(
+                                '$serverURL${widget.provider.urlImages[0]}'),
+                            placeholder: const AssetImage(
+                                Images.providerDetailPlaceholder),
+                            imageErrorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                  child: Text('provider image'));
+                            },
                           ),
                         ),
                       ),
@@ -93,12 +105,12 @@ class _ProviderScreenState extends State<ProviderScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
                           child: Text(
-                            'Proveedor',
+                            widget.provider.companyName,
                             textAlign: TextAlign.start,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: ColorStyles.primaryGrayBlue,
                               fontSize: 26,
                               fontWeight: FontWeight.w600,
@@ -106,53 +118,44 @@ class _ProviderScreenState extends State<ProviderScreen> {
                             ),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
                           child: Text(
-                            'Lorem ipsum dolor sit amet consectetur. Turpis enim feugiat egestas tellus amet. Tincidunt tincidunt aenean eget placerat. Proin risus enim sed velit. Lorem ipsum dolor sit amet consectetur. Turpis enim feugiat egestas tellus amet. Tincidunt tincidunt aenean eget placerat. Proin risus enim sed velit.',
+                            widget.provider.companyDescription,
                             textAlign: TextAlign.start,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: ColorStyles.primaryGrayBlue,
                               fontSize: 16,
                               fontFamily: 'Inter',
                             ),
                           ),
                         ),
-                        providerCategoryLabel(),
+                        // providerCategoryLabel(),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Column(
                             children: [
-                              providerInfo(Icons.phone, '961 123 1234'),
-                              providerInfo(Icons.mail, 'correo@mail.com'),
-                              providerInfo(Icons.schedule,
-                                  'Lunes a Viernes: 9AM - 6PM '),
                               providerInfo(
-                                  Icons.location_on, 'Av. Ejemplo #123'),
+                                  Icons.phone, widget.provider.companyPhone),
+                              providerInfo(
+                                  Icons.mail, widget.provider.companyEmail),
+                              providerInfo(Icons.schedule,
+                                  'Lunes a Viernes: ${widget.provider.hoursAvailability}'),
+                              providerInfo(Icons.location_on,
+                                  widget.provider.companyAddress),
                             ],
                           ),
                         ),
                         CarouselSlider(
-                          options: CarouselOptions(
-                            enableInfiniteScroll: false,
-                          ),
+                          options: CarouselOptions(enableInfiniteScroll: false),
                           items: [
-                            for (int index = 0; index < 3; index++)
+                            for (int index = 0;
+                                index < widget.provider.urlImages.length;
+                                index++)
                               Builder(
                                 builder: (BuildContext context) {
-                                  // return Image.file(i);
-                                  return Padding(
-                                    padding: const EdgeInsets.all(3),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.asset(
-                                        Images.providerDetailPlaceholder,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.95,
-                                      ),
-                                    ),
-                                  );
+                                  return providerImage(
+                                      widget.provider.urlImages[index]);
                                 },
                               ),
                           ],
