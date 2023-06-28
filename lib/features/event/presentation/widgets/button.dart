@@ -94,7 +94,7 @@ TextButton createEventBotton(
       // Verify if data are not empty
       if (eventName.isNotEmpty &&
           eventDescription.isNotEmpty &&
-          eventDate.isNotEmpty &&
+          eventDate.isNotEmpty && eventDate != 'Seleccionar fecha' &&
           selectedCategories.isNotEmpty &&
           eventImages.isNotEmpty) {
         // Bloc event
