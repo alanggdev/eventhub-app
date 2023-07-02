@@ -65,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 45, vertical: 10),
+                                      horizontal: 10, vertical: 10),
                                   child: Text(
                                     'Bienvenido, por favor, ingresa tus datos para registrarte.',
                                     textAlign: TextAlign.center,
@@ -85,19 +85,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           width: double.infinity,
                           child: Column(
                             children: [
-                              textFieldForm(context, Icons.person,
-                                  'Nombre de usuario', usernameController),
-                              textFieldForm(context, Icons.person,
-                                  'Nombre completo', fullnameController),
-                              textFieldForm(context, Icons.email,
-                                  'Correo electrónico', emailController),
-                              textFieldForm(context, Icons.lock, 'Contraseña',
-                                  passController),
-                              textFieldForm(
-                                  context,
-                                  Icons.lock,
-                                  'Confirmar Contraseña',
-                                  passConfirmController),
+                              textFieldMaxLength(context, Icons.person, 'Nombre de usuario', usernameController, 15),
+                              textFieldMaxLength(context, Icons.person, 'Nombre completo', fullnameController, 35),
+                              textField(context, Icons.email, 'Correo electrónico', emailController, TextInputType.text),
+                              textFieldPass(context, Icons.lock, 'Contraseña', passController),
+                              textFieldPass(context, Icons.lock, 'Confirmar Contraseña', passConfirmController),
                               Row(
                                 children: <Widget>[
                                   Expanded(

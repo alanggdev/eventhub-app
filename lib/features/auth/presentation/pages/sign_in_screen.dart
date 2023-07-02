@@ -79,10 +79,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         height: MediaQuery.of(context).size.height * 0.45,
                         child: Column(
                           children: [
-                            textFieldForm(context, Icons.email,
-                                'Correo electrónico', emailController),
-                            textFieldForm(context, Icons.lock, 'Contraseña',
-                                passController),
+                            textField(context, Icons.email, 'Correo electrónico', emailController, TextInputType.text),
+                            textFieldPass(context, Icons.lock, 'Contraseña', passController),
                           ],
                         ),
                       ),
@@ -108,9 +106,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     onPressed: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SignUpScreen()),
+                                        MaterialPageRoute(builder: (context) => const SignUpScreen()),
                                       );
                                     },
                                     child: const Text(

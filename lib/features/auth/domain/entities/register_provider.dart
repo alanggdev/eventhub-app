@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:eventhub_app/features/provider/domain/entities/service.dart';
+
 class RegisterProvider {
   final String companyName;
   final String companyDescription;
@@ -12,6 +14,7 @@ class RegisterProvider {
   final int? userid;
   List<String>? categoriesList;
   List<File>? imagesList;
+  List<Service>? services;
 
   RegisterProvider({
     required this.companyName,
@@ -25,6 +28,7 @@ class RegisterProvider {
     this.userid,
     this.categoriesList,
     this.imagesList,
+    this.services,
   });
 
   @override

@@ -3,13 +3,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:io';
 
 import 'package:eventhub_app/assets.dart';
+
 import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/create_company_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/add_info_company_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
+import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
-import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
+
+import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 
 Padding authButton(BuildContext context, String buttonType) {
   return Padding(
@@ -234,8 +238,10 @@ TextButton formButtonNextCompany(
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AddInfoCompanyScreen(
-                    registerUserData, registerProviderData)));
+              builder: (context) => AddInfoCompanyScreen(
+                  registerUserData, registerProviderData, null, null, null),
+              settings: const RouteSettings(name: '/addinfocompany'),
+            ));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           snackBar('No se permiten cambios vacios'),
@@ -260,6 +266,7 @@ TextButton formButtonCreateCompany(
     RegisterProvider registerProviderData,
     List<String> selectedCategories,
     List<File> companyImages,
+    List<Service> services,
     AuthBloc authBloc) {
   return TextButton(
     style: OutlinedButton.styleFrom(
@@ -273,10 +280,13 @@ TextButton formButtonCreateCompany(
       elevation: 6,
     ),
     onPressed: () {
-      if (selectedCategories.isNotEmpty && companyImages.isNotEmpty) {
+      if (selectedCategories.isNotEmpty && companyImages.isNotEmpty && services.isNotEmpty) {
         registerProviderData.categoriesList = selectedCategories;
         registerProviderData.imagesList = companyImages;
-        authBloc.add(CreateProvider(registerProviderData: registerProviderData, registerUserData: registerUserData));
+        registerProviderData.services = services;
+        authBloc.add(CreateProvider(
+            registerProviderData: registerProviderData,
+            registerUserData: registerUserData));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           snackBar('No se permiten cambios vacios'),

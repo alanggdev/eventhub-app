@@ -49,6 +49,7 @@ Stack loadingWidget(BuildContext context) {
             style: TextStyle(
                 // color: Colors.black,
                 color: ColorStyles.textPrimary2,
+                decoration: TextDecoration.none,
                 fontFamily: 'Inter',
                 fontSize: 16,
                 fontWeight: FontWeight.w500),

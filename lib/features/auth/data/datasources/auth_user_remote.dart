@@ -4,14 +4,16 @@ import 'dart:convert' as convert;
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:eventhub_app/features/auth/data/models/register_user_model.dart';
-import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/keys.dart';
+
+import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/login_user.dart';
+
+import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
 import 'package:eventhub_app/features/auth/data/models/login_user_model.dart';
 import 'package:eventhub_app/features/auth/data/models/user_model.dart';
-import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
+import 'package:eventhub_app/features/auth/data/models/register_user_model.dart';
 import 'package:eventhub_app/features/auth/data/models/register_provider_model.dart';
 
 abstract class AuthUserDataSource {
@@ -25,7 +27,6 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
   Future<String> registerUser(RegisterUser registerUserData) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var headers = {'Content-Type': 'application/json'};
-    // var url = Uri.http(serverURI, '/auth/register/');
     var url = Uri.parse('$serverURL/auth/register/');
 
     dynamic body = RegisterUserModel.fromEntityToJson(registerUserData);
@@ -74,7 +75,6 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
   @override
   Future<User> loginUser(LoginUser loginUserData) async {
     var headers = {'Content-Type': 'application/json'};
-    // var url = Uri.http(serverURI, '/auth/login/');
     var url = Uri.parse('$serverURL/auth/login/');
 
     dynamic body = LoginUserModel.fromEntityToJson(loginUserData);
@@ -109,6 +109,7 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
     // Get user id
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? userid = prefs.getInt('userid');
+    await prefs.remove('userid');
 
     // Register provider
     List<MultipartFile> imageMultipartFiles = [];
@@ -127,4 +128,8 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
       throw Exception('Server error');
     }
   }
+
+  // Future<String> registerServices(Service serviceToAdd) async {
+
+  // }
 }
