@@ -59,7 +59,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                               const Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 45, vertical: 10),
+                                    horizontal: 10, vertical: 10),
                                 child: Text(
                                   'Bienvenido, por favor, ingresa tus datos para iniciar sesión.',
                                   textAlign: TextAlign.center,

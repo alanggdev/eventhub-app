@@ -15,8 +15,8 @@ Padding textField(BuildContext context, IconData icon, String label, TextEditing
             ),
             boxShadow: [
               BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  blurRadius: 4,
+                  color: Colors.grey.withOpacity(0.25),
+                  blurRadius: 5,
                   offset: const Offset(0, 1)),
             ],
           ),
@@ -61,8 +61,8 @@ Padding textFieldMaxLength(BuildContext context, IconData icon, String label, Te
             ),
             boxShadow: [
               BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  blurRadius: 4,
+                  color: Colors.grey.withOpacity(0.25),
+                  blurRadius: 5,
                   offset: const Offset(0, 1)),
             ],
           ),
@@ -107,8 +107,8 @@ Padding textFieldPass(BuildContext context, IconData icon, String label, TextEdi
             ),
             boxShadow: [
               BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  blurRadius: 4,
+                  color: Colors.grey.withOpacity(0.25),
+                  blurRadius: 5,
                   offset: const Offset(0, 1)),
             ],
           ),
@@ -159,8 +159,8 @@ Padding textFieldLong(BuildContext context, IconData icon, String label, TextEdi
             ),
             boxShadow: [
               BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  blurRadius: 4,
+                  color: Colors.grey.withOpacity(0.25),
+                  blurRadius: 5,
                   offset: const Offset(0, 1)),
             ],
           ),

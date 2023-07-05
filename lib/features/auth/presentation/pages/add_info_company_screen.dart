@@ -152,10 +152,10 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                                   borderRadius: BorderRadius.circular(8),
                                   boxShadow: [
                                     BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
+                                        color: Colors.grey.withOpacity(0.25),
                                         spreadRadius: 1,
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 3)),
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 1)),
                                   ],
                                 ),
                                 child: Padding(
@@ -207,31 +207,42 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                                 ),
                               ),
                             ),
-                            Wrap(
-                              spacing: 8.0,
-                              children: selectedCategories.map((option) {
-                                return Chip(
-                                  backgroundColor: ColorStyles.primaryBlue,
-                                  labelStyle: const TextStyle(
-                                    color: ColorStyles.baseLightBlue,
-                                    fontFamily: 'Inter',
-                                  ),
-                                  label: Text(option),
-                                  deleteIcon: const Icon(
-                                    Icons.delete,
-                                    color: ColorStyles.baseLightBlue,
-                                    size: 16,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  onDeleted: () {
-                                    setState(() {
-                                      selectedCategories.remove(option);
-                                    });
-                                  },
-                                );
-                              }).toList(),
+                            const Text(
+                              'Agrega categorias que identifiquen o que sean relevantes para tu empresa. Min. 2',
+                              style: TextStyle(
+                                color: ColorStyles.textPrimary2,
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                              ),
+                            ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Wrap(
+                                spacing: 8.0,
+                                children: selectedCategories.map((option) {
+                                  return Chip(
+                                    backgroundColor: ColorStyles.primaryBlue,
+                                    labelStyle: const TextStyle(
+                                      color: ColorStyles.baseLightBlue,
+                                      fontFamily: 'Inter',
+                                    ),
+                                    label: Text(option),
+                                    deleteIcon: const Icon(
+                                      Icons.delete,
+                                      color: ColorStyles.baseLightBlue,
+                                      size: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    onDeleted: () {
+                                      setState(() {
+                                        selectedCategories.remove(option);
+                                      });
+                                    },
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           ],
                         ),
@@ -255,7 +266,7 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 shadowColor: Colors.black,
-                                elevation: 6,
+                                elevation: 3,
                               ),
                               onPressed: () {
                                 Navigator.pushReplacement(

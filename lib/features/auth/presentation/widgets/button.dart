@@ -35,7 +35,7 @@ Padding authButton(BuildContext context, String buttonType) {
           borderRadius: BorderRadius.circular(10),
         ),
         shadowColor: ColorStyles.black,
-        elevation: 6,
+        elevation: 3,
       ),
       onPressed: () {
         Navigator.push(
@@ -76,7 +76,7 @@ TextButton formButtonSignUp(
         borderRadius: BorderRadius.circular(10),
       ),
       shadowColor: Colors.black,
-      elevation: 6,
+      elevation: 3,
     ),
     onPressed: () {
       // Unfocus keyboard
@@ -157,7 +157,7 @@ TextButton formButtonSignIn(
         borderRadius: BorderRadius.circular(10),
       ),
       shadowColor: Colors.black,
-      elevation: 6,
+      elevation: 3,
     ),
     onPressed: () {
       // Unfocus keyboard
@@ -207,7 +207,7 @@ TextButton formButtonNextCompany(
         borderRadius: BorderRadius.circular(10),
       ),
       shadowColor: Colors.black,
-      elevation: 6,
+      elevation: 3,
     ),
     onPressed: () {
       FocusManager.instance.primaryFocus?.unfocus();
@@ -277,10 +277,10 @@ TextButton formButtonCreateCompany(
         borderRadius: BorderRadius.circular(10),
       ),
       shadowColor: Colors.black,
-      elevation: 6,
+      elevation: 3,
     ),
     onPressed: () {
-      if (selectedCategories.isNotEmpty && companyImages.isNotEmpty && services.isNotEmpty) {
+      if (selectedCategories.isNotEmpty && selectedCategories.length > 11 && companyImages.isNotEmpty && companyImages.length > 5 && services.isNotEmpty) {
         registerProviderData.categoriesList = selectedCategories;
         registerProviderData.imagesList = companyImages;
         registerProviderData.services = services;

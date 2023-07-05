@@ -31,8 +31,7 @@ class EventDataSourceImpl extends EventDataSource {
       'userId': eventData.userID
     });
 
-    final response =
-        await dio.post('$serverURL/events/', data: formData);
+    final response = await dio.post('$serverURL/events/', data: formData);
 
     if (response.statusCode == 200) {
       return 'Success';

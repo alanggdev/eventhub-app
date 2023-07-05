@@ -149,17 +149,18 @@ class _AddServiceState extends State<AddService> {
                     children: [
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.75,
-                        child: textFieldMaxLength(context, Icons.sell, 'Ttiquetas', tagsController, 20),
+                        child: textFieldMaxLength(context, Icons.sell, 'Etiquetas', tagsController, 20),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 40, bottom: 12),
                         child: GestureDetector(
                           onTap: () {
                             String tagToAdd = tagsController.text.trim();
-                            if (tagToAdd.isNotEmpty && tags.length < 5) {
+                            if (tagToAdd.isNotEmpty && tags.length < 6) {
                               setState(() {
                                 tags.add(tagToAdd);
                               });
+                              tagsController.clear();
                             }
                           },
                           child: Container(
@@ -182,7 +183,7 @@ class _AddServiceState extends State<AddService> {
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
-                      'Agrega etiquetas (palabras clave) que identifiquen o que sean relevantes para tu servicio. Max. 5',
+                      'Agrega etiquetas (palabras clave) que identifiquen o que sean relevantes para tu servicio. Min. 2 y Max. 6',
                       style: TextStyle(
                         color: ColorStyles.textPrimary2,
                         fontFamily: 'Inter',
@@ -192,31 +193,34 @@ class _AddServiceState extends State<AddService> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Wrap(
-                      spacing: 6,
-                      children: tags.map((option) {
-                        return Chip(
-                          backgroundColor: ColorStyles.primaryBlue,
-                          labelStyle: const TextStyle(
-                            color: ColorStyles.baseLightBlue,
-                            fontFamily: 'Inter',
-                          ),
-                          label: Text(option),
-                          deleteIcon: const Icon(
-                            Icons.delete,
-                            color: ColorStyles.baseLightBlue,
-                            size: 16,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          onDeleted: () {
-                            setState(() {
-                              tags.remove(option);
-                            });
-                          },
-                        );
-                      }).toList(),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Wrap(
+                        spacing: 6,
+                        children: tags.map((option) {
+                          return Chip(
+                            backgroundColor: ColorStyles.primaryBlue,
+                            labelStyle: const TextStyle(
+                              color: ColorStyles.baseLightBlue,
+                              fontFamily: 'Inter',
+                            ),
+                            label: Text(option),
+                            deleteIcon: const Icon(
+                              Icons.delete,
+                              color: ColorStyles.baseLightBlue,
+                              size: 16,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            onDeleted: () {
+                              setState(() {
+                                tags.remove(option);
+                              });
+                            },
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                   Padding(
@@ -292,7 +296,7 @@ class _AddServiceState extends State<AddService> {
                   onPressed: () {
                     String name = nameController.text.trim();
                     String description = descriptionController.text.trim();
-                    if (name.isNotEmpty && description.isNotEmpty && tags.isNotEmpty && images.isNotEmpty) {
+                    if (name.isNotEmpty && description.isNotEmpty && tags.isNotEmpty && tags.length > 1 && images.isNotEmpty) {
                       Service serviceToAdd = Service(name: name, description: description, tags: tags, images: images);
                       List<Service> services = widget.services;
                       services.add(serviceToAdd);

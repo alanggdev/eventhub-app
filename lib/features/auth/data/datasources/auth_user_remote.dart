@@ -16,6 +16,8 @@ import 'package:eventhub_app/features/auth/data/models/user_model.dart';
 import 'package:eventhub_app/features/auth/data/models/register_user_model.dart';
 import 'package:eventhub_app/features/auth/data/models/register_provider_model.dart';
 
+import 'package:eventhub_app/features/provider/domain/entities/service.dart';
+
 abstract class AuthUserDataSource {
   Future<String> registerUser(RegisterUser registerUserData);
   Future<User> loginUser(LoginUser loginUserData);
@@ -105,7 +107,6 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
 
   @override
   Future<String> registerProvider(RegisterProvider registerProviderData) async {
-
     // Get user id
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? userid = prefs.getInt('userid');
@@ -123,13 +124,43 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
     final response = await dio.post('$serverURL/providers/', data: formData);
 
     if (response.statusCode == 201) {
+      await registerServices(registerProviderData.services!, response.data['providerId']);
       return 'Provider created';
     } else {
       throw Exception('Server error');
     }
   }
 
-  // Future<String> registerServices(Service serviceToAdd) async {
+  Future<String> registerServices(List<Service> services, int providerid) async {
+    List<MultipartFile> imageMultipartFiles = [];
+    List<dynamic> servicesToUpload = [];
+    for (Service service in services) {
+      for (File file in service.images!) {
+        MultipartFile multipartFile = await MultipartFile.fromFile(file.path);
+        imageMultipartFiles.add(multipartFile);
+      }
+      dynamic body = {
+        "providerId": providerid,
+        "name": service.name,
+        "description": service.description,
+        "tags": service.tags,
+        "amountImages": service.images?.length
+      };
+      servicesToUpload.add(body);
+    }
 
-  // }
+    final formData = FormData.fromMap({
+      'services': servicesToUpload,
+      'images' : imageMultipartFiles
+    });
+
+    final dio = Dio();
+    final response = await dio.post('$serverURL/services/', data: formData);
+
+    if (response.statusCode == 201) {
+      return 'Services created';
+    } else {
+      throw Exception('Server error (providers)');
+    }
+  }
 }
