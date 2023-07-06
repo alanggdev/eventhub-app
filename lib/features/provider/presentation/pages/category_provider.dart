@@ -5,6 +5,7 @@ import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/provider.dart';
 import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart';
+import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 
 class CategoryProvider extends StatefulWidget {
   final String categoryName, categoryDescription;
@@ -16,6 +17,8 @@ class CategoryProvider extends StatefulWidget {
 }
 
 class _CategoryProviderState extends State<CategoryProvider> {
+  List<Provider> categoryProvider = [];
+
   @override
   void initState() {
     super.initState();
@@ -116,19 +119,36 @@ class _CategoryProviderState extends State<CategoryProvider> {
                               ),
                             ),
                           ),
+                          if (state is! CategoryProvidersLoaded && categoryProvider.isNotEmpty)
+                            Column(
+                              children: categoryProvider.map((provider) {
+                                return providerWidget(context, provider);
+                              }).toList(),
+                            ),
                           if (state is CategoryProvidersLoaded)
                             if (state.categoryProviders.isNotEmpty)
-                              Column(
-                                children: state.categoryProviders.map((provider) {
-                                  return providerWidget(context, provider);
-                                }).toList(),
-                              ),
+                              FutureBuilder(
+                                future: Future.delayed(Duration.zero, () async {
+                                  setState(() {
+                                    categoryProvider = state.categoryProviders;
+                                  });
+                                }),
+                                builder: (context, snapshot) {
+                                  return Column(
+                                    children: categoryProvider.map((provider) {
+                                      return providerWidget(context, provider);
+                                    }).toList(),
+                                  );
+                                },
+                              )
+                            else if (state.categoryProviders.isEmpty)
+                              emptyProviderCategoryWidget(context)
                         ],
                       ),
                     ),
                   ),
                 ),
-                if (state is GettingCategoryProviders)
+                if (state is LoadingCategoryProviders)
                   loadingCategoryWidget(context)
                 else if (state is Error)
                   errorProviderAlert(context, state.error)

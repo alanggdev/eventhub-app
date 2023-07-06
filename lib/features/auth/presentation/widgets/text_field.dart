@@ -94,7 +94,8 @@ Padding textFieldMaxLength(BuildContext context, IconData icon, String label, Te
   );
 }
 
-Padding textFieldPass(BuildContext context, IconData icon, String label, TextEditingController fieldContoller) {
+Padding textFieldPass(BuildContext context, IconData icon, String label, TextEditingController fieldContoller,
+    bool hidePass, Function(bool state) changePassVisibility) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     child: Stack(
@@ -115,15 +116,18 @@ Padding textFieldPass(BuildContext context, IconData icon, String label, TextEdi
         ),
         TextField(
           controller: fieldContoller,
+          obscureText: hidePass,
           decoration: InputDecoration(
             prefixIcon: Icon(
               icon,
               color: ColorStyles.secondaryColor3,
             ),
             suffixIcon: GestureDetector(
-              onTap:  () {},
-              child: const Icon(
-                Icons.visibility,
+              onTap:  () {
+                changePassVisibility(!hidePass);
+              },
+              child: Icon(
+                hidePass ? Icons.visibility : Icons.visibility_off,
                 color: ColorStyles.secondaryColor3,
               ),
             ),

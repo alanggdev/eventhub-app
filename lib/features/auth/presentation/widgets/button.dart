@@ -280,7 +280,7 @@ TextButton formButtonCreateCompany(
       elevation: 3,
     ),
     onPressed: () {
-      if (selectedCategories.isNotEmpty && selectedCategories.length > 11 && companyImages.isNotEmpty && companyImages.length > 5 && services.isNotEmpty) {
+      if (selectedCategories.isNotEmpty && selectedCategories.length > 1 && companyImages.isNotEmpty && services.isNotEmpty) {
         registerProviderData.categoriesList = selectedCategories;
         registerProviderData.imagesList = companyImages;
         registerProviderData.services = services;

@@ -13,6 +13,7 @@ import 'package:eventhub_app/features/event/domain/usecases/get_user_events.dart
 import 'package:eventhub_app/features/provider/data/datasources/provider_remote.dart';
 import 'package:eventhub_app/features/provider/data/repositories/provider_repository_impl.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/get_category_providers.dart';
+import 'package:eventhub_app/features/provider/domain/usecases/get_provider_services.dart';
 
 class UseCaseConfig {
   AuthUserDataSourceImpl? authUserDataSourceImpl;
@@ -29,7 +30,8 @@ class UseCaseConfig {
 
   ProviderDataSourceImpl? providerDataSourceImpl;
   ProviderRepositoryImpl? providerRepositoryImpl;
-  GetCategoryProviersUseCase? getCategoryProviersUseCase;
+  GetCategoryProvidersUseCase? getCategoryProvidersUseCase;
+  GetProviderServicesUseCase? getProviderServicesUseCase;
 
   UseCaseConfig() {
     authUserDataSourceImpl = AuthUserDataSourceImpl();
@@ -46,6 +48,7 @@ class UseCaseConfig {
 
     providerDataSourceImpl = ProviderDataSourceImpl();
     providerRepositoryImpl = ProviderRepositoryImpl(providerDataSource: providerDataSourceImpl!);
-    getCategoryProviersUseCase = GetCategoryProviersUseCase(providerRepositoryImpl!);
+    getCategoryProvidersUseCase = GetCategoryProvidersUseCase(providerRepositoryImpl!);
+    getProviderServicesUseCase = GetProviderServicesUseCase(providerRepositoryImpl!);
   }
 }

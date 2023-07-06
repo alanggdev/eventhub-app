@@ -13,7 +13,6 @@ class ProviderModel extends Provider {
     required List<dynamic> hoursAvailability,
     required List<dynamic> categories,
     required List<dynamic> urlImages,
-    required List<dynamic> servicesId,
   }) : super(
           providerId: providerId,
           userid: userid,
@@ -26,7 +25,6 @@ class ProviderModel extends Provider {
           hoursAvailability: hoursAvailability,
           categories: categories,
           urlImages: urlImages,
-          servicesId: servicesId,
         );
 
   factory ProviderModel.fromJson(Map<String, dynamic> json) {
@@ -41,8 +39,7 @@ class ProviderModel extends Provider {
       daysAvailability: json['daysAvailability'],
       hoursAvailability: json['hoursAvailability'],
       categories: json['categories'],
-      urlImages: json['urlImages'],
-      servicesId: json['servicesId'],
+      urlImages: json['urlImages']
     );
   }
 }

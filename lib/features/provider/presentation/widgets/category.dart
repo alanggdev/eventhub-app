@@ -66,11 +66,14 @@ Padding categoryWidget(
     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
     child: GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => CategoryProvider(category, description)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CategoryProvider(category, description)));
       },
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.35,
+        width: double.infinity,
+        height: 110,
         decoration: BoxDecoration(
           color: ColorStyles.white,
           borderRadius: BorderRadius.circular(8),
@@ -84,36 +87,48 @@ Padding categoryWidget(
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Image.asset(
-                image,
-                width: MediaQuery.of(context).size.width * 0.25,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: Text(
-                  category,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: ColorStyles.textPrimary2,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
+          child: IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(
+                  image,
+                  width: 85,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          category,
+                          style: const TextStyle(
+                            color: ColorStyles.textPrimary2,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Text(
+                            description,
+                            style: const TextStyle(
+                              color: ColorStyles.textPrimary1,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                description,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: ColorStyles.textPrimary1,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Inter',
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

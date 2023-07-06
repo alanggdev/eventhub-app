@@ -19,6 +19,15 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
+
+  bool hidePass = true;
+
+  changePassVisibility(bool state) {
+    setState(() {
+      hidePass = state;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +89,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: Column(
                           children: [
                             textField(context, Icons.email, 'Correo electrónico', emailController, TextInputType.text),
-                            textFieldPass(context, Icons.lock, 'Contraseña', passController),
+                            textFieldPass(context, Icons.lock, 'Contraseña', passController, hidePass, changePassVisibility),
                           ],
                         ),
                       ),

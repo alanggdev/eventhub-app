@@ -24,6 +24,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final passController = TextEditingController();
   final passConfirmController = TextEditingController();
   UserTypes? userType = UserTypes.normal;
+
+  bool hidePass = true;
+
+  changePassVisibility(bool state) {
+    setState(() {
+      hidePass = state;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,8 +94,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             textFieldMaxLength(context, Icons.person, 'Nombre de usuario', usernameController, 15),
                             textFieldMaxLength(context, Icons.person, 'Nombre completo', fullnameController, 35),
                             textField(context, Icons.email, 'Correo electrónico', emailController, TextInputType.text),
-                            textFieldPass(context, Icons.lock, 'Contraseña', passController),
-                            textFieldPass(context, Icons.lock, 'Confirmar Contraseña', passConfirmController),
+                            textFieldPass(context, Icons.lock, 'Contraseña', passController, hidePass, changePassVisibility),
+                            textFieldPass(context, Icons.lock, 'Confirmar Contraseña', passConfirmController, hidePass, changePassVisibility),
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
