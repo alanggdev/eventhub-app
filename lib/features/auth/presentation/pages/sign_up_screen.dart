@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
+import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -27,10 +28,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool hidePass = true;
 
+  @override
+  void initState() {
+    super.initState();
+    unloadLogInState();
+  }
+
   changePassVisibility(bool state) {
     setState(() {
       hidePass = state;
     });
+  }
+
+  unloadLogInState() {
+    final authbloc = context.read<AuthBloc>();
+    User userUnload = User(access: 'unload', refresh: 'unload', userinfo: 'unload');
+    authbloc.add(UnloadState(unload: userUnload));
   }
 
   @override

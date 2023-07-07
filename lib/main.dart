@@ -38,7 +38,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<ProviderBloc>(
           create: (BuildContext context) => ProviderBloc(
               getCategoryProvidersUseCase: usecaseConfig.getCategoryProvidersUseCase!,
-              getProviderServicesUseCase: usecaseConfig.getProviderServicesUseCase!),
+              getProviderServicesUseCase: usecaseConfig.getProviderServicesUseCase!,
+              getProviderByIdUseCase: usecaseConfig.getProviderByIdUseCase!,
+              getProviderByUseridUseCase: usecaseConfig.getProviderByUseridUseCase!),
         )
       ],
       child: MaterialApp(

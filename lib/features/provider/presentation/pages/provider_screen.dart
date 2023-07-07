@@ -9,12 +9,12 @@ import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/keys.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/provider.dart';
-import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
 
 class ProviderScreen extends StatefulWidget {
-  final Provider provider;
-  const ProviderScreen(this.provider, {super.key});
+  final int? providerId;
+  final int? providerUserId;
+  const ProviderScreen(this.providerId, this.providerUserId, {super.key});
 
   @override
   State<ProviderScreen> createState() => _ProviderScreenState();
@@ -31,7 +31,11 @@ class _ProviderScreenState extends State<ProviderScreen> {
   }
 
   loadProviderData() {
-    context.read<ProviderBloc>().add(GetProviderServices(providerid: widget.provider.providerId!));
+    if (widget.providerId != null) {
+      context.read<ProviderBloc>().add(GetProviderDetailById(providerid: widget.providerId!));
+    } else if (widget.providerUserId != null) {
+      context.read<ProviderBloc>().add(GetProviderDetailByUserId(providerUserId: widget.providerUserId!));
+    }
   }
 
   getDay() {
@@ -51,206 +55,213 @@ class _ProviderScreenState extends State<ProviderScreen> {
       backgroundColor: ColorStyles.primaryBlue,
       body: BlocBuilder<ProviderBloc, ProviderState>(
         builder: (context, state) {
-          return SafeArea(
-            child: Stack(
-              children: [ 
-                Container(
-                  color: ColorStyles.baseLightBlue,
-                  child: NestedScrollView(
-                    floatHeaderSlivers: true,
-                    headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                      SliverAppBar(
-                        automaticallyImplyLeading: false,
-                        toolbarHeight: 55,
-                        backgroundColor: ColorStyles.primaryBlue,
-                        title: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: const [
-                                Icon(
-                                  Icons.arrow_back_ios,
-                                  color: ColorStyles.white,
-                                  size: 16,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Text(
-                                    'Regresar',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontFamily: 'Inter',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    body: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              Container(
-                                color: ColorStyles.primaryBlue,
-                                child: AspectRatio(
-                                  aspectRatio: 2 / 1,
-                                  child: ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
-                                    child: FadeInImage(
-                                      fit: BoxFit.fitWidth,
-                                      alignment: FractionalOffset.center,
-                                      image: NetworkImage(
-                                          '$serverURL${widget.provider.urlImages[0]}'),
-                                      placeholder: const AssetImage(
-                                          Images.providerDetailPlaceholder),
-                                      imageErrorBuilder: (context, error, stackTrace) {
-                                        return const Center(
-                                            child: Text('provider image'));
-                                      },
-                                    ),
-                                  ),
-                                ),
+          if (state is LoadingProviderDetail) {
+            return Container(
+              color: ColorStyles.baseLightBlue,
+              child: loadingCategoryWidget(context),
+            );
+          } else if (state is ProviderDetailLoaded) {
+            return SafeArea(
+              child: Container(
+                color: ColorStyles.baseLightBlue,
+                child: NestedScrollView(
+                  floatHeaderSlivers: true,
+                  headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                    SliverAppBar(
+                      automaticallyImplyLeading: false,
+                      toolbarHeight: 55,
+                      backgroundColor: ColorStyles.primaryBlue,
+                      title: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.arrow_back_ios,
+                                color: ColorStyles.white,
+                                size: 16,
                               ),
-                              Container(
-                                width: double.infinity,
-                                height: 15,
-                                decoration: BoxDecoration(
-                                  color: ColorStyles.baseLightBlue,
-                                  border: Border.all(color: ColorStyles.baseLightBlue),
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  'Regresar',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5),
-                                  child: Text(
-                                    widget.provider.companyName,
-                                    textAlign: TextAlign.start,
-                                    style: const TextStyle(
-                                      color: ColorStyles.primaryGrayBlue,
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Inter',
-                                    ),
+                        ),
+                      ),
+                    ),
+                  ],
+                  body: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Container(
+                              color: ColorStyles.primaryBlue,
+                              child: AspectRatio(
+                                aspectRatio: 2 / 1,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                  child: FadeInImage(
+                                    fit: BoxFit.fitWidth,
+                                    alignment: FractionalOffset.center,
+                                    image: NetworkImage('$serverURL${state.providerData.urlImages[0]}'),
+                                    placeholder: const AssetImage(Images.providerDetailPlaceholder),
+                                    imageErrorBuilder: (context, error, stackTrace) {
+                                      return const Center(
+                                        child: Text('provider image'),
+                                      );
+                                    },
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5),
-                                  child: Text(
-                                    widget.provider.companyDescription,
-                                    textAlign: TextAlign.start,
-                                    style: const TextStyle(
-                                      color: ColorStyles.primaryGrayBlue,
-                                      fontSize: 16,
-                                      fontFamily: 'Inter',
-                                    ),
+                              ),
+                            ),
+                            Container(
+                              width: double.infinity,
+                              height: 15,
+                              decoration: BoxDecoration(
+                                color: ColorStyles.baseLightBlue,
+                                border: Border.all(color: ColorStyles.baseLightBlue),
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 25, vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                child: Text(
+                                  state.providerData.companyName,
+                                  textAlign: TextAlign.start,
+                                  style: const TextStyle(
+                                    color: ColorStyles.primaryGrayBlue,
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Wrap(
-                                    spacing: 8,
-                                    children: widget.provider.categories.map((category) {
-                                      return providerCategoryLabel(category);
-                                    }).toList(),
-                                    //
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                child: Text(
+                                  state.providerData.companyDescription,
+                                  textAlign: TextAlign.start,
+                                  style: const TextStyle(
+                                    color: ColorStyles.primaryGrayBlue,
+                                    fontSize: 16,
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  child: Column(
-                                    children: [
-                                      providerInfo(Icons.phone, widget.provider.companyPhone),
-                                      providerInfo(Icons.mail, widget.provider.companyEmail),
-                                      providerDaysInfo(Icons.schedule, widget.provider.daysAvailability, day!, widget.provider.hoursAvailability),
-                                      providerInfo(Icons.location_on, widget.provider.companyAddress),
-                                    ],
-                                  ),
+                              ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Wrap(
+                                  spacing: 8,
+                                  children: state.providerData.categories.map((category) {
+                                    return providerCategoryLabel(category);
+                                  }).toList(),
+                                  //
                                 ),
-                                CarouselSlider(
-                                  options: CarouselOptions(enableInfiniteScroll: false, viewportFraction: 1),
-                                  items: [
-                                    for (int index = 0;
-                                        index < widget.provider.urlImages.length;
-                                        index++)
-                                      Builder(
-                                        builder: (BuildContext context) {
-                                          return providerImage(
-                                              widget.provider.urlImages[index]);
-                                        },
-                                      ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Column(
+                                  children: [
+                                    providerInfo(Icons.phone, state.providerData.companyPhone),
+                                    providerInfo(Icons.mail, state.providerData.companyEmail),
+                                    providerDaysInfo(Icons.schedule, state.providerData.daysAvailability, day!, state.providerData.hoursAvailability),
+                                    providerInfo(Icons.location_on, state.providerData.companyAddress),
                                   ],
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Text(
-                                    'Servicios',
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: ColorStyles.primaryGrayBlue,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'Inter',
+                              ),
+                              CarouselSlider(
+                                options: CarouselOptions(enableInfiniteScroll: false, viewportFraction: 1),
+                                items: [
+                                  for (int index = 0;
+                                      index < state.providerData.urlImages.length;
+                                      index++)
+                                    Builder(
+                                      builder: (BuildContext context) {
+                                        return providerImage(
+                                            state.providerData.urlImages[index]);
+                                      },
                                     ),
+                                ],
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Text(
+                                  'Servicios',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: ColorStyles.primaryGrayBlue,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
-                                if (state is ProviderServicesLoaded)
-                                  CarouselSlider(
-                                    options: CarouselOptions(enableInfiniteScroll: false, viewportFraction: 1),
-                                    items: [
-                                      for (int index = 0;
-                                          index < state.providerServices.length;
-                                          index++)
-                                        Builder(
-                                          builder: (BuildContext context) {
-                                            return serviceWidget(context, state.providerServices[index]);
-                                          },
-                                        ),
-                                    ],
-                                  ),
+                              ),
+                              CarouselSlider(
+                                options: CarouselOptions(enableInfiniteScroll: false, viewportFraction: 1),
+                                items: [
+                                  for (int index = 0;
+                                      index < state.providerServices.length;
+                                      index++)
+                                    Builder(
+                                      builder: (BuildContext context) {
+                                        return serviceWidget(context, state.providerServices[index]);
+                                      },
+                                    ),
+                                ],
+                              ),
+                              if (widget.providerUserId == null)
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     providerOptionButton(context, 'Invitar a evento'),
                                     providerOptionButton(context, 'Contactar'),
                                   ],
-                                ),
-                              ],
-                            ),
+                                )
+                              else if (widget.providerUserId != null && widget.providerUserId == state.providerData.userid)
+                                providerEditButton(context, 'Editar información'),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                if (state is LoadingProviderServices)
-                  loadingCategoryWidget(context)
-                else if (state is Error)
-                  errorProviderAlert(context, state.error)
-              ],
-            ),
-          );
+              ),
+            );
+          } else if (state is Error) {
+            return Container(
+              color: ColorStyles.baseLightBlue,
+              child: errorProviderWidget(context, state.error),
+            );
+          } else {
+            return Container();
+          }
         },
       ),
     );

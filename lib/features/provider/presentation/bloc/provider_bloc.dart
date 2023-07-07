@@ -1,3 +1,5 @@
+import 'package:eventhub_app/features/provider/domain/usecases/get_provider_by_id.dart';
+import 'package:eventhub_app/features/provider/domain/usecases/get_provider_by_userid.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
@@ -9,19 +11,33 @@ part 'provider_event.dart';
 part 'provider_state.dart';
 
 class ProviderBloc extends Bloc<ProviderEvent, ProviderState> {
+  final GetProviderByUseridUseCase getProviderByUseridUseCase;
+  final GetProviderByIdUseCase getProviderByIdUseCase;
   final GetProviderServicesUseCase getProviderServicesUseCase;
   final GetCategoryProvidersUseCase getCategoryProvidersUseCase;
 
   ProviderBloc(
       {required this.getCategoryProvidersUseCase,
-      required this.getProviderServicesUseCase})
+      required this.getProviderServicesUseCase,
+      required this.getProviderByIdUseCase,
+      required this.getProviderByUseridUseCase})
       : super(InitialState()) {
     on<ProviderEvent>((event, emit) async {
-      if (event is GetProviderServices) {
+      if (event is GetProviderDetailByUserId) {
         try {
-          emit(LoadingProviderServices());
+          emit(LoadingProviderDetail());
+          Provider providerData = await getProviderByUseridUseCase.execute(event.providerUserId);
+          List<Service> providerServices = await getProviderServicesUseCase.execute(providerData.providerId!);
+          emit(ProviderDetailLoaded(providerData: providerData, providerServices: providerServices));
+        } catch (error) {
+          emit(Error(error: error.toString()));
+        }
+      } else if (event is GetProviderDetailById) {
+        try {
+          emit(LoadingProviderDetail());
+          Provider providerData = await getProviderByIdUseCase.execute(event.providerid);
           List<Service> providerServices = await getProviderServicesUseCase.execute(event.providerid);
-          emit(ProviderServicesLoaded(providerServices: providerServices));
+          emit(ProviderDetailLoaded(providerData: providerData, providerServices: providerServices));
         } catch (error) {
           emit(Error(error: error.toString()));
         }

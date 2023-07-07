@@ -17,4 +17,14 @@ class ProviderRepositoryImpl implements ProviderRepository {
   Future<List<Service>> getProviderServices(int providerid) async {
     return await providerDataSource.getProviderServices(providerid);
   }
+
+  @override
+  Future<Provider> getProviderById(int providerid) async {
+    return await providerDataSource.getProviderById(providerid);
+  }
+
+  @override
+  Future<Provider> getProviderByUserid(int userid) async {
+    return await providerDataSource.getProviderByUserid(userid);
+  }
 }

@@ -100,7 +100,7 @@ class _CategoryProviderState extends State<CategoryProvider> {
                                       widget.categoryName,
                                       style: const TextStyle(
                                         color: ColorStyles.primaryGrayBlue,
-                                        fontSize: 26,
+                                        fontSize: 25,
                                         fontWeight: FontWeight.w600,
                                         fontFamily: 'Inter',
                                       ),
@@ -109,7 +109,7 @@ class _CategoryProviderState extends State<CategoryProvider> {
                                       widget.categoryDescription,
                                       style: const TextStyle(
                                         color: ColorStyles.textSecondary2,
-                                        fontSize: 13,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                         fontFamily: 'Inter',
                                       ),
@@ -119,6 +119,8 @@ class _CategoryProviderState extends State<CategoryProvider> {
                               ),
                             ),
                           ),
+                          if (state is Error)
+                            errorProviderWidget(context, state.error.substring(11)),
                           if (state is! CategoryProvidersLoaded && categoryProvider.isNotEmpty)
                             Column(
                               children: categoryProvider.map((provider) {
@@ -150,8 +152,8 @@ class _CategoryProviderState extends State<CategoryProvider> {
                 ),
                 if (state is LoadingCategoryProviders)
                   loadingCategoryWidget(context)
-                else if (state is Error)
-                  errorProviderAlert(context, state.error)
+                // else if (state is Error)
+                //   errorProviderAlert(context, state.error)
               ],
             ),
           );

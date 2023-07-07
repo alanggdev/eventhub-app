@@ -20,9 +20,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<EventBloc>()
-        .add(GetUserEvents(userid: widget.user.userinfo['pk']));
+    context.read<EventBloc>().add(GetUserEvents(userid: widget.user.userinfo['pk']));
   }
 
   @override
@@ -64,6 +62,8 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                   ),
                   Column(
                     children: [
+                      if (state is Error)
+                        errorEventWidget(context, state.error.substring(11)),
                       if (state is UserEventGotten)
                         if (state.userEvents.isNotEmpty)
                           Column(

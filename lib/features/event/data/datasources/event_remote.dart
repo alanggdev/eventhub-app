@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:eventhub_app/features/event/data/models/event_model.dart';
 import 'package:eventhub_app/features/event/domain/entities/event.dart';
@@ -42,24 +43,29 @@ class EventDataSourceImpl extends EventDataSource {
 
   @override
   Future<List<Event>> getUserEvents(int userid) async {
-    Response response;
-    response = await dio.get('$serverURL/events/list/$userid');
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      Response response;
+      response = await dio.get('$serverURL/events/list/$userid');
 
-    if (response.statusCode == 200) {
-      List<Event> userEvents = [];
-      List<dynamic> data = response.data;
+      if (response.statusCode == 200) {
+        List<Event> userEvents = [];
+        List<dynamic> data = response.data;
 
-      if (response.data.isNotEmpty) {
-        for (var eventData in data) {
-          Event eventModel = EventModel.fromJson(eventData);
-          userEvents.add(eventModel);
+        if (response.data.isNotEmpty) {
+          for (var eventData in data) {
+            Event eventModel = EventModel.fromJson(eventData);
+            userEvents.add(eventModel);
+          }
+          return userEvents;
+        } else {
+          return userEvents;
         }
-        return userEvents;
       } else {
-        return userEvents;
+        throw Exception('Server error');
       }
     } else {
-      throw Exception('Server error');
+      throw Exception('Sin conexión a internet.');
     }
   }
 

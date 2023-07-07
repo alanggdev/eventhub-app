@@ -4,11 +4,12 @@ abstract class ProviderState {}
 
 class InitialState extends ProviderState {}
 
-class LoadingProviderServices extends ProviderState {}
-class ProviderServicesLoaded extends ProviderState {
+class LoadingProviderDetail extends ProviderState {}
+class ProviderDetailLoaded extends ProviderState {
+  final Provider providerData;
   final List<Service> providerServices;
 
-  ProviderServicesLoaded({required this.providerServices});
+  ProviderDetailLoaded({required this.providerData, required this.providerServices});
 }
 
 class LoadingCategoryProviders extends ProviderState {}

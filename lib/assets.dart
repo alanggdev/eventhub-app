@@ -27,6 +27,7 @@ class ColorStyles {
 
 class Images {
   static const String logoURL = 'assets/images/logo.png';
+  static const String error = 'assets/images/error.png';
 
   static const String welcomeAuth = 'assets/images/auth/welcome.png';
   static const String emptyImage = 'assets/images/auth/empty_image.png';

@@ -95,35 +95,38 @@ Padding categoryWidget(
                   image,
                   width: 85,
                 ),
-                Expanded(
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.6,
                   child: Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          category,
-                          style: const TextStyle(
-                            color: ColorStyles.textPrimary2,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            description,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            category,
                             style: const TextStyle(
-                              color: ColorStyles.textPrimary1,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
+                              color: ColorStyles.textPrimary2,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                               fontFamily: 'Inter',
                             ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              description,
+                              style: const TextStyle(
+                                color: ColorStyles.textPrimary1,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

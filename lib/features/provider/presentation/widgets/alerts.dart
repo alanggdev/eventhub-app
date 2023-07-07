@@ -91,3 +91,30 @@ Padding emptyProviderCategoryWidget(BuildContext context) {
     ),
   );
 }
+
+Padding errorProviderWidget(BuildContext context, String error) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 30),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          Images.error,
+          width: MediaQuery.of(context).size.width * 0.8,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(15),
+          child: Text(
+            error,
+            style: const TextStyle(
+              color: ColorStyles.primaryGrayBlue,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Inter',
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}

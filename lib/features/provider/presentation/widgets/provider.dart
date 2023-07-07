@@ -12,7 +12,7 @@ Padding providerWidget(BuildContext context, Provider provider) {
     child: GestureDetector(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ProviderScreen(provider)));
+            MaterialPageRoute(builder: (context) => ProviderScreen(provider.providerId!, null)));
       },
       child: Container(
         width: double.infinity,
@@ -238,6 +238,33 @@ Padding providerOptionButton(BuildContext context, String label) {
             ),
           )
         ],
+      ),
+    ),
+  );
+}
+
+Padding providerEditButton(BuildContext context, String label) {
+  return Padding(
+    padding: const EdgeInsets.all(10),
+    child: TextButton(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: ColorStyles.primaryBlue,
+        minimumSize: const Size(double.infinity, 40),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        shadowColor: Colors.black,
+        elevation: 6,
+      ),
+      onPressed: () {},
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+          fontFamily: 'Inter',
+        ),
       ),
     ),
   );

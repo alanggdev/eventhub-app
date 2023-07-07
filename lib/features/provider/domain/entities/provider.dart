@@ -10,6 +10,7 @@ class Provider {
   final List<dynamic> hoursAvailability;
   final List<dynamic> categories;
   final List<dynamic> urlImages;
+  final List<dynamic>? eventsId;
 
   Provider({
     this.providerId,
@@ -23,5 +24,6 @@ class Provider {
     required this.hoursAvailability,
     required this.categories,
     required this.urlImages,
+    this.eventsId,
   });
 }
