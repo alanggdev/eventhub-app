@@ -4,6 +4,13 @@ abstract class ProviderState {}
 
 class InitialState extends ProviderState {}
 
+class UpdatingProviderServices extends ProviderState {}
+class ProviderServicesUpdated extends ProviderState {
+  final String status;
+
+  ProviderServicesUpdated({required this.status});
+}
+
 class UpdatingProviderData extends ProviderState {}
 class ProviderDataUpdated extends ProviderState {
   final String status;

@@ -10,7 +10,7 @@ import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 
 class EditInformationScreen extends StatefulWidget {
   final Provider providerData;
-  const EditInformationScreen(this.providerData,{super.key});
+  const EditInformationScreen(this.providerData, {super.key});
 
   @override
   State<EditInformationScreen> createState() => _EditInformationScreenState();

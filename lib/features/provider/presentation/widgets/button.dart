@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
+import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 import 'package:eventhub_app/features/provider/presentation/pages/edit/edit_categories_screen.dart';
 import 'package:eventhub_app/features/provider/presentation/pages/edit/edit_information_screen.dart';
+import 'package:eventhub_app/features/provider/presentation/pages/service_list_screen.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart';
 
 TextButton providerNextPage(
@@ -157,7 +159,7 @@ Padding providerOptionButton(BuildContext context, String label) {
   );
 }
 
-Padding providerEditButton(BuildContext context, String label, Provider providerData) {
+Padding providerEditButton(BuildContext context, String label, Provider providerData, List<Service>? providerServices, int? userid) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     child: TextButton(
@@ -172,11 +174,19 @@ Padding providerEditButton(BuildContext context, String label, Provider provider
         elevation: 6,
       ),
       onPressed: () {
-        Navigator.push(
+        if (providerServices == null) {
+          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => EditInformationScreen(providerData),
             ));
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ServiceListScreen(providerData, providerServices, userid!),
+            ));
+        }
       },
       child: Text(
         label,

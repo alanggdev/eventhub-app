@@ -16,7 +16,7 @@ abstract class ProviderDataSource {
   Future<Provider> getProviderById(int providerid);
   Future<Provider> getProviderByUserid(int userid);
   Future<String> updateProviderData(Provider providerData);
-  Future<String> updateProviderServices(List<Service> servicesData, int providerid);
+  Future<String> createService(Service service, int providerid);
 }
 
 class ProviderDataSourceImpl extends ProviderDataSource {
@@ -138,77 +138,37 @@ class ProviderDataSourceImpl extends ProviderDataSource {
   }
 
   @override
-  Future<String> updateProviderServices(List<Service> servicesData, int providerid) async {
+  Future<String> createService(Service service, int providerid) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      List<MultipartFile> imageMultipartFiles = [];
 
-      List<Service> servicesToCreate = [];
-      List<Service> servicesToUpdate = [];
-
-      for (Service serviceValidation in servicesData) {
-        if (serviceValidation.serviceId == null) { // To create
-          servicesToCreate.add(serviceValidation);
-        } else { // To update
-          servicesToUpdate.add(serviceValidation);
-        }
+      for (File file in service.images!) {
+        MultipartFile multipartFile = await MultipartFile.fromFile(file.path);
+        imageMultipartFiles.add(multipartFile);
       }
 
-      if (servicesToCreate.isNotEmpty) {
-        /// Create services
-        List<MultipartFile> imageMultipartFiles = [];
-        List<dynamic> bodyToCreate = [];
-        for (Service service in servicesToCreate) {
-          for (File file in service.images!) {
-            MultipartFile multipartFile = await MultipartFile.fromFile(file.path);
-            imageMultipartFiles.add(multipartFile);
-          }
-          dynamic body = {
-            "providerId": providerid,
-            "name": service.name,
-            "description": service.description,
-            "tags": service.tags,
-            "amountImages": service.images?.length
-          };
-          bodyToCreate.add(body);
-        }
+      var body = [{
+        "providerId": providerid,
+        "name": service.name,
+        "description": service.description,
+        "tags": service.tags,
+        "amountImages": service.images?.length
+      }];
 
-        final formData = FormData.fromMap({
-          'services': bodyToCreate,
-          'images' : imageMultipartFiles
-        });
+      final formData = FormData.fromMap({
+        'services': body,
+        'images' : imageMultipartFiles
+      });
 
-        Response response = await dio.post('$serverURL/services/', data: formData);
+      final response = await dio.post('$serverURL/services/', data: formData);
 
-        if (response.statusCode != 201) {
-          throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
-        }
-        ///
+      if (response.statusCode == 201) {
+        return 'Services created';
+      } else {
+        throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
       }
 
-      // if (servicesToUpdate.isNotEmpty) {
-      //   /// Update services
-      //   for (Service service in servicesToUpdate) {
-      //     // For each service do an update
-      //     // List<MultipartFile> imageMultipartFiles = [];
-
-      //     // for (File file in service.images!) {
-      //     //   MultipartFile multipartFile = await MultipartFile.fromFile(file.path);
-      //     //   imageMultipartFiles.add(multipartFile);
-      //     // }
-
-      //     FormData body = ServiceModel.fromEntityToJson(service);
-      //     print(body);
-
-      //     Response response = await dio.patch('$serverURL/services/${service.serviceId}', data: body);
-          
-      //     if (response.statusCode != 200) {
-      //       throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
-      //     }
-      //   }
-      //   ///
-      // }
-
-      return 'Updated';
     } else {
       throw Exception('Sin conexión a internet');
     }

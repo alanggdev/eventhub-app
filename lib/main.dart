@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
               getProviderByIdUseCase: usecaseConfig.getProviderByIdUseCase!,
               getProviderByUseridUseCase: usecaseConfig.getProviderByUseridUseCase!,
               updateProviderDataUseCase: usecaseConfig.updateProviderDataUseCase!,
-              updateProviderServicesUseCase: usecaseConfig.updateProviderServicesUseCase!),
+              createServiceUseCase: usecaseConfig.createServiceUseCase!),
         )
       ],
       child: MaterialApp(

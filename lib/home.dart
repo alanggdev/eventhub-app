@@ -342,8 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Padding menuOption(
-      BuildContext context, String label, String profilePlaceholder, dynamic isProvider) {
+  Padding menuOption(BuildContext context, String label, String profilePlaceholder, dynamic isProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: GestureDetector(

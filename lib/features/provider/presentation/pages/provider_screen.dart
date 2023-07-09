@@ -1,3 +1,4 @@
+import 'package:eventhub_app/features/provider/presentation/pages/service_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
@@ -15,8 +16,8 @@ import 'package:eventhub_app/features/provider/presentation/widgets/button.dart'
 
 class ProviderScreen extends StatefulWidget {
   final int? providerId;
-  final int? providerUserId;
-  const ProviderScreen(this.providerId, this.providerUserId, {super.key});
+  final int? userId;
+  const ProviderScreen(this.providerId, this.userId, {super.key});
 
   @override
   State<ProviderScreen> createState() => _ProviderScreenState();
@@ -37,8 +38,8 @@ class _ProviderScreenState extends State<ProviderScreen> {
   loadProviderData() {
     if (widget.providerId != null) {
       context.read<ProviderBloc>().add(GetProviderDetailById(providerid: widget.providerId!));
-    } else if (widget.providerUserId != null) {
-      context.read<ProviderBloc>().add(GetProviderDetailByUserId(providerUserId: widget.providerUserId!));
+    } else if (widget.userId != null) {
+      context.read<ProviderBloc>().add(GetProviderDetailByUserId(providerUserId: widget.userId!));
     }
   }
 
@@ -222,13 +223,10 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                   }
                                 ),
                                 items: [
-                                  for (int index = 0;
-                                      index < state.providerData.urlImages.length;
-                                      index++)
+                                  for (int index = 0; index < state.providerData.urlImages.length; index++)
                                     Builder(
                                       builder: (BuildContext context) {
-                                        return providerImage(
-                                            state.providerData.urlImages[index]);
+                                        return providerImage(state.providerData.urlImages[index]);
                                       },
                                     ),
                                 ],
@@ -256,17 +254,20 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                   }
                                 ),
                                 items: [
-                                  for (int index = 0;
-                                      index < state.providerServices.length;
-                                      index++)
+                                  for (int index = 0; index < state.providerServices.length; index++)
                                     Builder(
                                       builder: (BuildContext context) {
-                                        return providerServiceWidget(context, state.providerServices[index]);
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceScreen(state.providerServices[index])));
+                                          },
+                                          child: providerServiceWidget(context, state.providerServices[index])
+                                        );
                                       },
                                     ),
                                 ],
                               ),
-                              if (widget.providerUserId == null)
+                              if (widget.userId == null)
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -274,11 +275,11 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                     providerOptionButton(context, 'Contactar'),
                                   ],
                                 )
-                              else if (widget.providerUserId != null && widget.providerUserId == state.providerData.userid)
+                              else if (widget.userId != null && widget.userId == state.providerData.userid)
                                 Column(
                                   children: [
-                                    providerEditButton(context, 'Editar información', state.providerData),
-                                    // providerEditButton(context, 'Editar Servicios', state.providerData, state.providerServices),
+                                    providerEditButton(context, 'Editar información', state.providerData, null, null),
+                                    providerEditButton(context, 'Editar Servicios', state.providerData, state.providerServices, widget.userId!),
                                   ],
                                 ),
                             ],
@@ -293,7 +294,44 @@ class _ProviderScreenState extends State<ProviderScreen> {
           } else if (state is Error) {
             return Container(
               color: ColorStyles.baseLightBlue,
-              child: errorProviderWidget(context, state.error),
+              child: NestedScrollView(
+                floatHeaderSlivers: true,
+                headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                  SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    toolbarHeight: 55,
+                    backgroundColor: ColorStyles.primaryBlue,
+                    title: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.arrow_back_ios,
+                              color: ColorStyles.white,
+                              size: 15,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                'Regresar',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                body: errorProviderWidget(context, state.error),
+              ),
             );
           } else {
             return Container();

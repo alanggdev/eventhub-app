@@ -12,12 +12,12 @@ import 'package:eventhub_app/features/event/domain/usecases/get_user_events.dart
 
 import 'package:eventhub_app/features/provider/data/datasources/provider_remote.dart';
 import 'package:eventhub_app/features/provider/data/repositories/provider_repository_impl.dart';
+import 'package:eventhub_app/features/provider/domain/usecases/create_service.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/get_category_providers.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/get_provider_by_id.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/get_provider_by_userid.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/get_provider_services.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/update_provider_data.dart';
-import 'package:eventhub_app/features/provider/domain/usecases/update_provider_services.dart';
 
 class UseCaseConfig {
   AuthUserDataSourceImpl? authUserDataSourceImpl;
@@ -39,7 +39,7 @@ class UseCaseConfig {
   GetProviderByIdUseCase? getProviderByIdUseCase;
   GetProviderByUseridUseCase? getProviderByUseridUseCase;
   UpdateProviderDataUseCase? updateProviderDataUseCase;
-  UpdateProviderServicesUseCase? updateProviderServicesUseCase;
+  CreateServiceUseCase? createServiceUseCase;
 
   UseCaseConfig() {
     authUserDataSourceImpl = AuthUserDataSourceImpl();
@@ -61,6 +61,6 @@ class UseCaseConfig {
     getProviderByIdUseCase = GetProviderByIdUseCase(providerRepositoryImpl!);
     getProviderByUseridUseCase = GetProviderByUseridUseCase(providerRepositoryImpl!);
     updateProviderDataUseCase = UpdateProviderDataUseCase(providerRepositoryImpl!);
-    updateProviderServicesUseCase = UpdateProviderServicesUseCase(providerRepositoryImpl!);
+    createServiceUseCase = CreateServiceUseCase(providerRepositoryImpl!);
   }
 }
