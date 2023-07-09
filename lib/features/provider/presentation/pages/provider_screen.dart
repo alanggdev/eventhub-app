@@ -76,32 +76,23 @@ class _ProviderScreenState extends State<ProviderScreen> {
                       automaticallyImplyLeading: false,
                       toolbarHeight: 55,
                       backgroundColor: ColorStyles.primaryBlue,
-                      title: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            children: const [
-                              Icon(
-                                Icons.arrow_back_ios,
-                                color: ColorStyles.white,
-                                size: 16,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Text(
-                                  'Regresar',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontFamily: 'Inter',
-                                  ),
-                                ),
-                              ),
-                            ],
+                      title: TextButton.icon(
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          color: ColorStyles.white,
+                          size: 15,
+                        ),
+                        label: const Text(
+                          'Regresar',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontFamily: 'Inter',
+                            color: ColorStyles.white,
                           ),
                         ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
                     ),
                   ],

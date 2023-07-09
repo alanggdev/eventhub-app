@@ -76,35 +76,23 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
           automaticallyImplyLeading: false,
           elevation: 0,
           toolbarHeight: 60,
-          title: Padding(
-            padding: const EdgeInsets.all(15),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.35,
-              height: MediaQuery.of(context).size.height * 0.05,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Row(
-                  children: const [
-                    Icon(
-                      Icons.arrow_back_ios,
-                      color: ColorStyles.primaryGrayBlue,
-                      size: 15,
-                    ),
-                    Text(
-                      'Regresar',
-                      style: TextStyle(
-                        fontSize: 15,
-                        // fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
-                        color: ColorStyles.primaryGrayBlue,
-                      ),
-                    ),
-                  ],
-                ),
+          title: TextButton.icon(
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: ColorStyles.primaryGrayBlue,
+              size: 15,
+            ),
+            label: const Text(
+              'Regresar',
+              style: TextStyle(
+                fontSize: 15,
+                fontFamily: 'Inter',
+                color: ColorStyles.primaryGrayBlue,
               ),
             ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
         ),
         body: SafeArea(

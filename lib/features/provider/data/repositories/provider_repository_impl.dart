@@ -37,4 +37,9 @@ class ProviderRepositoryImpl implements ProviderRepository {
   Future<String> createService(Service service, int providerid) async {
     return await providerDataSource.createService(service, providerid);
   }
+
+  @override
+  Future<String> deleteService(int serviceid) async {
+    return await providerDataSource.deleteService(serviceid);
+  }
 }

@@ -17,6 +17,7 @@ abstract class ProviderDataSource {
   Future<Provider> getProviderByUserid(int userid);
   Future<String> updateProviderData(Provider providerData);
   Future<String> createService(Service service, int providerid);
+  Future<String> deleteService(int serviceid);
 }
 
 class ProviderDataSourceImpl extends ProviderDataSource {
@@ -161,7 +162,7 @@ class ProviderDataSourceImpl extends ProviderDataSource {
         'images' : imageMultipartFiles
       });
 
-      final response = await dio.post('$serverURL/services/', data: formData);
+      Response response = await dio.post('$serverURL/services/', data: formData);
 
       if (response.statusCode == 201) {
         return 'Services created';
@@ -169,6 +170,22 @@ class ProviderDataSourceImpl extends ProviderDataSource {
         throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
       }
 
+    } else {
+      throw Exception('Sin conexión a internet');
+    }
+  }
+
+  @override
+  Future<String> deleteService(int serviceid) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      Response response = await dio.delete('$serverURL/services/$serviceid');
+
+      if (response.statusCode == 200) {
+        return 'Service deleted';
+      } else {
+        throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+      }
     } else {
       throw Exception('Sin conexión a internet');
     }

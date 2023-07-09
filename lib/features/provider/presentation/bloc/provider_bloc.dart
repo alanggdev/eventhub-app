@@ -6,6 +6,7 @@ import 'package:eventhub_app/features/provider/domain/usecases/get_provider_by_i
 import 'package:eventhub_app/features/provider/domain/usecases/get_provider_by_userid.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/update_provider_data.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/create_service.dart';
+import 'package:eventhub_app/features/provider/domain/usecases/delete_service.dart';
 
 import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 import 'package:eventhub_app/features/provider/domain/entities/service.dart';
@@ -14,6 +15,7 @@ part 'provider_event.dart';
 part 'provider_state.dart';
 
 class ProviderBloc extends Bloc<ProviderEvent, ProviderState> {
+  final DeleteServiceUseCase deleteServiceUseCase;
   final CreateServiceUseCase createServiceUseCase;
   final UpdateProviderDataUseCase updateProviderDataUseCase;
   final GetProviderByUseridUseCase getProviderByUseridUseCase;
@@ -27,11 +29,20 @@ class ProviderBloc extends Bloc<ProviderEvent, ProviderState> {
       required this.getProviderByIdUseCase,
       required this.getProviderByUseridUseCase,
       required this.updateProviderDataUseCase,
-      required this.createServiceUseCase
+      required this.createServiceUseCase,
+      required this.deleteServiceUseCase
       })
       : super(InitialState()) {
     on<ProviderEvent>((event, emit) async {
-      if (event is UpdateProviderServices) {
+      if (event is DeleteProviderService) {
+        try {
+          emit(UpdatingProviderServices());
+          String status = await deleteServiceUseCase.execute(event.servideid);
+          emit(ProviderServicesUpdated(status: status));
+        } catch (error) {
+          emit(Error(error: error.toString()));
+        }
+      } else if (event is CreateProviderServices) {
         try {
           emit(UpdatingProviderServices());
           String status = await createServiceUseCase.execute(event.service, event.providerid);
