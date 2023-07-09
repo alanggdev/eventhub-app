@@ -44,7 +44,7 @@ class RegisterProviderModel extends RegisterProvider {
       'images': imageMultipartFiles,
       'address': data.companyAddress,
       'userId': userid,
-      'servicesId': []
+      // 'servicesId': []
     });
     return formData;
   }

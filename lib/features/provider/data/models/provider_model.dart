@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 
 class ProviderModel extends Provider {
@@ -14,6 +16,7 @@ class ProviderModel extends Provider {
     required List<dynamic> categories,
     required List<dynamic> urlImages,
     List<dynamic>? eventsId,
+    List<File>? filesToUpload,
   }) : super(
           providerId: providerId,
           userid: userid,
@@ -27,6 +30,7 @@ class ProviderModel extends Provider {
           categories: categories,
           urlImages: urlImages,
           eventsId: eventsId,
+          filesToUpload: filesToUpload,
         );
 
   factory ProviderModel.fromJson(Map<String, dynamic> json) {
@@ -44,5 +48,44 @@ class ProviderModel extends Provider {
       urlImages: json['urlImages'],
       eventsId: json['eventsId'],
     );
+  }
+
+  static FormData fromEntityToJsonWithImages(Provider data, List<MultipartFile> imageMultipartFiles) {
+    String daysAvailability = data.daysAvailability.join(',');
+    String hoursAvailability = '${data.hoursAvailability[0]},${data.hoursAvailability[1]}';
+    String categories = data.categories.join(',');
+    String urlImages = data.urlImages.join(',');
+    final formData = FormData.fromMap({
+      'name': data.companyName,
+      'description': data.companyDescription,
+      'phoneNumber': data.companyPhone,
+      'email': data.companyEmail,
+      'daysAvailability': daysAvailability,
+      'hoursAvailability': hoursAvailability,
+      'categories': categories,
+      'images': imageMultipartFiles,
+      'urlImages' : urlImages,
+      'address': data.companyAddress
+    });
+    return formData;
+  }
+
+  static FormData fromEntityToJsonWithoutImages(Provider data) {
+    String daysAvailability = data.daysAvailability.join(',');
+    String hoursAvailability = '${data.hoursAvailability[0]},${data.hoursAvailability[1]}';
+    String categories = data.categories.join(',');
+    String urlImages = data.urlImages.join(',');
+    final formData = FormData.fromMap({
+      'name': data.companyName,
+      'description': data.companyDescription,
+      'phoneNumber': data.companyPhone,
+      'email': data.companyEmail,
+      'daysAvailability': daysAvailability,
+      'hoursAvailability': hoursAvailability,
+      'categories': categories,
+      'urlImages' : urlImages,
+      'address': data.companyAddress
+    });
+    return formData;
   }
 }

@@ -8,6 +8,7 @@ import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dar
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/home.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -22,10 +23,22 @@ class _SignInScreenState extends State<SignInScreen> {
 
   bool hidePass = true;
 
+  @override
+  void initState() {
+    super.initState();
+    unloadLogInState();
+  }
+
   changePassVisibility(bool state) {
     setState(() {
       hidePass = state;
     });
+  }
+
+  unloadLogInState() {
+    final authbloc = context.read<AuthBloc>();
+    User userUnload = User(access: 'unload', refresh: 'unload', userinfo: 'unload');
+    authbloc.add(UnloadState(unload: userUnload));
   }
 
   @override

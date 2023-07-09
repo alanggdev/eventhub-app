@@ -7,9 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/keys.dart';
+
 import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/provider.dart';
 import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
+import 'package:eventhub_app/features/provider/presentation/widgets/button.dart';
 
 class ProviderScreen extends StatefulWidget {
   final int? providerId;
@@ -22,6 +24,8 @@ class ProviderScreen extends StatefulWidget {
 
 class _ProviderScreenState extends State<ProviderScreen> {
   String? day;
+  int currentIndexGalley = 0;
+  int currentIndexServices = 0;
 
   @override
   void initState() {
@@ -58,7 +62,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
           if (state is LoadingProviderDetail) {
             return Container(
               color: ColorStyles.baseLightBlue,
-              child: loadingCategoryWidget(context),
+              child: loadingProviderWidget(context),
             );
           } else if (state is ProviderDetailLoaded) {
             return SafeArea(
@@ -195,8 +199,28 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                   ],
                                 ),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Text(
+                                  'Galeria ${currentIndexGalley+1}/${state.providerData.urlImages.length}',
+                                  textAlign: TextAlign.start,
+                                  style: const TextStyle(
+                                    color: ColorStyles.primaryGrayBlue,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                              ),
                               CarouselSlider(
-                                options: CarouselOptions(enableInfiniteScroll: false, viewportFraction: 1),
+                                options: CarouselOptions(
+                                  enableInfiniteScroll: false, viewportFraction: 1,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      currentIndexGalley = index;
+                                    });
+                                  }
+                                ),
                                 items: [
                                   for (int index = 0;
                                       index < state.providerData.urlImages.length;
@@ -209,12 +233,12 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                     ),
                                 ],
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
                                 child: Text(
-                                  'Servicios',
+                                  'Servicios ${currentIndexServices+1}/${state.providerServices.length}',
                                   textAlign: TextAlign.start,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: ColorStyles.primaryGrayBlue,
                                     fontSize: 20,
                                     fontWeight: FontWeight.w500,
@@ -223,14 +247,21 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                 ),
                               ),
                               CarouselSlider(
-                                options: CarouselOptions(enableInfiniteScroll: false, viewportFraction: 1),
+                                options: CarouselOptions(
+                                  enableInfiniteScroll: false, viewportFraction: 1,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      currentIndexServices = index;
+                                    });
+                                  }
+                                ),
                                 items: [
                                   for (int index = 0;
                                       index < state.providerServices.length;
                                       index++)
                                     Builder(
                                       builder: (BuildContext context) {
-                                        return serviceWidget(context, state.providerServices[index]);
+                                        return providerServiceWidget(context, state.providerServices[index]);
                                       },
                                     ),
                                 ],
@@ -244,7 +275,12 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                   ],
                                 )
                               else if (widget.providerUserId != null && widget.providerUserId == state.providerData.userid)
-                                providerEditButton(context, 'Editar información'),
+                                Column(
+                                  children: [
+                                    providerEditButton(context, 'Editar información', state.providerData),
+                                    // providerEditButton(context, 'Editar Servicios', state.providerData, state.providerServices),
+                                  ],
+                                ),
                             ],
                           ),
                         ),

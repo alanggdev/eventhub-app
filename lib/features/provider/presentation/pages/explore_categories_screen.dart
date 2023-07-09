@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
+
 import 'package:eventhub_app/features/provider/presentation/widgets/category.dart';
 
 class ExploreCategoriesScreen extends StatefulWidget {

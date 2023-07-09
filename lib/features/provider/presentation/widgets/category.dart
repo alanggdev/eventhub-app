@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
-import 'package:eventhub_app/features/provider/presentation/pages/category_provider.dart';
+import 'package:eventhub_app/features/provider/presentation/pages/category_provider_screen.dart';
 
 List<Map<String, dynamic>> allCategories = [
   {
@@ -69,7 +69,7 @@ Padding categoryWidget(
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => CategoryProvider(category, description)));
+                builder: (context) => CategoryProviderScreen(category, description)));
       },
       child: Container(
         width: double.infinity,

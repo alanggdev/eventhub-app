@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/keys.dart';
 import 'package:eventhub_app/assets.dart';
-import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
+
 import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
+
+import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 
 Padding providerWidget(BuildContext context, Provider provider) {
@@ -11,8 +13,10 @@ Padding providerWidget(BuildContext context, Provider provider) {
     padding: const EdgeInsets.all(15),
     child: GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ProviderScreen(provider.providerId!, null)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProviderScreen(provider.providerId!, null)));
       },
       child: Container(
         width: double.infinity,
@@ -205,71 +209,6 @@ Padding providerDaysInfo(IconData icon, List<dynamic> daysAvailability,
   );
 }
 
-Padding providerOptionButton(BuildContext context, String label) {
-  return Padding(
-    padding: const EdgeInsets.all(10),
-    child: TextButton(
-      style: OutlinedButton.styleFrom(
-        foregroundColor: Colors.white,
-        backgroundColor: ColorStyles.primaryBlue,
-        minimumSize: const Size(150, 40),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        shadowColor: Colors.black,
-        elevation: 6,
-      ),
-      onPressed: () {},
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Inter',
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 6),
-            child: Icon(
-              label == 'Contactar' ? Icons.message : Icons.event,
-              size: 24,
-            ),
-          )
-        ],
-      ),
-    ),
-  );
-}
-
-Padding providerEditButton(BuildContext context, String label) {
-  return Padding(
-    padding: const EdgeInsets.all(10),
-    child: TextButton(
-      style: OutlinedButton.styleFrom(
-        foregroundColor: Colors.white,
-        backgroundColor: ColorStyles.primaryBlue,
-        minimumSize: const Size(double.infinity, 40),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        shadowColor: Colors.black,
-        elevation: 6,
-      ),
-      onPressed: () {},
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
-          fontFamily: 'Inter',
-        ),
-      ),
-    ),
-  );
-}
-
 Container providerImage(dynamic image) {
   return Container(
     decoration: BoxDecoration(
@@ -304,7 +243,7 @@ Container providerImage(dynamic image) {
   );
 }
 
-SizedBox serviceWidget(BuildContext context, Service service) {
+SizedBox providerServiceWidget(BuildContext context, Service service) {
   return SizedBox(
     height: 250,
     child: Column(
@@ -402,11 +341,17 @@ SizedBox serviceWidget(BuildContext context, Service service) {
                       width: 120,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
-                        child: Image.network(
-                          '$serverURL${service.imagePaths?[0]}',
-                          fit: BoxFit.cover,
-                          alignment: FractionalOffset.center,
-                        ),
+                        child: service.images == null ?
+                          Image.network(
+                            '$serverURL${service.imagePaths?[0]}',
+                            fit: BoxFit.cover,
+                            alignment: FractionalOffset.center,
+                          ) :
+                          Image.file(
+                            service.images![0],
+                            fit: BoxFit.cover,
+                            alignment: FractionalOffset.center,
+                          ),
                       ),
                     ),
                   ],

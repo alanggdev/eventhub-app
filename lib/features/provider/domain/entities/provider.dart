@@ -1,16 +1,19 @@
+import 'dart:io';
+
 class Provider {
-  final int? providerId;
-  final int userid;
-  final String companyName;
-  final String companyDescription;
-  final String companyPhone;
-  final String companyEmail;
-  final String companyAddress;
-  final List<dynamic> daysAvailability;
-  final List<dynamic> hoursAvailability;
-  final List<dynamic> categories;
-  final List<dynamic> urlImages;
-  final List<dynamic>? eventsId;
+  int? providerId;
+  int userid;
+  String companyName;
+  String companyDescription;
+  String companyPhone;
+  String companyEmail;
+  String companyAddress;
+  List<dynamic> daysAvailability;
+  List<dynamic> hoursAvailability;
+  List<dynamic> categories;
+  List<dynamic> urlImages;
+  List<dynamic>? eventsId;
+  List<File>? filesToUpload;
 
   Provider({
     this.providerId,
@@ -25,5 +28,6 @@ class Provider {
     required this.categories,
     required this.urlImages,
     this.eventsId,
+    this.filesToUpload,
   });
 }

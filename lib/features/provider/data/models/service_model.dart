@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:dio/dio.dart';
 import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 
 class ServiceModel extends Service {
@@ -30,5 +30,17 @@ class ServiceModel extends Service {
       imagePaths: json['urlImages'],
       providerId: json['providerId'],
     );
+  }
+
+  static FormData fromEntityToJson(Service data) {
+    String tags = data.tags.join('|');
+    final FormData formData;
+      formData = FormData.fromMap({
+      'name': data.name,
+      'description': data.description,
+      'tags': tags,
+      'urlImages': data.imagePaths,
+    });
+    return formData;
   }
 }

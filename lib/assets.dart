@@ -23,6 +23,8 @@ class ColorStyles {
   static const Color logoBlue = Color(0xff4F5496);
   static const Color logoLightBlue = Color.fromARGB(127, 248, 244, 251);
   static const Color logoLightGreenGray = Color.fromARGB(127, 234, 172, 178);
+
+  static const Color warningCancel = Color(0xff4D4A4A);
 }
 
 class Images {

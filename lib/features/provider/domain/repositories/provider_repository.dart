@@ -6,4 +6,6 @@ abstract class ProviderRepository {
   Future<List<Service>> getProviderServices(int providerid);
   Future<Provider> getProviderById(int providerid);
   Future<Provider> getProviderByUserid(int userid);
+  Future<String> updateProviderData(Provider providerData);
+  Future<String> updateProviderServices(List<Service> servicesData, int providerid);
 }

@@ -16,6 +16,8 @@ import 'package:eventhub_app/features/provider/domain/usecases/get_category_prov
 import 'package:eventhub_app/features/provider/domain/usecases/get_provider_by_id.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/get_provider_by_userid.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/get_provider_services.dart';
+import 'package:eventhub_app/features/provider/domain/usecases/update_provider_data.dart';
+import 'package:eventhub_app/features/provider/domain/usecases/update_provider_services.dart';
 
 class UseCaseConfig {
   AuthUserDataSourceImpl? authUserDataSourceImpl;
@@ -36,6 +38,8 @@ class UseCaseConfig {
   GetProviderServicesUseCase? getProviderServicesUseCase;
   GetProviderByIdUseCase? getProviderByIdUseCase;
   GetProviderByUseridUseCase? getProviderByUseridUseCase;
+  UpdateProviderDataUseCase? updateProviderDataUseCase;
+  UpdateProviderServicesUseCase? updateProviderServicesUseCase;
 
   UseCaseConfig() {
     authUserDataSourceImpl = AuthUserDataSourceImpl();
@@ -56,5 +60,7 @@ class UseCaseConfig {
     getProviderServicesUseCase = GetProviderServicesUseCase(providerRepositoryImpl!);
     getProviderByIdUseCase = GetProviderByIdUseCase(providerRepositoryImpl!);
     getProviderByUseridUseCase = GetProviderByUseridUseCase(providerRepositoryImpl!);
+    updateProviderDataUseCase = UpdateProviderDataUseCase(providerRepositoryImpl!);
+    updateProviderServicesUseCase = UpdateProviderServicesUseCase(providerRepositoryImpl!);
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
 
-Stack loadingCategoryWidget(BuildContext context) {
+Stack loadingProviderWidget(BuildContext context) {
   return Stack(
     children: [
       Container(
@@ -116,5 +116,15 @@ Padding errorProviderWidget(BuildContext context, String error) {
         ),
       ],
     ),
+  );
+}
+
+SnackBar snackBar(String alert) {
+  return SnackBar(
+    duration: const Duration(seconds: 3),
+    content: Text(
+      alert,
+    ),
+    backgroundColor: Colors.red,
   );
 }

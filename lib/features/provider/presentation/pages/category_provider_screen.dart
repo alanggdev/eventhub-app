@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/assets.dart';
+
 import 'package:eventhub_app/features/provider/presentation/widgets/provider.dart';
 import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart';
+
 import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 
-class CategoryProvider extends StatefulWidget {
+class CategoryProviderScreen extends StatefulWidget {
   final String categoryName, categoryDescription;
-  const CategoryProvider(this.categoryName, this.categoryDescription,
-      {super.key});
+  const CategoryProviderScreen(this.categoryName, this.categoryDescription, {super.key});
 
   @override
-  State<CategoryProvider> createState() => _CategoryProviderState();
+  State<CategoryProviderScreen> createState() => _CategoryProviderScreenState();
 }
 
-class _CategoryProviderState extends State<CategoryProvider> {
+class _CategoryProviderScreenState extends State<CategoryProviderScreen> {
   List<Provider> categoryProvider = [];
 
   @override
@@ -151,7 +152,7 @@ class _CategoryProviderState extends State<CategoryProvider> {
                   ),
                 ),
                 if (state is LoadingCategoryProviders)
-                  loadingCategoryWidget(context)
+                  loadingProviderWidget(context)
                 // else if (state is Error)
                 //   errorProviderAlert(context, state.error)
               ],
