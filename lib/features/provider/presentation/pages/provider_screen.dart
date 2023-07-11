@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/keys.dart';
@@ -13,6 +14,7 @@ import 'package:eventhub_app/features/provider/presentation/widgets/provider.dar
 import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/provider/presentation/pages/service_screen.dart';
+import 'package:eventhub_app/features/provider/presentation/pages/location_screen.dart';
 
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
@@ -192,6 +194,13 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                     providerDaysInfo(Icons.schedule, state.providerData.daysAvailability, day!, state.providerData.hoursAvailability),
                                     providerInfo(Icons.location_on, state.providerData.companyAddress),
                                   ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: SizedBox.fromSize(
+                                  size: const Size(double.infinity, 200),
+                                  child: LocationScreen(initialLocation: LatLng(state.providerData.location![0], state.providerData.location![1])),
                                 ),
                               ),
                               Padding(

@@ -15,6 +15,7 @@ class RegisterProvider {
   List<String>? categoriesList;
   List<File>? imagesList;
   List<Service>? services;
+  List<String>? companyLocation;
 
   RegisterProvider({
     required this.companyName,
@@ -29,6 +30,7 @@ class RegisterProvider {
     this.categoriesList,
     this.imagesList,
     this.services,
+    this.companyLocation,
   });
 
   @override

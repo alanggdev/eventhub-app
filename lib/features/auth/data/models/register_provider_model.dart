@@ -33,6 +33,7 @@ class RegisterProviderModel extends RegisterProvider {
     String daysAvailability = data.companySelectedDays.join(',');
     String hoursAvailability = '${data.openTime},${data.closeTime}';
     String categories = data.categoriesList!.join(',');
+    String location = data.companyLocation!.join(',');
     final formData = FormData.fromMap({
       'name': data.companyName,
       'description': data.companyDescription,
@@ -44,7 +45,7 @@ class RegisterProviderModel extends RegisterProvider {
       'images': imageMultipartFiles,
       'address': data.companyAddress,
       'userId': userid,
-      // 'servicesId': []
+      'location': location
     });
     return formData;
   }

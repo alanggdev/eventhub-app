@@ -1,3 +1,4 @@
+import 'package:eventhub_app/features/auth/presentation/pages/map_picker_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
@@ -5,6 +6,10 @@ import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart'
 import 'package:eventhub_app/features/auth/presentation/widgets/text.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 class CreateCompanyScreen extends StatefulWidget {
   final RegisterUser registerUserData;
@@ -20,6 +25,7 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
   final companyPhoneController = TextEditingController();
   final companyEmailController = TextEditingController();
   final companyAddressController = TextEditingController();
+  List<String> companyLocation = [];
   final List<String> _selectedDays = [];
   TimeOfDay? selectedFirstTime, selectedLastime;
   String openTime = 'Seleccionar';
@@ -95,7 +101,71 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                   textFieldLong(context,Icons.description, 'Descripción general', companyDescriptionController, 280),
                   textField(context, Icons.phone, 'Teléfono', companyPhoneController, TextInputType.phone),
                   textField(context, Icons.mail, 'Correo electrónico', companyEmailController, TextInputType.emailAddress),
-                  textField(context, Icons.location_on, 'Dirección de la empresa', companyAddressController, TextInputType.text),
+                  textField(context, Icons.location_pin, 'Dirección de la empresa', companyAddressController, TextInputType.text),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: TextButton.icon(
+                      icon: const FaIcon(FontAwesomeIcons.mapLocationDot),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: ColorStyles.white,
+                        backgroundColor: ColorStyles.secondaryColor3,
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        shadowColor: Colors.grey.withOpacity(0.125),
+                        elevation: 3,
+                      ),
+                      onPressed: () async {
+                        Location location = Location();
+                  
+                        bool serviceEnabled;
+                        PermissionStatus permissionGranted;
+                        LocationData locationData;
+                  
+                        serviceEnabled = await location.serviceEnabled();
+                        if (!serviceEnabled) {
+                          serviceEnabled = await location.requestService();
+                          if (!serviceEnabled) {
+                            return;
+                          }
+                        }
+                  
+                        permissionGranted = await location.hasPermission();
+                        if (permissionGranted == PermissionStatus.denied) {
+                          permissionGranted = await location.requestPermission();
+                          if (permissionGranted != PermissionStatus.granted) {
+                            return;
+                          }
+                        }
+                  
+                        locationData = await location.getLocation();
+                        Future.microtask(() {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                            return MapPickerDialog(initialLocation: LatLng(locationData.latitude!, locationData.longitude!));
+                          }).then((newLocation) {
+                            if (newLocation != null) {
+                              LatLng coords = newLocation;
+                              setState(() {
+                                companyLocation.clear();
+                                companyLocation.add(coords.latitude.toString());
+                                companyLocation.add(coords.longitude.toString());
+                              });
+                            }
+                          });
+                        });
+                      },
+                      label: Text(
+                        companyLocation.isEmpty ? 'Seleccionar ubicación' : 'Ubicación seleccionada',
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Padding(
@@ -139,10 +209,9 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                                     borderRadius: BorderRadius.circular(50),
                                     boxShadow: [
                                       BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 1,
-                                          blurRadius: 2,
-                                          offset: const Offset(0, 1)),
+                                        color: Colors.grey.withOpacity(0.125),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 0.35)),
                                     ],
                                   ),
                                   child: Center(
@@ -197,7 +266,8 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                     companyAddressController,
                     _selectedDays,
                     openTime,
-                    closeTime),
+                    closeTime,
+                    companyLocation),
               ),
             ],
           ),
@@ -214,11 +284,10 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 1)),
-        ],
+              color: Colors.grey.withOpacity(0.125),
+              blurRadius: 4,
+              offset: const Offset(0, 0.35)),
+      ],
       ),
       child: Column(
         children: [

@@ -339,8 +339,8 @@ class _AddServiceState extends State<AddService> {
   CarouselSlider servicesImagesCarousel() {
     return CarouselSlider(
       options: CarouselOptions(
-        aspectRatio: 4 / 3,
         enableInfiniteScroll: false,
+        viewportFraction: 1
       ),
       items: [
         for (int index = 0; index < images.length; index++)
@@ -352,22 +352,26 @@ class _AddServiceState extends State<AddService> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: Container(
+                      height: 500,
                       decoration: BoxDecoration(
-                        color: ColorStyles.white,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.black.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 4,
-                              offset: const Offset(0, 3)),
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 0,
+                            blurRadius: 5,
+                            offset: const Offset(0, 1),
+                          ),
                         ],
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(3),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.file(images[index]),
+                      child: AspectRatio(
+                        aspectRatio: 64 / 25,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.file(images[index], fit: BoxFit.fitWidth),
+                          ),
                         ),
                       ),
                     ),

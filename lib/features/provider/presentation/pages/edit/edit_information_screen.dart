@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 import 'package:eventhub_app/assets.dart';
 
@@ -7,6 +10,7 @@ import 'package:eventhub_app/features/provider/presentation/widgets/button.dart'
 import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
 import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 
+import 'package:eventhub_app/features/auth/presentation/pages/map_picker_dialog.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class EditInformationScreen extends StatefulWidget {
@@ -28,6 +32,7 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
   TimeOfDay? selectedFirstTime, selectedLastime;
   String openTime = 'Seleccionar';
   String closeTime = 'Seleccionar';
+  List<String> companyLocation = [];
 
   TimePickerEntryMode entryMode = TimePickerEntryMode.dialOnly;
   TextDirection textDirection = TextDirection.ltr;
@@ -58,6 +63,8 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
     _selectedDays = widget.providerData.daysAvailability.map((item) => item.toString()).toList();
     openTime = widget.providerData.hoursAvailability[0];
     closeTime = widget.providerData.hoursAvailability[1];
+    companyLocation.add(widget.providerData.location![0].toString());
+    companyLocation.add(widget.providerData.location![1].toString());
   }
 
   @override
@@ -115,6 +122,77 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                     textField(context, Icons.mail, 'Correo electrónico', companyEmailController, TextInputType.emailAddress),
                     textField(context, Icons.location_on, 'Dirección de la empresa', companyAddressController, TextInputType.text),
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: TextButton.icon(
+                    icon: const FaIcon(FontAwesomeIcons.mapLocationDot),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: ColorStyles.white,
+                      backgroundColor: ColorStyles.secondaryColor3,
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      shadowColor: Colors.grey.withOpacity(0.125),
+                      elevation: 3,
+                    ),
+                    onPressed: () async {
+                      Location location = Location();
+                
+                      bool serviceEnabled;
+                      PermissionStatus permissionGranted;
+                      LocationData locationData;
+                
+                      serviceEnabled = await location.serviceEnabled();
+                      if (!serviceEnabled) {
+                        serviceEnabled = await location.requestService();
+                        if (!serviceEnabled) {
+                          return;
+                        }
+                      }
+                
+                      permissionGranted = await location.hasPermission();
+                      if (permissionGranted == PermissionStatus.denied) {
+                        permissionGranted = await location.requestPermission();
+                        if (permissionGranted != PermissionStatus.granted) {
+                          return;
+                        }
+                      }
+                
+                      locationData = await location.getLocation();
+                      Future.microtask(() {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                          return MapPickerDialog(initialLocation: LatLng(locationData.latitude!, locationData.longitude!));
+                        }).then((newLocation) {
+                          if (newLocation != null) {
+                            LatLng coords = newLocation;
+                            setState(() {
+                              companyLocation.clear();
+                              companyLocation.add(coords.latitude.toString());
+                              companyLocation.add(coords.longitude.toString());
+                            });
+                          }
+                        });
+                      });
+                    },
+                    label: Text(
+                      companyLocation.isEmpty ? 'Seleccionar ubicación' : 'Ubicación seleccionada',
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600
+                      ),
+                    ),
+                  ),
+                ),
+                Text(
+                  companyLocation.toString(),
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600
+                  ),
                 ),
                 Padding(
                   padding:
@@ -215,7 +293,8 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                       _selectedDays,
                       openTime,
                       closeTime,
-                      widget.user),
+                      widget.user,
+                      companyLocation),
                 ),
               ],
             ),

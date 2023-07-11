@@ -37,11 +37,13 @@ Padding authButton(BuildContext context, String buttonType) {
         shadowColor: ColorStyles.black,
         elevation: 3,
       ),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const SignInScreen()),
-        );
+      onPressed: () async {
+        if (buttonType == 'Correo') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SignInScreen()),
+          );
+        }
       },
       label: Text(
         'Ingresar con $buttonType',
@@ -197,6 +199,7 @@ TextButton formButtonNextCompany(
   List<String> selectedDays,
   String openTime,
   String closeTime,
+  List<String> companyLocation,
 ) {
   return TextButton(
     style: OutlinedButton.styleFrom(
@@ -234,7 +237,8 @@ TextButton formButtonNextCompany(
             companyAddress: companyAddress,
             companySelectedDays: selectedDays,
             openTime: openTime,
-            closeTime: closeTime);
+            closeTime: closeTime,
+            companyLocation: companyLocation);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -280,7 +284,10 @@ TextButton formButtonCreateCompany(
       elevation: 3,
     ),
     onPressed: () {
-      if (selectedCategories.isNotEmpty && selectedCategories.length > 1 && companyImages.isNotEmpty && services.isNotEmpty) {
+      if (selectedCategories.isNotEmpty &&
+          selectedCategories.length > 1 &&
+          companyImages.isNotEmpty &&
+          services.isNotEmpty) {
         registerProviderData.categoriesList = selectedCategories;
         registerProviderData.imagesList = companyImages;
         registerProviderData.services = services;

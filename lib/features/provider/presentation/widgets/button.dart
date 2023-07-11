@@ -25,6 +25,7 @@ TextButton providerNextPage(
   String openTime,
   String closeTime,
   User user,
+  List<String> companyLocation
 ) {
   return TextButton(
     style: OutlinedButton.styleFrom(
@@ -58,6 +59,7 @@ TextButton providerNextPage(
         providerData.companyAddress = companyAddress;
         providerData.daysAvailability = selectedDays;
         providerData.hoursAvailability = [openTime,closeTime];
+        providerData.location = companyLocation;
         
         Navigator.push(
             context,

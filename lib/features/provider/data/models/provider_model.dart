@@ -17,6 +17,7 @@ class ProviderModel extends Provider {
     required List<dynamic> urlImages,
     List<dynamic>? eventsId,
     List<File>? filesToUpload,
+    List<dynamic>? location,
   }) : super(
           providerId: providerId,
           userid: userid,
@@ -31,6 +32,7 @@ class ProviderModel extends Provider {
           urlImages: urlImages,
           eventsId: eventsId,
           filesToUpload: filesToUpload,
+          location: location,
         );
 
   factory ProviderModel.fromJson(Map<String, dynamic> json) {
@@ -47,6 +49,7 @@ class ProviderModel extends Provider {
       categories: json['categories'],
       urlImages: json['urlImages'],
       eventsId: json['eventsId'],
+      location: json['location']
     );
   }
 
@@ -55,6 +58,7 @@ class ProviderModel extends Provider {
     String hoursAvailability = '${data.hoursAvailability[0]},${data.hoursAvailability[1]}';
     String categories = data.categories.join(',');
     String urlImages = data.urlImages.join(',');
+    String location = data.location!.join(',');
     final formData = FormData.fromMap({
       'name': data.companyName,
       'description': data.companyDescription,
@@ -65,7 +69,8 @@ class ProviderModel extends Provider {
       'categories': categories,
       'images': imageMultipartFiles,
       'urlImages' : urlImages,
-      'address': data.companyAddress
+      'address': data.companyAddress,
+      'location': location
     });
     return formData;
   }
@@ -75,6 +80,7 @@ class ProviderModel extends Provider {
     String hoursAvailability = '${data.hoursAvailability[0]},${data.hoursAvailability[1]}';
     String categories = data.categories.join(',');
     String urlImages = data.urlImages.join(',');
+    String location = data.location!.join(',');
     final formData = FormData.fromMap({
       'name': data.companyName,
       'description': data.companyDescription,
@@ -84,7 +90,8 @@ class ProviderModel extends Provider {
       'hoursAvailability': hoursAvailability,
       'categories': categories,
       'urlImages' : urlImages,
-      'address': data.companyAddress
+      'address': data.companyAddress,
+      'location': location
     });
     return formData;
   }

@@ -14,6 +14,7 @@ class Provider {
   List<dynamic> urlImages;
   List<dynamic>? eventsId;
   List<File>? filesToUpload;
+  List<dynamic>? location;
 
   Provider({
     this.providerId,
@@ -29,5 +30,6 @@ class Provider {
     required this.urlImages,
     this.eventsId,
     this.filesToUpload,
+    this.location,
   });
 }
