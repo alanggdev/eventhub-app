@@ -7,10 +7,12 @@ import 'package:eventhub_app/features/provider/presentation/widgets/button.dart'
 import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
 import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class EditInformationScreen extends StatefulWidget {
   final Provider providerData;
-  const EditInformationScreen(this.providerData, {super.key});
+  final User user;
+  const EditInformationScreen(this.providerData, this.user, {super.key});
 
   @override
   State<EditInformationScreen> createState() => _EditInformationScreenState();
@@ -64,7 +66,7 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
       onWillPop: () async {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.providerData.userid),),
+            MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.providerData.userid, widget.user)),
             (Route<dynamic> route) => route.isFirst,
           );
         return false;
@@ -212,7 +214,8 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                       companyAddressController,
                       _selectedDays,
                       openTime,
-                      closeTime),
+                      closeTime,
+                      widget.user),
                 ),
               ],
             ),

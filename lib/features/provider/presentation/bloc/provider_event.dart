@@ -2,6 +2,12 @@ part of 'provider_bloc.dart';
 
 abstract class ProviderEvent {}
 
+class UpdateProviderService extends ProviderEvent {
+  final Service service;
+
+  UpdateProviderService({required this.service});
+}
+
 class DeleteProviderService extends ProviderEvent {
   final int servideid;
 

@@ -6,12 +6,14 @@ import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/provider.dart';
 import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart';
-
 import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
+
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class CategoryProviderScreen extends StatefulWidget {
   final String categoryName, categoryDescription;
-  const CategoryProviderScreen(this.categoryName, this.categoryDescription, {super.key});
+  final User user;
+  const CategoryProviderScreen(this.categoryName, this.categoryDescription, this.user, {super.key});
 
   @override
   State<CategoryProviderScreen> createState() => _CategoryProviderScreenState();
@@ -23,9 +25,7 @@ class _CategoryProviderScreenState extends State<CategoryProviderScreen> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<ProviderBloc>()
-        .add(GetCategoryProviders(category: widget.categoryName));
+    context.read<ProviderBloc>().add(GetCategoryProviders(category: widget.categoryName));
   }
 
   @override
@@ -125,7 +125,7 @@ class _CategoryProviderScreenState extends State<CategoryProviderScreen> {
                           if (state is! CategoryProvidersLoaded && categoryProvider.isNotEmpty)
                             Column(
                               children: categoryProvider.map((provider) {
-                                return providerWidget(context, provider);
+                                return providerWidget(context, provider, widget.user);
                               }).toList(),
                             ),
                           if (state is CategoryProvidersLoaded)
@@ -139,7 +139,7 @@ class _CategoryProviderScreenState extends State<CategoryProviderScreen> {
                                 builder: (context, snapshot) {
                                   return Column(
                                     children: categoryProvider.map((provider) {
-                                      return providerWidget(context, provider);
+                                      return providerWidget(context, provider, widget.user);
                                     }).toList(),
                                   );
                                 },

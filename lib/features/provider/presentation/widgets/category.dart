@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/provider/presentation/pages/category_provider_screen.dart';
 
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
+
 List<Map<String, dynamic>> allCategories = [
   {
     'id': 1,
@@ -61,7 +63,7 @@ List<Map<String, dynamic>> allCategories = [
 ];
 
 Padding categoryWidget(
-    BuildContext context, String image, String category, String description) {
+    BuildContext context, String image, String category, String description, User user) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
     child: GestureDetector(
@@ -69,7 +71,7 @@ Padding categoryWidget(
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => CategoryProviderScreen(category, description)));
+                builder: (context) => CategoryProviderScreen(category, description, user)));
       },
       child: Container(
         width: double.infinity,

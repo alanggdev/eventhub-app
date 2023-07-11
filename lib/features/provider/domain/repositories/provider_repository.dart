@@ -9,4 +9,5 @@ abstract class ProviderRepository {
   Future<String> updateProviderData(Provider providerData);
   Future<String> createService(Service service, int providerid);
   Future<String> deleteService(int serviceid);
+  Future<String> updateService(Service service);
 }

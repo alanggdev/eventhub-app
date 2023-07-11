@@ -17,12 +17,15 @@ import 'package:eventhub_app/features/provider/presentation/widgets/button.dart'
 import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/text_field.dart';
 
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
+
 class EditCategoriesScreen extends StatefulWidget {
   final Provider providerData;
   final List<String>? selectedCategories;
   final List<File>? companyImages;
   final List<String>? imagesPreLoaded;
-  const EditCategoriesScreen(this.providerData, this.selectedCategories, this.companyImages, this.imagesPreLoaded, {super.key});
+  final User user;
+  const EditCategoriesScreen(this.providerData, this.selectedCategories, this.companyImages, this.imagesPreLoaded, this.user, {super.key});
 
   @override
   State<EditCategoriesScreen> createState() => _EditCategoriesScreenState();
@@ -404,7 +407,7 @@ class _EditCategoriesScreenState extends State<EditCategoriesScreen> {
               future: Future.delayed(Duration.zero, () async {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.providerData.userid)),
+                  MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.providerData.userid, widget.user)),
                   (Route<dynamic> route) => route.isFirst,
                 );
               }),

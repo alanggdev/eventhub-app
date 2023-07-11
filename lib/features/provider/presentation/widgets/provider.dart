@@ -4,11 +4,12 @@ import 'package:eventhub_app/keys.dart';
 import 'package:eventhub_app/assets.dart';
 
 import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
-
 import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 
-Padding providerWidget(BuildContext context, Provider provider) {
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
+
+Padding providerWidget(BuildContext context, Provider provider, User user) {
   return Padding(
     padding: const EdgeInsets.all(15),
     child: GestureDetector(
@@ -16,7 +17,7 @@ Padding providerWidget(BuildContext context, Provider provider) {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ProviderScreen(provider.providerId!, null)));
+                builder: (context) => ProviderScreen(provider.providerId!, null, user)));
       },
       child: Container(
         width: double.infinity,
@@ -274,6 +275,7 @@ Column providerServiceWidget(BuildContext context, Service service) {
                             padding: const EdgeInsets.only(bottom: 5),
                             child: Text(
                               service.name,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 color: ColorStyles.black,
                                 fontSize: 20,

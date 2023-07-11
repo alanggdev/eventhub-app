@@ -1,4 +1,3 @@
-import 'package:eventhub_app/features/provider/presentation/pages/service_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
@@ -13,11 +12,15 @@ import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart'
 import 'package:eventhub_app/features/provider/presentation/widgets/provider.dart';
 import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/button.dart';
+import 'package:eventhub_app/features/provider/presentation/pages/service_screen.dart';
+
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class ProviderScreen extends StatefulWidget {
-  final int? providerId;
-  final int? userId;
-  const ProviderScreen(this.providerId, this.userId, {super.key});
+  final int? providerId; // From categories
+  final int? providerUserId; // From my provider 
+  final User user; // User visit
+  const ProviderScreen(this.providerId, this.providerUserId, this.user, {super.key});
 
   @override
   State<ProviderScreen> createState() => _ProviderScreenState();
@@ -38,8 +41,8 @@ class _ProviderScreenState extends State<ProviderScreen> {
   loadProviderData() {
     if (widget.providerId != null) {
       context.read<ProviderBloc>().add(GetProviderDetailById(providerid: widget.providerId!));
-    } else if (widget.userId != null) {
-      context.read<ProviderBloc>().add(GetProviderDetailByUserId(providerUserId: widget.userId!));
+    } else if (widget.providerUserId != null) {
+      context.read<ProviderBloc>().add(GetProviderDetailByUserId(providerUserId: widget.providerUserId!));
     }
   }
 
@@ -258,7 +261,8 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                     ),
                                 ],
                               ),
-                              if (widget.userId == null)
+                              showMoreButton(context, 'Ver todos los servicios', state.providerData, state.providerServices, widget.providerUserId, widget.user),
+                              if (widget.providerUserId == null)
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -266,11 +270,12 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                     providerOptionButton(context, 'Contactar'),
                                   ],
                                 )
-                              else if (widget.userId != null && widget.userId == state.providerData.userid)
-                                Column(
+                              else if (widget.providerUserId != null && widget.providerUserId == state.providerData.userid)
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    providerEditButton(context, 'Editar información', state.providerData, null, null),
-                                    providerEditButton(context, 'Editar Servicios', state.providerData, state.providerServices, widget.userId!),
+                                    providerEditButton(context, 'Editar información', state.providerData, null, null, widget.user),
+                                    providerEditButton(context, 'Editar Servicios', state.providerData, state.providerServices, widget.providerUserId!, widget.user),
                                   ],
                                 ),
                             ],

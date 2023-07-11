@@ -18,6 +18,7 @@ abstract class ProviderDataSource {
   Future<String> updateProviderData(Provider providerData);
   Future<String> createService(Service service, int providerid);
   Future<String> deleteService(int serviceid);
+  Future<String> updateService(Service service);
 }
 
 class ProviderDataSourceImpl extends ProviderDataSource {
@@ -186,6 +187,34 @@ class ProviderDataSourceImpl extends ProviderDataSource {
       } else {
         throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
       }
+    } else {
+      throw Exception('Sin conexión a internet');
+    }
+  }
+
+  @override
+  Future<String> updateService(Service service) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+      List<MultipartFile> imageMultipartFiles = [];
+      if (service.images!.isNotEmpty) {
+        for (File file in service.images!) {
+          MultipartFile multipartFile = await MultipartFile.fromFile(file.path);
+          imageMultipartFiles.add(multipartFile);
+        }
+      }
+
+      FormData formData = ServiceModel.fromEntityToJson(service, imageMultipartFiles);
+
+      Response response = await dio.patch('$serverURL/services/${service.serviceId}', data: formData);
+
+      if (response.statusCode == 200) {
+        return 'Service updated';
+      } else {
+        throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+      }
+
     } else {
       throw Exception('Sin conexión a internet');
     }

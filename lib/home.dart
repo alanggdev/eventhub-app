@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 import 'package:eventhub_app/assets.dart';
+
 import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.dart';
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     _widgetOptions = <Widget>[
       MyEventsScreen(widget.userinfo),
-      const ExploreCategoriesScreen(),
+      ExploreCategoriesScreen(widget.userinfo),
       const Center(
           child: Text(
         'Messages Screen',
@@ -349,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: () {
           if (isProvider) {
             Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.userinfo.userinfo['pk'])));
+              MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.userinfo.userinfo['pk'], widget.userinfo)));
           } else {
             print(widget.userinfo.userinfo['pk'].toString());
             print('to create provider');

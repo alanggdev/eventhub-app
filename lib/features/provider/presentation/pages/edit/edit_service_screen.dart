@@ -14,11 +14,14 @@ import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart'
 import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
 import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
+
 class EditServiceScreen extends StatefulWidget {
   final Service? serviceToUpdate;
   final int providerId;
   final int userid;
-  const EditServiceScreen(this.serviceToUpdate, this.providerId, this.userid, {super.key});
+  final User user;
+  const EditServiceScreen(this.serviceToUpdate, this.providerId, this.userid, this.user, {super.key});
 
   @override
   State<EditServiceScreen> createState() => _EditServiceScreenState();
@@ -437,8 +440,9 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
                               serviceToUpdate!.tags = tags;
                               serviceToUpdate!.imagePaths = imagesPreLoaded;
                               serviceToUpdate!.images = images;
-
+                              
                               // send to update
+                              context.read<ProviderBloc>().add(UpdateProviderService(service: serviceToUpdate!));
                             } else {
                               Service newService = Service(name: name, description: description, tags: tags, images: images);
 
@@ -474,7 +478,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
               future: Future.delayed(Duration.zero, () async {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.userid)),
+                  MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.userid, widget.user)),
                   (Route<dynamic> route) => route.isFirst,
                 );
               }),

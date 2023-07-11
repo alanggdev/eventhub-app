@@ -19,6 +19,7 @@ import 'package:eventhub_app/features/provider/domain/usecases/get_provider_by_i
 import 'package:eventhub_app/features/provider/domain/usecases/get_provider_by_userid.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/get_provider_services.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/update_provider_data.dart';
+import 'package:eventhub_app/features/provider/domain/usecases/update_service.dart';
 
 class UseCaseConfig {
   AuthUserDataSourceImpl? authUserDataSourceImpl;
@@ -42,6 +43,7 @@ class UseCaseConfig {
   UpdateProviderDataUseCase? updateProviderDataUseCase;
   CreateServiceUseCase? createServiceUseCase;
   DeleteServiceUseCase? deleteServiceUseCase;
+  UpdateServiceUseCase? updateServiceUseCase;
 
   UseCaseConfig() {
     authUserDataSourceImpl = AuthUserDataSourceImpl();
@@ -65,5 +67,6 @@ class UseCaseConfig {
     updateProviderDataUseCase = UpdateProviderDataUseCase(providerRepositoryImpl!);
     createServiceUseCase = CreateServiceUseCase(providerRepositoryImpl!);
     deleteServiceUseCase = DeleteServiceUseCase(providerRepositoryImpl!);
+    updateServiceUseCase = UpdateServiceUseCase(providerRepositoryImpl!);
   }
 }

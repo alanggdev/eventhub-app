@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
@@ -10,6 +9,9 @@ import 'package:eventhub_app/features/provider/presentation/pages/edit/edit_cate
 import 'package:eventhub_app/features/provider/presentation/pages/edit/edit_information_screen.dart';
 import 'package:eventhub_app/features/provider/presentation/pages/service_list_screen.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart';
+import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
+
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 TextButton providerNextPage(
   BuildContext context,
@@ -22,6 +24,7 @@ TextButton providerNextPage(
   List<String> selectedDays,
   String openTime,
   String closeTime,
+  User user,
 ) {
   return TextButton(
     style: OutlinedButton.styleFrom(
@@ -59,7 +62,7 @@ TextButton providerNextPage(
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => EditCategoriesScreen(providerData, null, null, null)
+              builder: (context) => EditCategoriesScreen(providerData, null, null, null, user)
             ));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -159,14 +162,15 @@ Padding providerOptionButton(BuildContext context, String label) {
   );
 }
 
-Padding providerEditButton(BuildContext context, String label, Provider providerData, List<Service>? providerServices, int? userid) {
+Padding providerEditButton(BuildContext context, String label, Provider providerData, List<Service>? providerServices, int? providerUserId, User user) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-    child: TextButton(
+    child: TextButton.icon(
+      icon: Icon(providerServices == null ? Icons.edit : Icons.checklist),
       style: OutlinedButton.styleFrom(
         foregroundColor: Colors.white,
         backgroundColor: ColorStyles.primaryBlue,
-        minimumSize: const Size(double.infinity, 40),
+        minimumSize: const Size(150, 40),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -178,23 +182,54 @@ Padding providerEditButton(BuildContext context, String label, Provider provider
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => EditInformationScreen(providerData),
+              builder: (context) => EditInformationScreen(providerData, user),
             ));
         } else {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ServiceListScreen(providerData, providerServices, userid!),
+              builder: (context) => ServiceListScreen(providerData, providerServices, providerUserId!, user),
             ));
         }
       },
-      child: Text(
+      label: Text(
         label,
         style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w500,
           fontFamily: 'Inter',
         ),
+      ),
+    ),
+  );
+}
+
+TextButton showMoreButton(BuildContext context, String label, Provider providerData, List<Service> providerServices, int? providerUserId, User user) {
+  return TextButton(
+    style: OutlinedButton.styleFrom(
+      foregroundColor: Colors.white,
+      backgroundColor: ColorStyles.textSecondary3,
+      minimumSize: const Size(double.infinity, 40),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      shadowColor: Colors.black,
+      elevation: 3,
+    ),
+    onPressed: () {
+      if (label == 'Ver todos los servicios') {
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ServiceListScreen(providerData, providerServices, providerUserId, user)));
+      }
+    },
+    child: Text(
+      label,
+      style: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
+        fontFamily: 'Inter',
+        fontSize: 16
       ),
     ),
   );

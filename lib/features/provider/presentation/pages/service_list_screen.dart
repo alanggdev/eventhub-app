@@ -10,11 +10,14 @@ import 'package:eventhub_app/features/provider/presentation/widgets/provider.dar
 import 'package:eventhub_app/features/provider/presentation/pages/service_screen.dart';
 import 'package:eventhub_app/features/provider/presentation/pages/edit/edit_service_screen.dart';
 
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
+
 class ServiceListScreen extends StatefulWidget {
   final Provider providerData;
   final List<Service> servicesData;
-  final int userid;
-  const ServiceListScreen(this.providerData, this.servicesData, this.userid, {super.key});
+  final int? providerUserId;
+  final User user;
+  const ServiceListScreen(this.providerData, this.servicesData, this.providerUserId, this.user, {super.key});
 
   @override
   State<ServiceListScreen> createState() => _ServiceListScreenState();
@@ -23,7 +26,7 @@ class ServiceListScreen extends StatefulWidget {
 class _ServiceListScreenState extends State<ServiceListScreen> {
   Provider? provider;
   List<Service> services = [];
-  int? userid;
+  int? providerUserId;
 
   @override
   void initState() {
@@ -34,18 +37,26 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
   loadData() {
     provider = widget.providerData;
     services = widget.servicesData;
-    userid = widget.userid;
+    providerUserId = widget.providerUserId;
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushAndRemoveUntil(
+        if (providerUserId != null) {
+          Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.providerData.userid)),
+            MaterialPageRoute(builder: (context) => ProviderScreen(null, provider!.userid, widget.user)),
             (Route<dynamic> route) => route.isFirst,
           );
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => ProviderScreen(provider!.providerId, null, widget.user)),
+            (Route<dynamic> route) => route.isFirst,
+          );
+        }
         return false;
       },
       child: Scaffold(
@@ -89,8 +100,8 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                         padding: const EdgeInsets.only(bottom: 6),
                         child: GestureDetector(
                           onTap: () {
-                            if (userid == provider!.userid) {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => EditServiceScreen(service, provider!.providerId!, provider!.userid)));
+                            if (providerUserId != null) {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => EditServiceScreen(service, provider!.providerId!, provider!.userid, widget.user)));
                             } else {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceScreen(service)));
                             }
@@ -105,10 +116,10 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
             ),
           ),
         ),
-        floatingActionButton: userid == provider!.userid
+        floatingActionButton: providerUserId != null
           ? FloatingActionButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => EditServiceScreen(null, provider!.providerId!, provider!.userid)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => EditServiceScreen(null, provider!.providerId!, provider!.userid, widget.user)));
               },
               backgroundColor: ColorStyles.primaryBlue,
               child: const Icon(

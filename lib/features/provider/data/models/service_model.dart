@@ -32,14 +32,17 @@ class ServiceModel extends Service {
     );
   }
 
-  static FormData fromEntityToJson(Service data) {
+  static FormData fromEntityToJson(Service data, List<MultipartFile> images) {
     String tags = data.tags.join('|');
+    String urlImages = data.imagePaths!.join(',');
     final FormData formData;
-      formData = FormData.fromMap({
+    formData = FormData.fromMap({
       'name': data.name,
       'description': data.description,
       'tags': tags,
-      'urlImages': data.imagePaths,
+      'urlImages': urlImages,
+      'providerId': data.providerId,
+      'images': images,
     });
     return formData;
   }
