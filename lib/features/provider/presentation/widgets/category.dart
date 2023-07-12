@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
-import 'package:eventhub_app/features/provider/presentation/pages/category_provider.dart';
+import 'package:eventhub_app/features/provider/presentation/pages/category_provider_screen.dart';
+
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 List<Map<String, dynamic>> allCategories = [
   {
@@ -61,16 +63,19 @@ List<Map<String, dynamic>> allCategories = [
 ];
 
 Padding categoryWidget(
-    BuildContext context, String image, String category, String description) {
+    BuildContext context, String image, String category, String description, User user) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
     child: GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => CategoryProvider(category, description)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CategoryProviderScreen(category, description, user)));
       },
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.35,
+        width: double.infinity,
+        height: 110,
         decoration: BoxDecoration(
           color: ColorStyles.white,
           borderRadius: BorderRadius.circular(8),
@@ -84,36 +89,51 @@ Padding categoryWidget(
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Image.asset(
-                image,
-                width: MediaQuery.of(context).size.width * 0.25,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: Text(
-                  category,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: ColorStyles.textPrimary2,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
+          child: IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(
+                  image,
+                  width: 85,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            category,
+                            style: const TextStyle(
+                              color: ColorStyles.textPrimary2,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              description,
+                              style: const TextStyle(
+                                color: ColorStyles.textPrimary1,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                description,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: ColorStyles.textPrimary1,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Inter',
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

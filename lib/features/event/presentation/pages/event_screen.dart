@@ -12,8 +12,6 @@ import 'package:eventhub_app/home.dart';
 
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
-import 'package:eventhub_app/features/provider/presentation/widgets/provider.dart';
-
 class EventScreen extends StatefulWidget {
   final Event userEvent;
   final User user;
@@ -127,8 +125,8 @@ class _EventScreenState extends State<EventScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
+                              children: const [
+                                Text(
                                   'Empresas colaboradoras',
                                   style: TextStyle(
                                       fontSize: 22,
@@ -136,26 +134,10 @@ class _EventScreenState extends State<EventScreen> {
                                       fontWeight: FontWeight.w500,
                                       color: ColorStyles.primaryGrayBlue),
                                 ),
-                                const Divider(
+                                Divider(
                                   color: ColorStyles.baseLightBlue,
                                 ),
-                                if (widget.userEvent.providersID.isNotEmpty)
-                                  CarouselSlider(
-                                    options: CarouselOptions(
-                                        enableInfiniteScroll: false,
-                                        viewportFraction: 1,
-                                        height: 250),
-                                    items: [
-                                      for (int index = 0; index < 3; index++)
-                                        Builder(
-                                          builder: (BuildContext context) {
-                                            return providerWidget(context);
-                                          },
-                                        ),
-                                    ],
-                                  )
-                                else
-                                  const Text(
+                                Text(
                                     'Aun no tiene empresas que colaboren',
                                     style: TextStyle(
                                         fontSize: 14,
@@ -163,6 +145,30 @@ class _EventScreenState extends State<EventScreen> {
                                         fontWeight: FontWeight.w500,
                                         color: ColorStyles.primaryGrayBlue),
                                   ),
+                                // if (widget.userEvent.providersID.isNotEmpty)
+                                //   CarouselSlider(
+                                //     options: CarouselOptions(
+                                //         enableInfiniteScroll: false,
+                                //         viewportFraction: 1,
+                                //         height: 250),
+                                //     items: [
+                                //       for (int index = 0; index < 3; index++)
+                                //         Builder(
+                                //           builder: (BuildContext context) {
+                                //             return providerWidget(context);
+                                //           },
+                                //         ),
+                                //     ],
+                                //   )
+                                // else
+                                //   const Text(
+                                //     'Aun no tiene empresas que colaboren',
+                                //     style: TextStyle(
+                                //         fontSize: 14,
+                                //         fontFamily: 'Inter',
+                                //         fontWeight: FontWeight.w500,
+                                //         color: ColorStyles.primaryGrayBlue),
+                                //   ),
                               ],
                             ),
                           ),

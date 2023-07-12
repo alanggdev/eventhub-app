@@ -2,6 +2,13 @@ part of 'auth_bloc.dart';
 
 abstract class AuthEvent {}
 
+class CreateProvider extends AuthEvent {
+  final RegisterUser registerUserData;
+  final RegisterProvider registerProviderData;
+
+  CreateProvider({required this.registerProviderData, required this.registerUserData});
+}
+
 class UnloadState extends AuthEvent {
   final User unload;
 

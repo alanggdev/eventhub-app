@@ -20,7 +20,7 @@ Text textInterW600(String label) {
   return Text(
     label,
     style: const TextStyle(
-      fontSize: 25,
+      fontSize: 22,
       fontWeight: FontWeight.w600,
       fontFamily: 'Inter',
       color: ColorStyles.primaryGrayBlue,

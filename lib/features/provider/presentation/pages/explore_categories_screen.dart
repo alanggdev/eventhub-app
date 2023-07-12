@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
+
 import 'package:eventhub_app/features/provider/presentation/widgets/category.dart';
 
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
+
 class ExploreCategoriesScreen extends StatefulWidget {
-  const ExploreCategoriesScreen({super.key});
+  final User user;
+  const ExploreCategoriesScreen(this.user, {super.key});
 
   @override
   State<ExploreCategoriesScreen> createState() =>
@@ -63,7 +67,7 @@ class _ExploreCategoriesScreenState extends State<ExploreCategoriesScreen> {
             ),
             Wrap(
               children: categoryList.map((category) {
-                return categoryWidget(context, category['image'], category['name'], category['description']);
+                return categoryWidget(context, category['image'], category['name'], category['description'], widget.user);
               },).toList(),
             ),
           ],

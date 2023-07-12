@@ -8,6 +8,7 @@ import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dar
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/home.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -19,6 +20,27 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
+
+  bool hidePass = true;
+
+  @override
+  void initState() {
+    super.initState();
+    unloadLogInState();
+  }
+
+  changePassVisibility(bool state) {
+    setState(() {
+      hidePass = state;
+    });
+  }
+
+  unloadLogInState() {
+    final authbloc = context.read<AuthBloc>();
+    User userUnload = User(access: 'unload', refresh: 'unload', userinfo: 'unload');
+    authbloc.add(UnloadState(unload: userUnload));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +81,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                               const Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 45, vertical: 10),
+                                    horizontal: 10, vertical: 10),
                                 child: Text(
                                   'Bienvenido, por favor, ingresa tus datos para iniciar sesión.',
                                   textAlign: TextAlign.center,
@@ -79,10 +101,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         height: MediaQuery.of(context).size.height * 0.45,
                         child: Column(
                           children: [
-                            textFieldForm(context, Icons.email,
-                                'Correo electrónico', emailController),
-                            textFieldForm(context, Icons.lock, 'Contraseña',
-                                passController),
+                            textField(context, Icons.email, 'Correo electrónico', emailController, TextInputType.text),
+                            textFieldPass(context, Icons.lock, 'Contraseña', passController, hidePass, changePassVisibility),
                           ],
                         ),
                       ),
@@ -108,9 +128,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     onPressed: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SignUpScreen()),
+                                        MaterialPageRoute(builder: (context) => const SignUpScreen()),
                                       );
                                     },
                                     child: const Text(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/assets.dart';
+
+import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
 import 'package:eventhub_app/features/provider/presentation/pages/explore_categories_screen.dart';
@@ -30,8 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void unloadLoginState() {
     final authbloc = context.read<AuthBloc>();
-    User userUnload =
-        User(access: 'unload', refresh: 'unload', userinfo: 'unload');
+    User userUnload = User(access: 'unload', refresh: 'unload', userinfo: 'unload');
     authbloc.add(UnloadState(unload: userUnload));
   }
 
@@ -45,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     _widgetOptions = <Widget>[
       MyEventsScreen(widget.userinfo),
-      const ExploreCategoriesScreen(),
+      ExploreCategoriesScreen(widget.userinfo),
       const Center(
           child: Text(
         'Messages Screen',
@@ -180,10 +181,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       const Divider(
                                         color: Color(0xff3B47B6),
                                       ),
-                                      menuOption(context, 'Mi perfil',
-                                          Images.profilePlaceholder),
-                                      menuOption(context, 'Mi empresa',
-                                          Images.companyPlaceholder),
+                                      menuOption(context, 'Mi perfil', Images.profilePlaceholder, false),
+                                      menuOption(context, 'Mi empresa', Images.companyPlaceholder, widget.userinfo.userinfo['is_provider']),
                                       logoutButton(context)
                                     ],
                                   ),
@@ -343,43 +342,53 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Padding menuOption(
-      BuildContext context, String label, String profilePlaceholder) {
+  Padding menuOption(BuildContext context, String label, String profilePlaceholder, dynamic isProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      child: Row(
-        children: [
-          Center(
-            child: Container(
-              width: 45,
-              height: 45,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-                image: DecorationImage(
-                    fit: BoxFit.fill, image: AssetImage(profilePlaceholder)),
+      child: GestureDetector(
+        onTap: () {
+          if (isProvider) {
+            Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.userinfo.userinfo['pk'], widget.userinfo)));
+          } else {
+            print(widget.userinfo.userinfo['pk'].toString());
+            print('to create provider');
+          }
+        },
+        child: Row(
+          children: [
+            Center(
+              child: Container(
+                width: 45,
+                height: 45,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                  image: DecorationImage(
+                      fit: BoxFit.fill, image: AssetImage(profilePlaceholder)),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 23,
-                color: Color(0xff242C71),
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 23,
+                  color: Color(0xff242C71),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
