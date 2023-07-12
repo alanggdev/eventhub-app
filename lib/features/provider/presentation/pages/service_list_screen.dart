@@ -81,7 +81,19 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
               ),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              if (providerUserId != null) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProviderScreen(null, provider!.userid, widget.user)),
+                  (Route<dynamic> route) => route.isFirst,
+                );
+              } else {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProviderScreen(provider!.providerId, null, widget.user)),
+                  (Route<dynamic> route) => route.isFirst,
+                );
+              }
             },
           ),
         ),
