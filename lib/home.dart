@@ -1,3 +1,5 @@
+import 'package:eventhub_app/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:eventhub_app/features/chat/presentation/pages/messages_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +16,8 @@ import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
 
 class HomeScreen extends StatefulWidget {
   final User userinfo;
-  const HomeScreen(this.userinfo, {super.key});
+  final int index;
+  const HomeScreen(this.userinfo, this.index, {super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -27,7 +30,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    loadIndex();
     unloadLoginState();
+  }
+
+  void loadIndex() {
+    setState(() {
+      _selectedIndex = widget.index;
+    });
   }
 
   void unloadLoginState() {
@@ -47,11 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _widgetOptions = <Widget>[
       MyEventsScreen(widget.userinfo),
       ExploreCategoriesScreen(widget.userinfo),
-      const Center(
-          child: Text(
-        'Messages Screen',
-        style: TextStyle(color: Colors.white),
-      )),
+      MessagesScreen(widget.userinfo),
       const Center(
           child: Text(
         'Notifications Screen',

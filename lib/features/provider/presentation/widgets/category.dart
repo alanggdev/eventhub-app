@@ -81,10 +81,10 @@ Padding categoryWidget(
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: const Offset(0, 3)),
+              color: Colors.grey.withOpacity(0.25),
+              blurRadius: 5,
+              offset: const Offset(0, 0.5),
+            ),
           ],
         ),
         child: Padding(

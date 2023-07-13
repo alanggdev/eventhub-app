@@ -21,6 +21,15 @@ import 'package:eventhub_app/features/provider/domain/usecases/get_provider_serv
 import 'package:eventhub_app/features/provider/domain/usecases/update_provider_data.dart';
 import 'package:eventhub_app/features/provider/domain/usecases/update_service.dart';
 
+import 'package:eventhub_app/features/chat/data/datasources/chat_remote.dart';
+import 'package:eventhub_app/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:eventhub_app/features/chat/domain/usecases/create_chat_usecase.dart';
+import 'package:eventhub_app/features/chat/domain/usecases/get_chat_usecase.dart';
+import 'package:eventhub_app/features/chat/domain/usecases/get_message_usecase.dart';
+import 'package:eventhub_app/features/chat/domain/usecases/init_socket_usecase.dart';
+import 'package:eventhub_app/features/chat/domain/usecases/load_chats_usecase.dart';
+import 'package:eventhub_app/features/chat/domain/usecases/send_message_usecase.dart';
+
 class UseCaseConfig {
   AuthUserDataSourceImpl? authUserDataSourceImpl;
   AuthUserRepositoryImpl? authUserRepositoryImpl;
@@ -45,6 +54,15 @@ class UseCaseConfig {
   DeleteServiceUseCase? deleteServiceUseCase;
   UpdateServiceUseCase? updateServiceUseCase;
 
+  ChatsRepositoryImpl? chatsRepositoryImpl;
+  ChatRemoteDataSourceImpl? chatsRemoteDataSourceImp;
+  CreateChatUseCase? createChatUseCase;
+  GetChatUseCase? getChatUseCase;
+  GetMessageUseCase? getMessageUseCase;
+  InitSocketUseCase? initSocketUseCase;
+  LoadChatsUseCase? loadChatsUseCase; 
+  SendMessageUseCase? sendMessageUseCase;
+
   UseCaseConfig() {
     authUserDataSourceImpl = AuthUserDataSourceImpl();
     authUserRepositoryImpl = AuthUserRepositoryImpl(authUserDataSource: authUserDataSourceImpl!);
@@ -68,5 +86,15 @@ class UseCaseConfig {
     createServiceUseCase = CreateServiceUseCase(providerRepositoryImpl!);
     deleteServiceUseCase = DeleteServiceUseCase(providerRepositoryImpl!);
     updateServiceUseCase = UpdateServiceUseCase(providerRepositoryImpl!);
+
+    chatsRemoteDataSourceImp = ChatRemoteDataSourceImpl();
+    chatsRepositoryImpl = ChatsRepositoryImpl(chatRemoteDataSource: chatsRemoteDataSourceImp!);
+
+    createChatUseCase = CreateChatUseCase(chatsRepositoryImpl!);
+    getChatUseCase = GetChatUseCase(chatsRepositoryImpl!);
+    getMessageUseCase = GetMessageUseCase(chatsRepositoryImpl!);
+    initSocketUseCase = InitSocketUseCase(chatsRepositoryImpl!);
+    loadChatsUseCase = LoadChatsUseCase(chatsRepositoryImpl!); 
+    sendMessageUseCase = SendMessageUseCase(chatsRepositoryImpl!);
   }
 }

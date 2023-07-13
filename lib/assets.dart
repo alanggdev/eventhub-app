@@ -13,6 +13,7 @@ class ColorStyles {
   static const Color secondaryColor1 = Color(0xff746C96);
   static const Color secondaryColor2 = Color(0xff857CAB);
   static const Color secondaryColor3 = Color(0xffB8B0E1);
+  static const Color secondaryColor4 = Color(0xffBCBCBC);
 
   static const Color textPrimary1 = Color(0xff4F5496);
   static const Color textPrimary2 = Color(0xff606172);

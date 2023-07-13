@@ -5,10 +5,10 @@ import 'package:eventhub_app/usecase_config.dart';
 import 'package:eventhub_app/welcome.dart';
 
 import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
+
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
-
 import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
-
+import 'package:eventhub_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
 
 UseCaseConfig usecaseConfig = UseCaseConfig();
@@ -46,7 +46,17 @@ class MyApp extends StatelessWidget {
               createServiceUseCase: usecaseConfig.createServiceUseCase!,
               deleteServiceUseCase: usecaseConfig.deleteServiceUseCase!,
               updateServiceUseCase: usecaseConfig.updateServiceUseCase!),
-        )
+        ),
+        BlocProvider<ChatBloc>(
+          create: (BuildContext context) => ChatBloc(
+            createChatUseCase: usecaseConfig.createChatUseCase!,
+            getChatUseCase: usecaseConfig.getChatUseCase!,
+            getMessageUseCase: usecaseConfig.getMessageUseCase!,
+            initSocketUseCase: usecaseConfig.initSocketUseCase!,
+            loadChatsUseCase: usecaseConfig.loadChatsUseCase!,
+            sendMessageUseCase: usecaseConfig.sendMessageUseCase!
+          ),
+        ),
       ],
       child: MaterialApp(
         theme: ThemeData(

@@ -56,7 +56,7 @@ class _LocationScreenState extends State<LocationScreen> {
           markers: [
             Marker(
               point: widget.initialLocation,
-              builder: (_) => const Icon(Icons.location_on, color: ColorStyles.primaryGrayBlue,),
+              builder: (_) => const Icon(Icons.location_on, color: Colors.red),
             ),
           ],
         ),
