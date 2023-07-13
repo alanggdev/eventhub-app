@@ -22,19 +22,13 @@ class MessagesScreen extends StatefulWidget {
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
-  final IO.Socket socket = IO.io(
-      socketURL,
-      IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .disableAutoConnect()
-          .build());
+  final IO.Socket socket = IO.io(socketURL, IO.OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
   User? user;
   List<Chat> chats = [];
 
   @override
   void initState() {
     super.initState();
-    print('init state');
     initSocket();
     createChat();
   }
@@ -98,7 +92,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 sendBy: widget.user.userinfo['pk'].toString(),
                 user1: widget.user.userinfo['pk'].toString(),
                 user1Name: widget.user.userinfo['full_name'].toString(),
-                user2: '35', //providerUserId.toString(),
+                user2: providerUserId.toString(),
                 user2Name: providerName,
               ));
         }));
