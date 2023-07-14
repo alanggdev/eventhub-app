@@ -55,7 +55,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         return chats;
       }
     } catch (e) {
-      print(e);
+      // print(e);
+      throw Exception(e.toString());
     }
     return null;
   }
@@ -86,7 +87,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         );
       }
     } catch (e) {
-      print(e);
+      // print(e);
+      throw Exception(e.toString());
     }
     return null;
   }
@@ -97,14 +99,15 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       Response res = await dio.get('$socketURL/chats/msg/',
           data: {'userID': userId, 'chatId': chatId});
       if (res.statusCode == 200) {
-        print(res.data);
+        // print(res.data);
         return Message(
             message: res.data['message'],
             sendBy: res.data['sendBy'],
             timeStamp: res.data['timeStamp']);
       }
     } catch (e) {
-      print(e);
+      // print(e);
+      throw Exception(e.toString());
     }
     return null;
   }
@@ -119,11 +122,12 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       Response res =
           await dio.put('$socketURL/chats/msg/$chatId', data: formData);
       if (res.statusCode == 200) {
-        print(res.data);
+        // print(res.data);
         return true;
       }
     } catch (e) {
-      print(e);
+      // print(e);
+      throw Exception(e.toString());
     }
     return false;
   }
@@ -142,11 +146,12 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     try {
       Response res = await dio.post('$socketURL/chats/', data: formData);
       if (res.statusCode == 200) {
-        print(res.data);
+        // print(res.data);
         return true;
       }
     } catch (e) {
-      print(e);
+      // print(e);
+      throw Exception(e.toString());
     }
     return false;
   }
@@ -159,19 +164,19 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
             .setTransports(['websocket']).setQuery({'userId': 1}).build());
 
     socket.onConnect((data) {
-      print("CONNECTED");
+      // print("CONNECTED");
     });
     socket.on('server:load-chats', (data) {
-      print("Cargando chats");
+      // print("Cargando chats");
     });
     socket.on('server:new-chat', (data) {
-      print("nuevo chat");
+      // print("nuevo chat");
     });
     socket.on('server:new-message', (data) {
-      print("nuevo mensaje");
+      // print("nuevo mensaje");
     });
     socket.onError((err) {
-      print(err);
+      // print(err);
     });
   }
 }

@@ -2,6 +2,8 @@ part of 'chat_bloc.dart';
 
 abstract class ChatEvent {}
 
+class UnloadMessages extends ChatEvent {}
+
 class LoadHomePage extends ChatEvent {
   final String userId;
   LoadHomePage({required this.userId});

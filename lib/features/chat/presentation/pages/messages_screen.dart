@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'package:eventhub_app/assets.dart';
-import 'package:eventhub_app/keys.dart';
 
 import 'package:eventhub_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:eventhub_app/features/chat/presentation/widgets/alerts.dart';
@@ -15,16 +14,16 @@ import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class MessagesScreen extends StatefulWidget {
   final User user;
-  const MessagesScreen(this.user, {super.key});
+  final IO.Socket? socketConn;
+  const MessagesScreen(this.user, this.socketConn, {super.key});
 
   @override
   State<MessagesScreen> createState() => _MessagesScreenState();
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
-  final IO.Socket socket = IO.io(socketURL, IO.OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
   User? user;
-  List<Chat> chats = [];
+  List<Chat>? chats = [];
 
   @override
   void initState() {
@@ -34,41 +33,34 @@ class _MessagesScreenState extends State<MessagesScreen> {
   }
 
   void initSocket() {
-    if (socket.active) {
-      print('Already active');
-      context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
-    } else {
-      print('Activating');
-      socket.connect();
-      socket.onConnect((data) {
-        print("SOCKET CONNECTADO");
-      });
-
-      socket.on('server:load-chats', (data) {
-        print("Cargando chats");
+    if (widget.socketConn != null) {
+      if (widget.socketConn!.active) {
         context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
-      });
 
-      socket.on('server:new-chat', (data) {
-        print("Nuevo chat recibido");
-        if (data == widget.user.userinfo['pk'].toString()) {
-          print("recargando");
-          context.read<ChatBloc>().add(NewChatReceived(userId: widget.user.userinfo['pk'].toString()));
-        }
-      });
+        widget.socketConn!.on('server:new-chat', (data) {
+          // print("Nuevo chat recibido");
+          if (data == widget.user.userinfo['pk'].toString()) {
+            // print("recargando");
+            context.read<ChatBloc>().add(NewChatReceived(userId: widget.user.userinfo['pk'].toString()));
+          }
+        });
 
-      socket.on('server:new-message', (data) {
-        print("Nuevo mensaje recibido desde mensajes");
-        if (data == widget.user.userinfo['pk'].toString()) {
-          print("recargando");
-          context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
-        }
-      });
-  
+        widget.socketConn!.on('server:new-message', (data) {
+          // print("Nuevo mensaje recibido desde mensajes");
+          if (data == widget.user.userinfo['pk'].toString()) {
+            // print("recargando");
+            context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
+          }
+        });
+      } else {
+        chats = null;
+      }
+    } else {
+      chats = null;
     }
 
-    socket.onError((err) {
-      print(err);
+    widget.socketConn?.onError((err) {
+      chats = null;
     });
   }
 
@@ -82,11 +74,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
       prefs.remove('providerName');
 
       if (providerUserId != null && providerName != null) {
-        print('create and load chat');
-        // create chat
         Future.microtask((() {
           context.read<ChatBloc>().add(CreateChat(
-                socketConn: socket,
+                socketConn: widget.socketConn!,
                 message:
                     "Hola, me gustaría obtener más información sobre sus servicios.",
                 sendBy: widget.user.userinfo['pk'].toString(),
@@ -135,19 +125,24 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   ),
                 ),
               ),
-              if (state is LoadingChats || state is InitialState)
+              if (chats == null) 
+                errorWidget(context, 'No fue posible cargar los chats. Inténtelo más tarde.'),
+              if (state is LoadingChats || state is InitialState && chats != null)
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.45,
                   child: loadingChatWidget(context),
                 ),
-              if (state is! LoadedChats && chats.isNotEmpty)
-                Column(
-                  children: chats.map(
-                    (chat) {
-                      return chatWidget(context, chat);
-                    },
-                  ).toList(),
+              if (state is! LoadedChats && chats != null && state is! LoadingChats)
+                if (chats!.isNotEmpty)
+                  Column(
+                    children: chats!.map(
+                      (chat) {
+                        return chatWidget(context, chat);
+                      },
+                    ).toList(),
                 ),
+              if (state is LoadedChats && chats!.isEmpty)
+                  emptyWidget(context, 'No tienes mensajes', Images.emptychat),
               if (state is LoadedChats)
                 if (state.chats!.isNotEmpty)
                 FutureBuilder(
@@ -165,7 +160,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
                     );
                   },
                 )
-                  
             ],
           ),
         ),
@@ -183,21 +177,20 @@ class _MessagesScreenState extends State<MessagesScreen> {
             MaterialPageRoute(
               builder: (context) => ChatScreen(
                   widget.user,
-                  chat.id,
+                  chat.id!,
                   widget.user.userinfo['pk'].toString(),
                   chat.user1 != widget.user.userinfo['pk'].toString()
-                      ? chat.user1
-                      : chat.user2,
+                      ? chat.user1!
+                      : chat.user2!,
                   chat.user1 != widget.user.userinfo['pk'].toString()
-                      ? widget.user.userinfo['full_name']
-                      : chat.user2Name,
-                  socket),
+                      ? chat.user1Name!
+                      : chat.user2Name!,
+                  widget.socketConn!),
             ),
           );
         },
         child: Container(
           width: double.infinity,
-          height: 80,
           decoration: BoxDecoration(
             color: ColorStyles.white,
             borderRadius: BorderRadius.circular(8),
@@ -221,7 +214,10 @@ class _MessagesScreenState extends State<MessagesScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        chat.user2Name,
+                        widget.user.userinfo['pk'].toString() == chat.user1
+                          ? chat.user2Name!
+                          : chat.user1Name!,
+                        //chat.user2Name,
                         style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w500,
@@ -229,7 +225,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                             color: ColorStyles.textPrimary2),
                       ),
                       Text(
-                        chat.messages.last.timeStamp,
+                        chat.messages!.last.timeStamp,
                         style: const TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 15,
@@ -239,10 +235,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   ),
                 ),
                 Text(
-                  chat.messages.last.sendBy ==
-                          widget.user.userinfo['pk'].toString()
-                      ? 'Tú: ${chat.messages.last.message}'
-                      : chat.messages.last.message,
+                  chat.messages!.last.sendBy == widget.user.userinfo['pk'].toString()
+                      ? 'Tú: ${chat.messages!.last.message}'
+                      : chat.messages!.last.message,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: const TextStyle(

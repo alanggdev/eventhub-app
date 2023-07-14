@@ -31,7 +31,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     required this.sendMessageUseCase,
   }) : super(InitialState()) {
     on<ChatEvent>((event, emit) async {
-      if (event is LoadHomePage){
+      if (event is UnloadMessages) {
+        emit(LoadedChat(chat: Chat(messages: [])));
+      } else if (event is LoadHomePage){
        try {
           emit(LoadingChats());
           final List<Chat>? chats = await loadChatsUseCase.execute(event.userId);

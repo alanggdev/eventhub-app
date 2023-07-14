@@ -43,6 +43,8 @@ class Images {
   static const String categoryPlaceholder = 'assets/images/provider/category_placeholder.png';
   static const String providerPlaceholder = 'assets/images/provider/provider_placeholder.png';
   static const String providerDetailPlaceholder = 'assets/images/provider/provider_placeholder_detail.png';
+
+  static const String emptychat = 'assets/images/chat/emptyChat.png';
 }
 
 class CustomIcons {
@@ -54,4 +56,56 @@ class CustomIcons {
   static const String messagesOutlined = 'assets/icons/messages_outlined.png';
   static const String notificationsFilled = 'assets/icons/notifications_filled.png';
   static const String notificationsOutlined = 'assets/icons/notifications_outlined.png';
+}
+
+Padding errorWidget(BuildContext context, String error) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 30),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          Images.error,
+          width: MediaQuery.of(context).size.width * 0.8,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(15),
+          child: Text(
+            error,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: ColorStyles.primaryGrayBlue,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Inter',
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Padding emptyWidget(BuildContext context, String label, String image) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 30),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          image,
+          width: MediaQuery.of(context).size.width * 0.8,
+        ),
+        Text(
+          label,
+          style: const TextStyle(
+            color: ColorStyles.primaryGrayBlue,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Inter',
+          ),
+        ),
+      ],
+    ),
+  );
 }

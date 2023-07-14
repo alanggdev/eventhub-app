@@ -80,6 +80,7 @@ flutter:
     - assets/images/auth/
     - assets/images/event/
     - assets/images/provider/
+    - assets/images/chat/
     - assets/fonts/
     - assets/icons/
 

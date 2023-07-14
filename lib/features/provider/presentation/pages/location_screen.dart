@@ -1,4 +1,3 @@
-import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
