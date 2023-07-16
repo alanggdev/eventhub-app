@@ -166,7 +166,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => HomeScreen(state.user)),
+                              builder: (context) => HomeScreen(state.user, 0)),
                           (route) => false);
                     }),
                     builder: (context, snapshot) {

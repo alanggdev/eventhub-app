@@ -1,4 +1,3 @@
-import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -56,7 +55,7 @@ class _LocationScreenState extends State<LocationScreen> {
           markers: [
             Marker(
               point: widget.initialLocation,
-              builder: (_) => const Icon(Icons.location_on, color: ColorStyles.primaryGrayBlue,),
+              builder: (_) => const Icon(Icons.location_on, color: Colors.red),
             ),
           ],
         ),

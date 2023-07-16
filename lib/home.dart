@@ -1,33 +1,50 @@
+// ignore_for_file: library_prefixes
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'package:eventhub_app/assets.dart';
+import 'package:eventhub_app/keys.dart';
 
 import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
 import 'package:eventhub_app/features/provider/presentation/pages/explore_categories_screen.dart';
+
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
+import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
+
+import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
 import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
 import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
+import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.dart';
+
+import 'package:eventhub_app/features/chat/presentation/pages/messages_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final User userinfo;
-  const HomeScreen(this.userinfo, {super.key});
+  final int index;
+  const HomeScreen(this.userinfo, this.index, {super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  IO.Socket? socket = IO.io(socketURL, IO.OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = [];
 
   @override
   void initState() {
     super.initState();
+    loadIndex();
     unloadLoginState();
+    initSocket();
+  }
+
+  void loadIndex() {
+    setState(() {
+      _selectedIndex = widget.index;
+    });
   }
 
   void unloadLoginState() {
@@ -42,16 +59,49 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void initSocket() {
+    if (!socket!.active) {
+      socket!.connect();
+      socket!.onConnect((data) {
+        // print("SOCKET CONNECTADO");
+      });
+    } else {
+      // socket.on('server:load-chats', (data) {
+      //   print("Cargando chats");
+      //   context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
+      // });
+
+      // socket.on('server:new-chat', (data) {
+      //   print("Nuevo chat recibido");
+      //   if (data == widget.user.userinfo['pk'].toString()) {
+      //     print("recargando");
+      //     context.read<ChatBloc>().add(NewChatReceived(userId: widget.user.userinfo['pk'].toString()));
+      //   }
+      // });
+
+      // socket.on('server:new-message', (data) {
+      //   print("Nuevo mensaje recibido desde mensajes");
+      //   if (data == widget.user.userinfo['pk'].toString()) {
+      //     print("recargando");
+      //     context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
+      //   }
+      // });
+    }
+
+    socket!.onError((err) {
+      // print(err);
+      setState(() {
+        socket = null;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     _widgetOptions = <Widget>[
       MyEventsScreen(widget.userinfo),
       ExploreCategoriesScreen(widget.userinfo),
-      const Center(
-          child: Text(
-        'Messages Screen',
-        style: TextStyle(color: Colors.white),
-      )),
+      MessagesScreen(widget.userinfo, socket),
       const Center(
           child: Text(
         'Notifications Screen',
@@ -324,6 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 6,
         ),
         onPressed: () {
+          socket?.disconnect();
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const AuthScreen()),

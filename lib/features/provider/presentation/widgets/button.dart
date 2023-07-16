@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
@@ -11,6 +11,7 @@ import 'package:eventhub_app/features/provider/presentation/pages/service_list_s
 import 'package:eventhub_app/features/provider/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
 
+import 'package:eventhub_app/home.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 TextButton providerNextPage(
@@ -163,6 +164,57 @@ Padding providerOptionButton(BuildContext context, String label) {
     ),
   );
 }
+
+Padding sendMessageToPorivderButton(BuildContext context, String label, User user, Provider provider) {
+  return Padding(
+    padding: const EdgeInsets.all(10),
+    child: TextButton(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: ColorStyles.primaryBlue,
+        minimumSize: const Size(150, 40),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        shadowColor: Colors.black,
+        elevation: 6,
+      ),
+      onPressed: () async {
+        await SharedPreferences.getInstance().then((prefs) async {
+          await prefs.setInt('providerUserId', provider.userid).then((value) async {
+            await prefs.setString('providerName', provider.companyName).then((value) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen(user, 2)),
+                (Route<dynamic> route) => false,
+              ); 
+            });
+          });
+        });
+      },
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Inter',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 6),
+            child: Icon(
+              label == 'Contactar' ? Icons.message : Icons.event,
+              size: 24,
+            ),
+          )
+        ],
+      ),
+    ),
+  );
+}
+
 
 Padding providerEditButton(BuildContext context, String label, Provider providerData, List<Service>? providerServices, int? providerUserId, User user) {
   return Padding(

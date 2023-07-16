@@ -491,7 +491,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HomeScreen(widget.user)),
+                            builder: (context) => HomeScreen(widget.user, 0)),
                         (route) => false);
                   }),
                   builder: (context, snapshot) {
