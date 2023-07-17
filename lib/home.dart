@@ -1,6 +1,7 @@
 // ignore_for_file: library_prefixes
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'package:eventhub_app/assets.dart';
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!socket!.active) {
       socket!.connect();
       socket!.onConnect((data) {
-        // print("SOCKET CONNECTADO");
+        print("SOCKET CONNECTADO");
       });
     } else {
       // socket.on('server:load-chats', (data) {
@@ -202,8 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    widget.userinfo
-                                                        .userinfo['full_name'],
+                                                    widget.userinfo.userinfo['full_name'],
                                                     style: const TextStyle(
                                                       fontSize: 23,
                                                       color: Color(0xff242C71),
@@ -375,6 +375,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         onPressed: () {
           socket?.disconnect();
+          final google = GoogleSignIn();
+          google.signOut();
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const AuthScreen()),

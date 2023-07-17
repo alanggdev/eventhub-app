@@ -6,6 +6,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/assets.dart';
+import 'package:eventhub_app/home.dart';
 
 import 'package:eventhub_app/features/auth/presentation/pages/register/provider/add_service_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/login/sign_in_screen.dart';
@@ -15,6 +16,7 @@ import 'package:eventhub_app/features/auth/presentation/widgets/company.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 
 import 'package:eventhub_app/features/provider/presentation/widgets/category.dart';
@@ -26,8 +28,9 @@ class AddInfoCompanyScreen extends StatefulWidget {
   final List<String>? selectedCategories;
   final List<File>? companyImages;
   final List<Service>? services;
+  final User? userData;
   const AddInfoCompanyScreen(this.registerUserData, this.registerProviderData,
-      this.selectedCategories, this.companyImages, this.services,
+      this.selectedCategories, this.companyImages, this.services, this.userData,
       {super.key});
 
   @override
@@ -182,17 +185,13 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                                             underline: const SizedBox(),
                                             onChanged: (String? newValue) {
                                               setState(() {
-                                                if (!selectedCategories
-                                                    .contains(newValue)) {
+                                                if (!selectedCategories.contains(newValue)) {
                                                   dropdownValue = newValue;
-                                                  selectedCategories
-                                                      .add(newValue!);
+                                                  selectedCategories.add(newValue!);
                                                 }
                                               });
                                             },
-                                            items: categoriesList
-                                                .map<DropdownMenuItem<String>>(
-                                                    (String value) {
+                                            items: categoriesList.map<DropdownMenuItem<String>>((String value) {
                                               return DropdownMenuItem<String>(
                                                 value: value,
                                                 child: Text(value),
@@ -276,7 +275,8 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                                             widget.registerProviderData,
                                             selectedCategories,
                                             companyImages,
-                                            services)));
+                                            services,
+                                            widget.userData)));
                               },
                               label: const Text(
                                 'Agregar servicio',
@@ -364,7 +364,8 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                             selectedCategories,
                             companyImages,
                             services,
-                            context.read<AuthBloc>()),
+                            context.read<AuthBloc>(),
+                            widget.userData),
                       ),
                     ],
                   ),
@@ -372,7 +373,7 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
               ),
             ),
           ),
-          if (state is CreatingProvider)
+          if (state is CreatingProvider || state is CreatingGoogleProvider)
             loadingWidget(context)
           else if (state is ProviderCreated)
             FutureBuilder(
@@ -381,6 +382,20 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const SignInScreen()));
+              }),
+              builder: (context, snapshot) {
+                return Container();
+              },
+            )
+          else if (state is GoogleProviderCreated)
+            FutureBuilder(
+              future: Future.delayed(Duration.zero, () async {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomeScreen(state.user, 0)),
+                  (route) => false,
+                );
               }),
               builder: (context, snapshot) {
                 return Container();

@@ -174,24 +174,30 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
   Future<User> googleLogin() async {
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       
       final googleSignIn = GoogleSignIn();
       final session = await googleSignIn.signIn();
-      final auth = await session?.authentication;
-      final token = auth?.accessToken;
+      if (session != null) {
+        final auth = await session.authentication;
+        final token = auth.accessToken;
 
-      var body = {"access_token": token.toString()};
+        var body = {"access_token": token.toString()};
 
-      Response response = await dio.post(
-        '$serverURL/auth/google/connect/',
-        options: Options(headers: {HttpHeaders.contentTypeHeader: "application/json"}),
-        data: convert.jsonEncode(body),
-      );
+        Response response = await dio.post(
+          '$serverURL/auth/google/connect/',
+          options: Options(headers: {HttpHeaders.contentTypeHeader: "application/json"}),
+          data: convert.jsonEncode(body),
+        );
 
-      if (response.statusCode == 200) {
-        return UserModel.fromJson(response.data);
+        if (response.statusCode == 200) {
+          await prefs.setInt('userid', response.data['user']['pk']);
+          return UserModel.fromJson(response.data);
+        } else {
+          throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+        }
       } else {
-        throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+        throw Exception('Inicio con google cancelado');
       }
 
     } else {
@@ -218,6 +224,10 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
       );
 
       if (response.statusCode == 200) {
+        Response newResponse = await dio.get('$serverURL/auth/user/');
+        if (newResponse.statusCode == 200) {
+          userData.userinfo = newResponse.data;
+        }
         return userData;
       } else {
         throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');

@@ -2,6 +2,14 @@ part of 'auth_bloc.dart';
 
 abstract class AuthEvent {}
 
+class CompleteProviderGoogleLogIn extends AuthEvent {
+  final User userData;
+  final RegisterUser registerData;
+  final RegisterProvider registerProviderData;
+
+  CompleteProviderGoogleLogIn({required this.userData, required this.registerData, required this.registerProviderData});
+}
+
 class CompleteGoogleLogIn extends AuthEvent {
   final User userData;
   final RegisterUser registerData;

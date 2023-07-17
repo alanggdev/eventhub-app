@@ -12,6 +12,7 @@ import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart'
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 
@@ -21,8 +22,9 @@ class AddService extends StatefulWidget {
   final List<String> selectedCategories;
   final List<File> companyImages;
   final List<Service> services;
+  final User? userData;
   const AddService(this.registerUserData, this.registerProviderData,
-      this.selectedCategories, this.companyImages, this.services,
+      this.selectedCategories, this.companyImages, this.services, this.userData,
       {super.key});
 
   @override
@@ -80,7 +82,8 @@ class _AddServiceState extends State<AddService> {
                   widget.registerProviderData,
                   widget.selectedCategories,
                   widget.companyImages,
-                  widget.services),
+                  widget.services,
+                  widget.userData),
             ));
         return false;
       },
@@ -107,7 +110,8 @@ class _AddServiceState extends State<AddService> {
                             widget.registerProviderData,
                             widget.selectedCategories,
                             widget.companyImages,
-                            widget.services),
+                            widget.services,
+                            widget.userData),
                       ));
                 },
                 child: Row(
@@ -308,9 +312,10 @@ class _AddServiceState extends State<AddService> {
                                 widget.registerProviderData,
                                 widget.selectedCategories,
                                 widget.companyImages,
-                                services,
+                                services, widget.userData,
                               ),
-                            ));
+                            )
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         snackBar('No se permiten cambios vacios'),

@@ -30,7 +30,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       : super(InitialState()) {
     on<AuthEvent>(
       (event, emit) async {
-        if (event is CompleteGoogleLogIn) {
+        if (event is CompleteProviderGoogleLogIn) {
+          // Complete google log in with provider user
+          try {
+            emit(CreatingGoogleProvider());
+            await updateUserUseCase.execute(event.userData, event.registerData).then((userData) async {
+              String providerCreationStatus = await registerProviderUseCase.execute(event.registerProviderData);
+              emit (GoogleProviderCreated(providerCreationStatus: providerCreationStatus, user: userData));
+            },);
+          } catch (error) {
+            emit(Error(error: error.toString()));
+          }
+        } else  if (event is CompleteGoogleLogIn) {
+          // Complete google log in with standard user
           try {
             emit(CompletingGoogleLogIn());
             User user = await updateUserUseCase.execute(event.userData, event.registerData);
@@ -39,6 +51,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             emit(Error(error: error.toString()));
           }
         } else if (event is GoogleLogIn) {
+          // Log in via google account
           try {
             emit(ConnectingGoogle());
             User user = await googleLoginUseCase.execute();
@@ -47,6 +60,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             emit(Error(error: error.toString()));
           }
         } else if (event is CreateProvider) {
+          // Create a new provider via email account
           try {
             emit(CreatingProvider());
             await registerUserUseCase.execute(event.registerUserData).then((value) async {
@@ -58,8 +72,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             emit(Error(error: error.toString()));
           }
         } else if (event is UnloadState) {
+          // Unload useer logged in
           emit(UserLoggedIn(user: event.unload));
         } else if (event is SignInUser) {
+          // Log in via email account
           try {
             emit(LoggingInUser());
             LoginUser loginUserData = LoginUser(email: event.email, password: event.password);
@@ -69,6 +85,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             emit(Error(error: error.toString()));
           }
         } else if (event is CreateUser) {
+          // Create user via email account
           try {
             emit(CreatingUser());
             RegisterUser registerUserData = RegisterUser(

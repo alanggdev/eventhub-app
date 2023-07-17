@@ -126,7 +126,7 @@ TextButton formButtonSignUp(
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => CreateCompanyScreen(registerUserData)),
+                  builder: (context) => CreateCompanyScreen(registerUserData, null)),
             );
           }
         } else {
@@ -224,18 +224,12 @@ TextButton formButtonSignUpGoogle(BuildContext context, User userData, AccountTy
             
           } else if (accountType == AccountTypes.supplier) {
             // company registration
-            // bool isprovider = true;
-            // RegisterUser registerUserData = RegisterUser(
-            //     username: userData.userinfo['username'],
-            //     fullname: fullname,
-            //     email: userData.userinfo['email'],
-            //     password: 'GoogleAccount',
-            //     isprovider: isprovider);
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //       builder: (context) => CreateCompanyScreen(registerUserData)),
-            // );
+            bool isprovider = true;
+            RegisterUser registerUser = RegisterUser(username: 'GoogleAccount', fullname: fullname, email: 'GoogleAccount', password: 'GoogleAccount', isprovider: isprovider);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateCompanyScreen(registerUser, userData)),
+            );
           }
         
       } else {
@@ -268,6 +262,7 @@ TextButton formButtonNextCompany(
   String openTime,
   String closeTime,
   List<String> companyLocation,
+  User? userData
 ) {
   return TextButton(
     style: OutlinedButton.styleFrom(
@@ -311,7 +306,7 @@ TextButton formButtonNextCompany(
             context,
             MaterialPageRoute(
               builder: (context) => AddInfoCompanyScreen(
-                  registerUserData, registerProviderData, null, null, null),
+                  registerUserData, registerProviderData, null, null, null, userData),
               settings: const RouteSettings(name: '/addinfocompany'),
             ));
       } else {
@@ -339,7 +334,8 @@ TextButton formButtonCreateCompany(
     List<String> selectedCategories,
     List<File> companyImages,
     List<Service> services,
-    AuthBloc authBloc) {
+    AuthBloc authBloc,
+    User? userData) {
   return TextButton(
     style: OutlinedButton.styleFrom(
       foregroundColor: Colors.white,
@@ -352,16 +348,17 @@ TextButton formButtonCreateCompany(
       elevation: 3,
     ),
     onPressed: () {
-      if (selectedCategories.isNotEmpty &&
-          selectedCategories.length > 1 &&
-          companyImages.isNotEmpty &&
-          services.isNotEmpty) {
+      if (selectedCategories.isNotEmpty && selectedCategories.length > 1 && companyImages.isNotEmpty && services.isNotEmpty) {
         registerProviderData.categoriesList = selectedCategories;
         registerProviderData.imagesList = companyImages;
         registerProviderData.services = services;
-        authBloc.add(CreateProvider(
-            registerProviderData: registerProviderData,
-            registerUserData: registerUserData));
+
+        if (userData == null) {
+          authBloc.add(CreateProvider(registerProviderData: registerProviderData, registerUserData: registerUserData));
+        } else {
+          authBloc.add(CompleteProviderGoogleLogIn(userData: userData, registerData: registerUserData, registerProviderData: registerProviderData));
+        }
+        
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           snackBar('No se permiten cambios vacios'),
