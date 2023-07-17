@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/assets.dart';
+
+import 'package:eventhub_app/features/auth/presentation/pages/login/sign_in_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -253,126 +254,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
             );
           },
         ));
-  }
-
-  Future<dynamic> tooltip(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Center(
-          child: Stack(
-            children: <Widget>[
-              Container(
-                width: 320,
-                height: 170,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(16.0),
-                    boxShadow: const <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 0.0,
-                        offset: Offset(0.0, 0.0),
-                      ),
-                    ]),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: SizedBox(
-                    height: 140,
-                    width: 320,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 15),
-                        RichText(
-                          text: const TextSpan(
-                            text: "Elige ",
-                            style: TextStyle(
-                              color: ColorStyles.textPrimary2,
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "Usuario Estándar ",
-                                style: TextStyle(
-                                  color: ColorStyles.textSecondary2,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w600
-                                ),
-                              ),
-                              TextSpan(
-                                text: "si solo quieres llevar el control de tus eventos.",
-                                style: TextStyle(
-                                  color: ColorStyles.textPrimary2,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        RichText(
-                          text: const TextSpan(
-                            text: "Elige ",
-                            style: TextStyle(
-                              color: ColorStyles.textPrimary2,
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "Organizador/Proveedor ",
-                                style: TextStyle(
-                                  color: ColorStyles.textSecondary2,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w600
-                                ),
-                              ),
-                              TextSpan(
-                                text: "si eres una empresa u organizador independiente que ofrece servicios o productos para eventos. Aún podrás crear y gestionar tus eventos, y los usuarios estándar podrán contactarte.",
-                                style: TextStyle(
-                                  color: ColorStyles.textPrimary2,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                right: 5,
-                top: 5,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Align(
-                    alignment: Alignment.topRight,
-                    child: CircleAvatar(
-                      radius: 14.0,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.close, color: ColorStyles.primaryGrayBlue),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 }

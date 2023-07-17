@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
 
-Padding textField(BuildContext context, IconData icon, String label, TextEditingController fieldContoller, TextInputType textInputType) {
+Padding textField(BuildContext context, IconData icon, String label, TextEditingController? fieldContoller, TextInputType textInputType) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     child: Stack(
@@ -24,6 +24,7 @@ Padding textField(BuildContext context, IconData icon, String label, TextEditing
         TextField(
           controller: fieldContoller,
           keyboardType: textInputType,
+          enabled: fieldContoller != null ? true : false,
           decoration: InputDecoration(
             prefixIcon: Icon(
               icon,
@@ -48,7 +49,7 @@ Padding textField(BuildContext context, IconData icon, String label, TextEditing
   );
 }
 
-Padding textFieldMaxLength(BuildContext context, IconData icon, String label, TextEditingController fieldContoller, int maxLength) {
+Padding textFieldMaxLength(BuildContext context, IconData icon, String label, TextEditingController? fieldContoller, int maxLength) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
     child: Stack(
@@ -70,6 +71,7 @@ Padding textFieldMaxLength(BuildContext context, IconData icon, String label, Te
         TextField(
           controller: fieldContoller,
           maxLength: maxLength,
+          enabled: fieldContoller != null ? true : false,
           decoration: InputDecoration(
             prefixIcon: Icon(
               icon,
@@ -94,7 +96,7 @@ Padding textFieldMaxLength(BuildContext context, IconData icon, String label, Te
   );
 }
 
-Padding textFieldPass(BuildContext context, IconData icon, String label, TextEditingController fieldContoller,
+Padding textFieldPass(BuildContext context, IconData icon, String label, TextEditingController? fieldContoller,
     bool hidePass, Function(bool state) changePassVisibility) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -150,7 +152,7 @@ Padding textFieldPass(BuildContext context, IconData icon, String label, TextEdi
   );
 }
 
-Padding textFieldLong(BuildContext context, IconData icon, String label, TextEditingController fieldContoller, int maxLength) {
+Padding textFieldLong(BuildContext context, IconData icon, String label, TextEditingController? fieldContoller, int maxLength) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
     child: Stack(

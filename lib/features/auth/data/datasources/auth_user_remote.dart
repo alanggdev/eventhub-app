@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:dio/dio.dart';
@@ -22,9 +24,13 @@ abstract class AuthUserDataSource {
   Future<String> registerUser(RegisterUser registerUserData);
   Future<User> loginUser(LoginUser loginUserData);
   Future<String> registerProvider(RegisterProvider registerProviderData);
+  Future<User> googleLogin();
+  Future<User> updateUser(User userData, RegisterUser registerUserData);
 }
 
 class AuthUserDataSourceImpl extends AuthUserDataSource {
+  final dio = Dio();
+
   @override
   Future<String> registerUser(RegisterUser registerUserData) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -161,6 +167,64 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
       return 'Services created';
     } else {
       throw Exception('Server error (providers)');
+    }
+  }
+
+  @override
+  Future<User> googleLogin() async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      
+      final googleSignIn = GoogleSignIn();
+      final session = await googleSignIn.signIn();
+      final auth = await session?.authentication;
+      final token = auth?.accessToken;
+
+      var body = {"access_token": token.toString()};
+
+      Response response = await dio.post(
+        '$serverURL/auth/google/connect/',
+        options: Options(headers: {HttpHeaders.contentTypeHeader: "application/json"}),
+        data: convert.jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        return UserModel.fromJson(response.data);
+      } else {
+        throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+      }
+
+    } else {
+      throw Exception('Sin conexión a internet');
+    }
+  }
+
+  @override
+  Future<User> updateUser(User userData, RegisterUser registerUserData) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+      var body = {
+        'full_name': registerUserData.fullname,
+        'is_provider': registerUserData.isprovider
+      };
+
+      dio.options.headers["Content-Type"] = "application/json";
+      dio.options.headers["Authorization"] = "Bearer ${userData.access}";
+
+      Response response = await dio.patch(
+        '$serverURL/auth/user/',
+        data: convert.jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        return userData;
+      } else {
+        throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+      }
+
+    } else {
+      throw Exception('Sin conexión a internet');
     }
   }
 }

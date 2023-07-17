@@ -1,15 +1,15 @@
-import 'package:eventhub_app/features/auth/presentation/pages/map_picker_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 import 'package:eventhub_app/assets.dart';
+
+import 'package:eventhub_app/features/auth/presentation/pages/register/provider/map_picker_dialog.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
 
 class CreateCompanyScreen extends StatefulWidget {
   final RegisterUser registerUserData;

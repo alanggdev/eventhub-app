@@ -4,6 +4,20 @@ abstract class AuthState {}
 
 class InitialState extends AuthState {}
 
+class CompletingGoogleLogIn extends AuthState {}
+class GoogleLogInCompleted extends AuthState {
+  final User user;
+
+  GoogleLogInCompleted({required this.user});
+}
+
+class ConnectingGoogle extends AuthState {}
+class GoogleConnected extends AuthState {
+  final User user;
+
+  GoogleConnected({required this.user});
+}
+
 class CreatingProvider extends AuthState {}
 class ProviderCreated extends AuthState {
   final String providerCreationStatus;

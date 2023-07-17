@@ -6,12 +6,12 @@ import 'package:image_cropper/image_cropper.dart';
 
 import 'package:eventhub_app/assets.dart';
 
-import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
-import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/add_info_company_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/provider/add_info_company_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
+import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
+import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
 
 import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 

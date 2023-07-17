@@ -10,7 +10,7 @@ import 'package:eventhub_app/features/provider/presentation/widgets/button.dart'
 import 'package:eventhub_app/features/provider/presentation/pages/provider_screen.dart';
 import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 
-import 'package:eventhub_app/features/auth/presentation/pages/map_picker_dialog.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/provider/map_picker_dialog.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class EditInformationScreen extends StatefulWidget {

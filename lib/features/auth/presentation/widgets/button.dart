@@ -4,18 +4,21 @@ import 'dart:io';
 
 import 'package:eventhub_app/assets.dart';
 
-import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/create_company_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/add_info_company_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/login/sign_in_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/provider/create_company_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/provider/add_info_company_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/user/google_sign_up_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/user/sign_up_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 
-Padding authButton(BuildContext context, String buttonType) {
+Padding authButton(
+    BuildContext context, String buttonType, AuthBloc? authBloc) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 6),
     child: TextButton.icon(
@@ -38,11 +41,15 @@ Padding authButton(BuildContext context, String buttonType) {
         elevation: 3,
       ),
       onPressed: () async {
+        // final googleSignIn = GoogleSignIn();
         if (buttonType == 'Correo') {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const SignInScreen()),
           );
+          // googleSignIn.signOut();
+        } else {
+          authBloc!.add(GoogleLogIn());
         }
       },
       label: Text(
@@ -179,6 +186,67 @@ TextButton formButtonSignIn(
     child: const Text(
       'Iniciar sesión',
       style: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        fontFamily: 'Inter',
+      ),
+    ),
+  );
+}
+
+TextButton formButtonSignUpGoogle(BuildContext context, User userData, AccountTypes? accountType, TextEditingController fullnameController, AuthBloc authBloc) {
+  return TextButton(
+    style: OutlinedButton.styleFrom(
+      foregroundColor: Colors.white,
+      backgroundColor: ColorStyles.primaryBlue,
+      minimumSize: const Size(double.infinity, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      shadowColor: Colors.black,
+      elevation: 3,
+    ),
+    onPressed: () {
+      // Unfocus keyboard
+      FocusManager.instance.primaryFocus?.unfocus();
+      // Get register data
+      String fullname = fullnameController.text.trim();
+      // Verify if credentials are not empty
+      if (fullname.isNotEmpty) {
+          // User registration
+          if (accountType == AccountTypes.normal) {
+            // data
+            bool isprovider = false;
+            // go to update profile
+            RegisterUser registerUser = RegisterUser(username: 'GoogleAccount', fullname: fullname, email: 'GoogleAccount', password: 'GoogleAccount', isprovider: isprovider);
+            authBloc.add(CompleteGoogleLogIn(userData: userData, registerData: registerUser));
+            
+          } else if (accountType == AccountTypes.supplier) {
+            // company registration
+            // bool isprovider = true;
+            // RegisterUser registerUserData = RegisterUser(
+            //     username: userData.userinfo['username'],
+            //     fullname: fullname,
+            //     email: userData.userinfo['email'],
+            //     password: 'GoogleAccount',
+            //     isprovider: isprovider);
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //       builder: (context) => CreateCompanyScreen(registerUserData)),
+            // );
+          }
+        
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          snackBar('No se permiten cambios vacios'),
+        );
+      }
+    },
+    child: Text(
+      accountType == AccountTypes.normal ? 'Crear cuenta' : 'Continuar',
+      style: const TextStyle(
         color: Colors.white,
         fontSize: 20,
         fontWeight: FontWeight.w600,

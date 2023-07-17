@@ -402,8 +402,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(context,
               MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.userinfo.userinfo['pk'], widget.userinfo)));
           } else {
-            print(widget.userinfo.userinfo['pk'].toString());
-            print('to create provider');
+            // print(widget.userinfo.userinfo['pk'].toString());
+            // print('to create provider');
           }
         },
         child: Row(

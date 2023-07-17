@@ -7,19 +7,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/assets.dart';
 
-import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/add_service_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/provider/add_service_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/login/sign_in_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/company.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
-
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 
-import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/category.dart';
+import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 
 class AddInfoCompanyScreen extends StatefulWidget {
   final RegisterUser registerUserData;
