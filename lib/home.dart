@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!socket!.active) {
       socket!.connect();
       socket!.onConnect((data) {
-        print("SOCKET CONNECTADO");
+        // print("SOCKET CONNECTADO");
       });
     } else {
       // socket.on('server:load-chats', (data) {

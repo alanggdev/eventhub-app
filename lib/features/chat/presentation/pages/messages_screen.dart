@@ -39,7 +39,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
         context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
 
         widget.socketConn!.on('server:new-chat', (data) {
-          print("Nuevo chat recibido");
+          // print("Nuevo chat recibido");
           if (data == widget.user.userinfo['pk'].toString()) {
             if (isActive) {
               context.read<ChatBloc>().add(NewChatReceived(userId: widget.user.userinfo['pk'].toString()));
@@ -48,7 +48,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
         });
 
         widget.socketConn!.on('server:load-messages', (data) {
-          print("Nuevo mensaje recibido desde mensajes");
+          // print("Nuevo mensaje recibido desde mensajes");
           if (data == widget.user.userinfo['pk'].toString()) {
             if (isActive) {
               context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));

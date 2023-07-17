@@ -47,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
     context.read<ChatBloc>().add(LoadChatPage(chatId: widget.chatId));
 
     widget.socketConn.on('server:new-message', (data) {
-      print("Nuevo mensaje recibido desde chat");
+      // print("Nuevo mensaje recibido desde chat");
       if (data == widget.userId) {
         if (isActive) {
           context.read<ChatBloc>().add(LoadChatPage(chatId: widget.chatId));
@@ -176,9 +176,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       );
                     },
-                  )
-              else 
-                Text('data'),
+                  ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: SizedBox(
