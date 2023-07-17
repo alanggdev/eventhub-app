@@ -33,6 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
   ScrollController scrollController = ScrollController();
   TextEditingController messageController = TextEditingController();
   bool available = true;
+  bool isActive = true;
 
   List<Message> messages = [];
 
@@ -45,10 +46,12 @@ class _ChatScreenState extends State<ChatScreen> {
   void connectSocket() {
     context.read<ChatBloc>().add(LoadChatPage(chatId: widget.chatId));
 
-    widget.socketConn.on('server:load-messages', (data) {
-      // print("Nuevo mensaje recibido desde chat");
+    widget.socketConn.on('server:new-message', (data) {
+      print("Nuevo mensaje recibido desde chat");
       if (data == widget.userId) {
-        context.read<ChatBloc>().add(LoadChatPage(chatId: widget.chatId));
+        if (isActive) {
+          context.read<ChatBloc>().add(LoadChatPage(chatId: widget.chatId));
+        }
       }
     });
   }
@@ -60,6 +63,9 @@ class _ChatScreenState extends State<ChatScreen> {
         onWillPop: () async {
           // ignore: invalid_use_of_visible_for_testing_member
           context.read<ChatBloc>().emit(LoadedChat(chat: Chat(messages: [])));
+          setState(() {
+            isActive = false;
+          });
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen(widget.user, 2)),
@@ -93,6 +99,9 @@ class _ChatScreenState extends State<ChatScreen> {
               onPressed: () {
                 // ignore: invalid_use_of_visible_for_testing_member
                 context.read<ChatBloc>().emit(LoadedChat(chat: Chat(messages: [])));
+                setState(() {
+                  isActive = false;
+                });
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => HomeScreen(widget.user, 2)),
@@ -167,7 +176,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       );
                     },
-                  ),
+                  )
+              else 
+                Text('data'),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: SizedBox(
