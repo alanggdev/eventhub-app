@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:eventhub_app/assets.dart';
 
@@ -26,6 +27,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final passController = TextEditingController();
   final passConfirmController = TextEditingController();
   UserTypes? userType = UserTypes.normal;
+  bool termsAndConditions = false;
 
   bool hidePass = true;
 
@@ -47,6 +49,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     authbloc.add(UnloadState(unload: userUnload));
   }
 
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(Uri.parse('https://eventhub.fun/aviso-de-privacidad.html'), mode: LaunchMode.externalNonBrowserApplication)) {
+      throw Exception('Could not launch https://eventhub.fun/aviso-de-privacidad.html');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.2,
+                          height: MediaQuery.of(context).size.height * 0.15,
                           width: double.infinity,
                           child: Padding(
                             padding: const EdgeInsets.all(15),
@@ -73,8 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   children: [
                                     Image.asset(
                                       Images.logoURL,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.15,
+                                      width: 50,
                                     ),
                                     const Text(
                                       'eventhub',
@@ -90,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 10),
                                   child: Text(
-                                    'Bienvenido, por favor, ingresa tus datos para registrarte.',
+                                    'Ingresa tus datos para registrarte.',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: ColorStyles.textPrimary2,
@@ -105,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         Column(
                           children: [
-                            textFieldMaxLength(context, Icons.person, 'Nombre de usuario', usernameController, 15),
+                            textFieldMaxLength(context, Icons.account_circle, 'Nombre de usuario', usernameController, 15),
                             textFieldMaxLength(context, Icons.person, 'Nombre completo', fullnameController, 35),
                             textField(context, Icons.email, 'Correo electrónico', emailController, TextInputType.text),
                             textFieldPass(context, Icons.lock, 'Contraseña', passController, hidePass, changePassVisibility),
@@ -126,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 Expanded(
                                   child: ListTile(
                                     title: const Text(
-                                      'Usuario normal',
+                                      'Usuario estandar',
                                       style: TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 14,
@@ -178,15 +185,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     fontSize: 12,
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    tooltip(context);
-                                  },
-                                  icon: const Icon(Icons.help_outline,
-                                      color: ColorStyles.textPrimary2,
-                                      size: 22),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      tooltip(context);
+                                    },
+                                    child: const Icon(Icons.help_outline, color: ColorStyles.textPrimary2, size: 20),
+                                  ),
                                 ),
                               ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Checkbox(
+                                    value: termsAndConditions,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        termsAndConditions = value!;
+                                      });
+                                    },
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      _launchUrl();
+                                    },
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.7,
+                                      child: RichText(
+                                        text: const TextSpan(
+                                          text: "Acepto los ",
+                                            style: TextStyle(
+                                            color: ColorStyles.textPrimary2,
+                                            fontFamily: 'Inter',
+                                            fontSize: 12,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text: "términos y condiciones",
+                                                style: TextStyle(color: Color(0xffe73f6a), fontWeight: FontWeight.w600)),
+                                            TextSpan(text: " de la aplicación "),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: formButtonSignUp(
+                                  context,
+                                  userType,
+                                  usernameController,
+                                  fullnameController,
+                                  emailController,
+                                  passController,
+                                  passConfirmController,
+                                  context.read<AuthBloc>(),
+                                  termsAndConditions),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -214,19 +276,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   ),
                                 ),
                               ],
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: formButtonSignUp(
-                                  context,
-                                  userType,
-                                  usernameController,
-                                  fullnameController,
-                                  emailController,
-                                  passController,
-                                  passConfirmController,
-                                  context.read<AuthBloc>()),
                             ),
                           ],
                         ),

@@ -1,6 +1,7 @@
 import 'package:eventhub_app/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:eventhub_app/assets.dart';
 
@@ -24,6 +25,7 @@ class _GoogleSignUpScreenState extends State<GoogleSignUpScreen> {
   final fullnameController = TextEditingController();
   AccountTypes? accountType = AccountTypes.normal;
   User? user;
+  bool termsAndConditions = false;
 
   @override
   void initState() {
@@ -40,6 +42,12 @@ class _GoogleSignUpScreenState extends State<GoogleSignUpScreen> {
 
   void loadData() {
     user = widget.user;
+  }
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(Uri.parse('https://eventhub.fun/aviso-de-privacidad.html'), mode: LaunchMode.externalNonBrowserApplication)) {
+      throw Exception('Could not launch https://eventhub.fun/aviso-de-privacidad.html');
+    }
   }
 
   @override
@@ -172,6 +180,46 @@ class _GoogleSignUpScreenState extends State<GoogleSignUpScreen> {
                         ),
                       ),
                       Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Checkbox(
+                              value: termsAndConditions,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  termsAndConditions = value!;
+                                });
+                              },
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                _launchUrl();
+                              },
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                child: RichText(
+                                  text: const TextSpan(
+                                    text: "Acepto los ",
+                                      style: TextStyle(
+                                      color: ColorStyles.textPrimary2,
+                                      fontFamily: 'Inter',
+                                      fontSize: 12,
+                                    ),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                          text: "términos y condiciones",
+                                          style: TextStyle(color: Color(0xffe73f6a), fontWeight: FontWeight.w600)),
+                                      TextSpan(text: " de la aplicación "),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
                         padding:
                             const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                         child: formButtonSignUpGoogle(
@@ -179,7 +227,8 @@ class _GoogleSignUpScreenState extends State<GoogleSignUpScreen> {
                             user!,
                             accountType,
                             fullnameController,
-                            context.read<AuthBloc>()),
+                            context.read<AuthBloc>(),
+                            termsAndConditions),
                       ),
                     ],
                   ),

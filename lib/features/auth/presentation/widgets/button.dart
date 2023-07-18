@@ -75,11 +75,12 @@ TextButton formButtonSignUp(
     TextEditingController emailController,
     TextEditingController passController,
     TextEditingController passConfirmController,
-    AuthBloc authBloc) {
+    AuthBloc authBloc,
+    bool termsAndConditions) {
   return TextButton(
     style: OutlinedButton.styleFrom(
       foregroundColor: Colors.white,
-      backgroundColor: ColorStyles.primaryBlue,
+      backgroundColor: termsAndConditions ? ColorStyles.primaryBlue : ColorStyles.primaryGrayBlue,
       minimumSize: const Size(double.infinity, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -90,54 +91,56 @@ TextButton formButtonSignUp(
     onPressed: () {
       // Unfocus keyboard
       FocusManager.instance.primaryFocus?.unfocus();
-      // Get register data
-      String username = usernameController.text.trim();
-      String fullname = fullnameController.text.trim();
-      String email = emailController.text.trim();
-      String pass = passController.text.trim();
-      String passConfirm = passConfirmController.text.trim();
-      // Verify if credentials are not empty
-      if (username.isNotEmpty &&
-          fullname.isNotEmpty &&
-          email.isNotEmpty &&
-          pass.isNotEmpty &&
-          passConfirm.isNotEmpty) {
-        // Verify if password fields
-        if (pass == passConfirm) {
-          // User registration
-          if (userType == UserTypes.normal) {
-            // data
-            bool isprovider = false;
-            authBloc.add(CreateUser(
-                username: username,
-                fullname: fullname,
-                email: email,
-                password: pass,
-                isprovider: isprovider));
-          } else if (userType == UserTypes.supplier) {
-            // company registration
-            bool isprovider = true;
-            RegisterUser registerUserData = RegisterUser(
-                username: username,
-                fullname: fullname,
-                email: email,
-                password: pass,
-                isprovider: isprovider);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CreateCompanyScreen(registerUserData, null)),
+      if (termsAndConditions) {
+        // Get register data
+        String username = usernameController.text.trim();
+        String fullname = fullnameController.text.trim();
+        String email = emailController.text.trim();
+        String pass = passController.text.trim();
+        String passConfirm = passConfirmController.text.trim();
+        // Verify if credentials are not empty
+        if (username.isNotEmpty &&
+            fullname.isNotEmpty &&
+            email.isNotEmpty &&
+            pass.isNotEmpty &&
+            passConfirm.isNotEmpty) {
+          // Verify if password fields
+          if (pass == passConfirm) {
+            // User registration
+            if (userType == UserTypes.normal) {
+              // data
+              bool isprovider = false;
+              authBloc.add(CreateUser(
+                  username: username,
+                  fullname: fullname,
+                  email: email,
+                  password: pass,
+                  isprovider: isprovider));
+            } else if (userType == UserTypes.supplier) {
+              // company registration
+              bool isprovider = true;
+              RegisterUser registerUserData = RegisterUser(
+                  username: username,
+                  fullname: fullname,
+                  email: email,
+                  password: pass,
+                  isprovider: isprovider);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateCompanyScreen(registerUserData, null)),
+              );
+            }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              snackBar('Verifique la contraseña'),
             );
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            snackBar('Verifique la contraseña'),
+            snackBar('No se permiten cambios vacios'),
           );
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          snackBar('No se permiten cambios vacios'),
-        );
       }
     },
     child: Text(
@@ -195,11 +198,13 @@ TextButton formButtonSignIn(
   );
 }
 
-TextButton formButtonSignUpGoogle(BuildContext context, User userData, AccountTypes? accountType, TextEditingController fullnameController, AuthBloc authBloc) {
+TextButton formButtonSignUpGoogle(BuildContext context, User userData,
+  AccountTypes? accountType, TextEditingController fullnameController,
+    AuthBloc authBloc, bool termsAndConditions) {
   return TextButton(
     style: OutlinedButton.styleFrom(
       foregroundColor: Colors.white,
-      backgroundColor: ColorStyles.primaryBlue,
+      backgroundColor: termsAndConditions ? ColorStyles.primaryBlue : ColorStyles.primaryGrayBlue,
       minimumSize: const Size(double.infinity, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -210,33 +215,36 @@ TextButton formButtonSignUpGoogle(BuildContext context, User userData, AccountTy
     onPressed: () {
       // Unfocus keyboard
       FocusManager.instance.primaryFocus?.unfocus();
-      // Get register data
-      String fullname = fullnameController.text.trim();
-      // Verify if credentials are not empty
-      if (fullname.isNotEmpty) {
-          // User registration
-          if (accountType == AccountTypes.normal) {
-            // data
-            bool isprovider = false;
-            // go to update profile
-            RegisterUser registerUser = RegisterUser(username: 'GoogleAccount', fullname: fullname, email: 'GoogleAccount', password: 'GoogleAccount', isprovider: isprovider);
-            authBloc.add(CompleteGoogleLogIn(userData: userData, registerData: registerUser));
-            
-          } else if (accountType == AccountTypes.supplier) {
-            // company registration
-            bool isprovider = true;
-            RegisterUser registerUser = RegisterUser(username: 'GoogleAccount', fullname: fullname, email: 'GoogleAccount', password: 'GoogleAccount', isprovider: isprovider);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreateCompanyScreen(registerUser, userData)),
-            );
-          }
-        
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          snackBar('No se permiten cambios vacios'),
-        );
+      if (termsAndConditions) {
+        // Get register data
+        String fullname = fullnameController.text.trim();
+        // Verify if credentials are not empty
+        if (fullname.isNotEmpty) {
+            // User registration
+            if (accountType == AccountTypes.normal) {
+              // data
+              bool isprovider = false;
+              // go to update profile
+              RegisterUser registerUser = RegisterUser(username: 'GoogleAccount', fullname: fullname, email: 'GoogleAccount', password: 'GoogleAccount', isprovider: isprovider);
+              authBloc.add(CompleteGoogleLogIn(userData: userData, registerData: registerUser));
+              
+            } else if (accountType == AccountTypes.supplier) {
+              // company registration
+              bool isprovider = true;
+              RegisterUser registerUser = RegisterUser(username: 'GoogleAccount', fullname: fullname, email: 'GoogleAccount', password: 'GoogleAccount', isprovider: isprovider);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateCompanyScreen(registerUser, userData)),
+              );
+            }
+          
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            snackBar('No se permiten cambios vacios'),
+          );
+        }
       }
+      
     },
     child: Text(
       accountType == AccountTypes.normal ? 'Crear cuenta' : 'Continuar',

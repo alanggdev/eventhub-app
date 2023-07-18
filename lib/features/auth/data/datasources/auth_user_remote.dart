@@ -212,7 +212,9 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
 
       var body = {
         'full_name': registerUserData.fullname,
-        'is_provider': registerUserData.isprovider
+        'is_provider': registerUserData.isprovider,
+        'firebase_token': 'pending',
+        'terms_conditions' : true
       };
 
       dio.options.headers["Content-Type"] = "application/json";

@@ -64,36 +64,15 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!socket!.active) {
       socket!.connect();
       socket!.onConnect((data) {
-        // print("SOCKET CONNECTADO");
+        print("SOCKET CONNECTADO");
       });
-    } else {
-      // socket.on('server:load-chats', (data) {
-      //   print("Cargando chats");
-      //   context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
-      // });
-
-      // socket.on('server:new-chat', (data) {
-      //   print("Nuevo chat recibido");
-      //   if (data == widget.user.userinfo['pk'].toString()) {
-      //     print("recargando");
-      //     context.read<ChatBloc>().add(NewChatReceived(userId: widget.user.userinfo['pk'].toString()));
-      //   }
-      // });
-
-      // socket.on('server:new-message', (data) {
-      //   print("Nuevo mensaje recibido desde mensajes");
-      //   if (data == widget.user.userinfo['pk'].toString()) {
-      //     print("recargando");
-      //     context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
-      //   }
-      // });
     }
 
     socket!.onError((err) {
-      // print(err);
-      setState(() {
-        socket = null;
-      });
+      print(err);
+      // setState(() {
+      //   socket = null;
+      // });
     });
   }
 
@@ -375,6 +354,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         onPressed: () {
           socket?.disconnect();
+          socket?.destroy();
+          socket?.dispose();
           final google = GoogleSignIn();
           google.signOut();
           Navigator.pushAndRemoveUntil(
