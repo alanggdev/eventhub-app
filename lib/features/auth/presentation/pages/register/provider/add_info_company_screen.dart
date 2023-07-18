@@ -206,7 +206,7 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                               ),
                             ),
                             const Text(
-                              'Agrega categorias que identifiquen o que sean relevantes para tu empresa. Min. 2',
+                              'Agrega categorias que identifiquen o que sean relevantes para tu empresa.',
                               style: TextStyle(
                                 color: ColorStyles.textPrimary2,
                                 fontFamily: 'Inter',
@@ -254,37 +254,40 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                             const Divider(
                               color: ColorStyles.baseLightBlue,
                             ),
-                            TextButton.icon(
-                              icon: const Icon(Icons.add),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: ColorStyles.textSecondary1,
-                                minimumSize: const Size(double.infinity, 50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 15),
+                              child: TextButton.icon(
+                                icon: const Icon(Icons.add),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: ColorStyles.textSecondary1,
+                                  minimumSize: const Size(double.infinity, 50),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  shadowColor: Colors.black,
+                                  elevation: 3,
                                 ),
-                                shadowColor: Colors.black,
-                                elevation: 3,
-                              ),
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddService(
-                                            widget.registerUserData,
-                                            widget.registerProviderData,
-                                            selectedCategories,
-                                            companyImages,
-                                            services,
-                                            widget.userData)));
-                              },
-                              label: const Text(
-                                'Agregar servicio',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Inter',
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AddService(
+                                              widget.registerUserData,
+                                              widget.registerProviderData,
+                                              selectedCategories,
+                                              companyImages,
+                                              services,
+                                              widget.userData)));
+                                },
+                                label: const Text(
+                                  'Agregar servicio',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Inter',
+                                  ),
                                 ),
                               ),
                             ),
@@ -410,8 +413,7 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
 
   CarouselSlider servicesWidgetCarousel() {
     return CarouselSlider(
-      options:
-          CarouselOptions(enableInfiniteScroll: false, viewportFraction: 1),
+      options: CarouselOptions(enableInfiniteScroll: false, viewportFraction: 1),
       items: [
         for (int index = 0; index < services.length; index++)
           Builder(

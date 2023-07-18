@@ -356,7 +356,7 @@ TextButton formButtonCreateCompany(
       elevation: 3,
     ),
     onPressed: () {
-      if (selectedCategories.isNotEmpty && selectedCategories.length > 1 && companyImages.isNotEmpty && services.isNotEmpty) {
+      if (selectedCategories.isNotEmpty && companyImages.isNotEmpty && services.isNotEmpty) {
         registerProviderData.categoriesList = selectedCategories;
         registerProviderData.imagesList = companyImages;
         registerProviderData.services = services;
