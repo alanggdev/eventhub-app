@@ -22,6 +22,8 @@ class RegisterUserModel extends RegisterUser {
       'password1': data.password,
       'password2': data.password,
       'is_provider': data.isprovider,
+      'firebase_token': 'pending',
+      'terms_conditions' : true
     };
   }
 }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:eventhub_app/assets.dart';
+
+import 'package:eventhub_app/features/auth/presentation/pages/login/sign_in_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -25,6 +27,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final passController = TextEditingController();
   final passConfirmController = TextEditingController();
   UserTypes? userType = UserTypes.normal;
+  bool termsAndConditions = false;
 
   bool hidePass = true;
 
@@ -46,6 +49,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     authbloc.add(UnloadState(unload: userUnload));
   }
 
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(Uri.parse('https://eventhub.fun/aviso-de-privacidad.html'), mode: LaunchMode.externalNonBrowserApplication)) {
+      throw Exception('Could not launch https://eventhub.fun/aviso-de-privacidad.html');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.2,
+                          height: MediaQuery.of(context).size.height * 0.15,
                           width: double.infinity,
                           child: Padding(
                             padding: const EdgeInsets.all(15),
@@ -72,8 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   children: [
                                     Image.asset(
                                       Images.logoURL,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.15,
+                                      width: 50,
                                     ),
                                     const Text(
                                       'eventhub',
@@ -89,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 10),
                                   child: Text(
-                                    'Bienvenido, por favor, ingresa tus datos para registrarte.',
+                                    'Ingresa tus datos para registrarte.',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: ColorStyles.textPrimary2,
@@ -104,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         Column(
                           children: [
-                            textFieldMaxLength(context, Icons.person, 'Nombre de usuario', usernameController, 15),
+                            textFieldMaxLength(context, Icons.account_circle, 'Nombre de usuario', usernameController, 15),
                             textFieldMaxLength(context, Icons.person, 'Nombre completo', fullnameController, 35),
                             textField(context, Icons.email, 'Correo electrónico', emailController, TextInputType.text),
                             textFieldPass(context, Icons.lock, 'Contraseña', passController, hidePass, changePassVisibility),
@@ -125,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 Expanded(
                                   child: ListTile(
                                     title: const Text(
-                                      'Usuario normal',
+                                      'Usuario estandar',
                                       style: TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 14,
@@ -177,15 +185,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     fontSize: 12,
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    tooltip(context);
-                                  },
-                                  icon: const Icon(Icons.help_outline,
-                                      color: ColorStyles.textPrimary2,
-                                      size: 22),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      tooltip(context);
+                                    },
+                                    child: const Icon(Icons.help_outline, color: ColorStyles.textPrimary2, size: 20),
+                                  ),
                                 ),
                               ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Checkbox(
+                                    value: termsAndConditions,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        termsAndConditions = value!;
+                                      });
+                                    },
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      _launchUrl();
+                                    },
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.7,
+                                      child: RichText(
+                                        text: const TextSpan(
+                                          text: "Acepto los ",
+                                            style: TextStyle(
+                                            color: ColorStyles.textPrimary2,
+                                            fontFamily: 'Inter',
+                                            fontSize: 12,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text: "términos y condiciones",
+                                                style: TextStyle(color: Color(0xffe73f6a), fontWeight: FontWeight.w600)),
+                                            TextSpan(text: " de la aplicación "),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: formButtonSignUp(
+                                  context,
+                                  userType,
+                                  usernameController,
+                                  fullnameController,
+                                  emailController,
+                                  passController,
+                                  passConfirmController,
+                                  context.read<AuthBloc>(),
+                                  termsAndConditions),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -214,19 +277,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: formButtonSignUp(
-                                  context,
-                                  userType,
-                                  usernameController,
-                                  fullnameController,
-                                  emailController,
-                                  passController,
-                                  passConfirmController,
-                                  context.read<AuthBloc>()),
-                            ),
                           ],
                         ),
                       ],
@@ -253,126 +303,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
             );
           },
         ));
-  }
-
-  Future<dynamic> tooltip(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Center(
-          child: Stack(
-            children: <Widget>[
-              Container(
-                width: 320,
-                height: 170,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(16.0),
-                    boxShadow: const <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 0.0,
-                        offset: Offset(0.0, 0.0),
-                      ),
-                    ]),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: SizedBox(
-                    height: 140,
-                    width: 320,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 15),
-                        RichText(
-                          text: const TextSpan(
-                            text: "Elige ",
-                            style: TextStyle(
-                              color: ColorStyles.textPrimary2,
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "Usuario Estándar ",
-                                style: TextStyle(
-                                  color: ColorStyles.textSecondary2,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w600
-                                ),
-                              ),
-                              TextSpan(
-                                text: "si solo quieres llevar el control de tus eventos.",
-                                style: TextStyle(
-                                  color: ColorStyles.textPrimary2,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        RichText(
-                          text: const TextSpan(
-                            text: "Elige ",
-                            style: TextStyle(
-                              color: ColorStyles.textPrimary2,
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "Organizador/Proveedor ",
-                                style: TextStyle(
-                                  color: ColorStyles.textSecondary2,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w600
-                                ),
-                              ),
-                              TextSpan(
-                                text: "si eres una empresa u organizador independiente que ofrece servicios o productos para eventos. Aún podrás crear y gestionar tus eventos, y los usuarios estándar podrán contactarte.",
-                                style: TextStyle(
-                                  color: ColorStyles.textPrimary2,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                right: 5,
-                top: 5,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Align(
-                    alignment: Alignment.topRight,
-                    child: CircleAvatar(
-                      radius: 14.0,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.close, color: ColorStyles.primaryGrayBlue),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 }

@@ -4,18 +4,21 @@ import 'dart:io';
 
 import 'package:eventhub_app/assets.dart';
 
-import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/create_company_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/add_info_company_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/login/sign_in_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/provider/create_company_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/provider/add_info_company_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/user/google_sign_up_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/user/sign_up_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 
-Padding authButton(BuildContext context, String buttonType) {
+Padding authButton(
+    BuildContext context, String buttonType, AuthBloc? authBloc) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 6),
     child: TextButton.icon(
@@ -38,11 +41,15 @@ Padding authButton(BuildContext context, String buttonType) {
         elevation: 3,
       ),
       onPressed: () async {
+        // final googleSignIn = GoogleSignIn();
         if (buttonType == 'Correo') {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const SignInScreen()),
           );
+          // googleSignIn.signOut();
+        } else {
+          authBloc!.add(GoogleLogIn());
         }
       },
       label: Text(
@@ -68,11 +75,12 @@ TextButton formButtonSignUp(
     TextEditingController emailController,
     TextEditingController passController,
     TextEditingController passConfirmController,
-    AuthBloc authBloc) {
+    AuthBloc authBloc,
+    bool termsAndConditions) {
   return TextButton(
     style: OutlinedButton.styleFrom(
       foregroundColor: Colors.white,
-      backgroundColor: ColorStyles.primaryBlue,
+      backgroundColor: termsAndConditions ? ColorStyles.primaryBlue : ColorStyles.primaryGrayBlue,
       minimumSize: const Size(double.infinity, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -83,54 +91,56 @@ TextButton formButtonSignUp(
     onPressed: () {
       // Unfocus keyboard
       FocusManager.instance.primaryFocus?.unfocus();
-      // Get register data
-      String username = usernameController.text.trim();
-      String fullname = fullnameController.text.trim();
-      String email = emailController.text.trim();
-      String pass = passController.text.trim();
-      String passConfirm = passConfirmController.text.trim();
-      // Verify if credentials are not empty
-      if (username.isNotEmpty &&
-          fullname.isNotEmpty &&
-          email.isNotEmpty &&
-          pass.isNotEmpty &&
-          passConfirm.isNotEmpty) {
-        // Verify if password fields
-        if (pass == passConfirm) {
-          // User registration
-          if (userType == UserTypes.normal) {
-            // data
-            bool isprovider = false;
-            authBloc.add(CreateUser(
-                username: username,
-                fullname: fullname,
-                email: email,
-                password: pass,
-                isprovider: isprovider));
-          } else if (userType == UserTypes.supplier) {
-            // company registration
-            bool isprovider = true;
-            RegisterUser registerUserData = RegisterUser(
-                username: username,
-                fullname: fullname,
-                email: email,
-                password: pass,
-                isprovider: isprovider);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CreateCompanyScreen(registerUserData)),
+      if (termsAndConditions) {
+        // Get register data
+        String username = usernameController.text.trim();
+        String fullname = fullnameController.text.trim();
+        String email = emailController.text.trim();
+        String pass = passController.text.trim();
+        String passConfirm = passConfirmController.text.trim();
+        // Verify if credentials are not empty
+        if (username.isNotEmpty &&
+            fullname.isNotEmpty &&
+            email.isNotEmpty &&
+            pass.isNotEmpty &&
+            passConfirm.isNotEmpty) {
+          // Verify if password fields
+          if (pass == passConfirm) {
+            // User registration
+            if (userType == UserTypes.normal) {
+              // data
+              bool isprovider = false;
+              authBloc.add(CreateUser(
+                  username: username,
+                  fullname: fullname,
+                  email: email,
+                  password: pass,
+                  isprovider: isprovider));
+            } else if (userType == UserTypes.supplier) {
+              // company registration
+              bool isprovider = true;
+              RegisterUser registerUserData = RegisterUser(
+                  username: username,
+                  fullname: fullname,
+                  email: email,
+                  password: pass,
+                  isprovider: isprovider);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateCompanyScreen(registerUserData, null)),
+              );
+            }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              snackBar('Verifique la contraseña'),
             );
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            snackBar('Verifique la contraseña'),
+            snackBar('No se permiten cambios vacios'),
           );
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          snackBar('No se permiten cambios vacios'),
-        );
       }
     },
     child: Text(
@@ -188,6 +198,66 @@ TextButton formButtonSignIn(
   );
 }
 
+TextButton formButtonSignUpGoogle(BuildContext context, User userData,
+  AccountTypes? accountType, TextEditingController fullnameController,
+    AuthBloc authBloc, bool termsAndConditions) {
+  return TextButton(
+    style: OutlinedButton.styleFrom(
+      foregroundColor: Colors.white,
+      backgroundColor: termsAndConditions ? ColorStyles.primaryBlue : ColorStyles.primaryGrayBlue,
+      minimumSize: const Size(double.infinity, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      shadowColor: Colors.black,
+      elevation: 3,
+    ),
+    onPressed: () {
+      // Unfocus keyboard
+      FocusManager.instance.primaryFocus?.unfocus();
+      if (termsAndConditions) {
+        // Get register data
+        String fullname = fullnameController.text.trim();
+        // Verify if credentials are not empty
+        if (fullname.isNotEmpty) {
+            // User registration
+            if (accountType == AccountTypes.normal) {
+              // data
+              bool isprovider = false;
+              // go to update profile
+              RegisterUser registerUser = RegisterUser(username: 'GoogleAccount', fullname: fullname, email: 'GoogleAccount', password: 'GoogleAccount', isprovider: isprovider);
+              authBloc.add(CompleteGoogleLogIn(userData: userData, registerData: registerUser));
+              
+            } else if (accountType == AccountTypes.supplier) {
+              // company registration
+              bool isprovider = true;
+              RegisterUser registerUser = RegisterUser(username: 'GoogleAccount', fullname: fullname, email: 'GoogleAccount', password: 'GoogleAccount', isprovider: isprovider);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateCompanyScreen(registerUser, userData)),
+              );
+            }
+          
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            snackBar('No se permiten cambios vacios'),
+          );
+        }
+      }
+      
+    },
+    child: Text(
+      accountType == AccountTypes.normal ? 'Crear cuenta' : 'Continuar',
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        fontFamily: 'Inter',
+      ),
+    ),
+  );
+}
+
 TextButton formButtonNextCompany(
   BuildContext context,
   RegisterUser registerUserData,
@@ -200,6 +270,7 @@ TextButton formButtonNextCompany(
   String openTime,
   String closeTime,
   List<String> companyLocation,
+  User? userData
 ) {
   return TextButton(
     style: OutlinedButton.styleFrom(
@@ -243,7 +314,7 @@ TextButton formButtonNextCompany(
             context,
             MaterialPageRoute(
               builder: (context) => AddInfoCompanyScreen(
-                  registerUserData, registerProviderData, null, null, null),
+                  registerUserData, registerProviderData, null, null, null, userData),
               settings: const RouteSettings(name: '/addinfocompany'),
             ));
       } else {
@@ -271,7 +342,8 @@ TextButton formButtonCreateCompany(
     List<String> selectedCategories,
     List<File> companyImages,
     List<Service> services,
-    AuthBloc authBloc) {
+    AuthBloc authBloc,
+    User? userData) {
   return TextButton(
     style: OutlinedButton.styleFrom(
       foregroundColor: Colors.white,
@@ -284,16 +356,17 @@ TextButton formButtonCreateCompany(
       elevation: 3,
     ),
     onPressed: () {
-      if (selectedCategories.isNotEmpty &&
-          selectedCategories.length > 1 &&
-          companyImages.isNotEmpty &&
-          services.isNotEmpty) {
+      if (selectedCategories.isNotEmpty && companyImages.isNotEmpty && services.isNotEmpty) {
         registerProviderData.categoriesList = selectedCategories;
         registerProviderData.imagesList = companyImages;
         registerProviderData.services = services;
-        authBloc.add(CreateProvider(
-            registerProviderData: registerProviderData,
-            registerUserData: registerUserData));
+
+        if (userData == null) {
+          authBloc.add(CreateProvider(registerProviderData: registerProviderData, registerUserData: registerUserData));
+        } else {
+          authBloc.add(CompleteProviderGoogleLogIn(userData: userData, registerData: registerUserData, registerProviderData: registerProviderData));
+        }
+        
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           snackBar('No se permiten cambios vacios'),

@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => AuthBloc(
               registerUserUseCase: usecaseConfig.registerUserUseCase!,
               loginUserUseCase: usecaseConfig.loginUserUseCase!,
-              registerProviderUseCase: usecaseConfig.registerProviderUseCase!),
+              registerProviderUseCase: usecaseConfig.registerProviderUseCase!,
+              googleLoginUseCase: usecaseConfig.googleLoginUseCase!,
+              updateUserUseCase: usecaseConfig.updateUserUseCase!),
         ),
         BlocProvider<EventBloc>(
           create: (BuildContext context) => EventBloc(
@@ -59,6 +61,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

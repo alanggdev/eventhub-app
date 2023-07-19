@@ -24,6 +24,7 @@ class MessagesScreen extends StatefulWidget {
 class _MessagesScreenState extends State<MessagesScreen> {
   User? user;
   List<Chat>? chats = [];
+  bool isActive = true;
 
   @override
   void initState() {
@@ -40,16 +41,18 @@ class _MessagesScreenState extends State<MessagesScreen> {
         widget.socketConn!.on('server:new-chat', (data) {
           // print("Nuevo chat recibido");
           if (data == widget.user.userinfo['pk'].toString()) {
-            // print("recargando");
-            context.read<ChatBloc>().add(NewChatReceived(userId: widget.user.userinfo['pk'].toString()));
+            if (isActive) {
+              context.read<ChatBloc>().add(NewChatReceived(userId: widget.user.userinfo['pk'].toString()));
+            }
           }
         });
 
-        widget.socketConn!.on('server:new-message', (data) {
+        widget.socketConn!.on('server:load-messages', (data) {
           // print("Nuevo mensaje recibido desde mensajes");
           if (data == widget.user.userinfo['pk'].toString()) {
-            // print("recargando");
-            context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
+            if (isActive) {
+              context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
+            }
           }
         });
       } else {
@@ -172,7 +175,10 @@ class _MessagesScreenState extends State<MessagesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
+          setState(() {
+            isActive = false;
+          });
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => ChatScreen(

@@ -6,20 +6,21 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/assets.dart';
+import 'package:eventhub_app/home.dart';
 
-import 'package:eventhub_app/features/auth/presentation/pages/sign_in_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/add_service_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/register/provider/add_service_screen.dart';
+import 'package:eventhub_app/features/auth/presentation/pages/login/sign_in_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/company.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
-
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
 
-import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 import 'package:eventhub_app/features/provider/presentation/widgets/category.dart';
+import 'package:eventhub_app/features/provider/domain/entities/service.dart';
 
 class AddInfoCompanyScreen extends StatefulWidget {
   final RegisterUser registerUserData;
@@ -27,8 +28,9 @@ class AddInfoCompanyScreen extends StatefulWidget {
   final List<String>? selectedCategories;
   final List<File>? companyImages;
   final List<Service>? services;
+  final User? userData;
   const AddInfoCompanyScreen(this.registerUserData, this.registerProviderData,
-      this.selectedCategories, this.companyImages, this.services,
+      this.selectedCategories, this.companyImages, this.services, this.userData,
       {super.key});
 
   @override
@@ -183,17 +185,13 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                                             underline: const SizedBox(),
                                             onChanged: (String? newValue) {
                                               setState(() {
-                                                if (!selectedCategories
-                                                    .contains(newValue)) {
+                                                if (!selectedCategories.contains(newValue)) {
                                                   dropdownValue = newValue;
-                                                  selectedCategories
-                                                      .add(newValue!);
+                                                  selectedCategories.add(newValue!);
                                                 }
                                               });
                                             },
-                                            items: categoriesList
-                                                .map<DropdownMenuItem<String>>(
-                                                    (String value) {
+                                            items: categoriesList.map<DropdownMenuItem<String>>((String value) {
                                               return DropdownMenuItem<String>(
                                                 value: value,
                                                 child: Text(value),
@@ -208,7 +206,7 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                               ),
                             ),
                             const Text(
-                              'Agrega categorias que identifiquen o que sean relevantes para tu empresa. Min. 2',
+                              'Agrega categorias que identifiquen o que sean relevantes para tu empresa.',
                               style: TextStyle(
                                 color: ColorStyles.textPrimary2,
                                 fontFamily: 'Inter',
@@ -256,36 +254,40 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                             const Divider(
                               color: ColorStyles.baseLightBlue,
                             ),
-                            TextButton.icon(
-                              icon: const Icon(Icons.add),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: ColorStyles.textSecondary1,
-                                minimumSize: const Size(double.infinity, 50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 15),
+                              child: TextButton.icon(
+                                icon: const Icon(Icons.add),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: ColorStyles.textSecondary1,
+                                  minimumSize: const Size(double.infinity, 50),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  shadowColor: Colors.black,
+                                  elevation: 3,
                                 ),
-                                shadowColor: Colors.black,
-                                elevation: 3,
-                              ),
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddService(
-                                            widget.registerUserData,
-                                            widget.registerProviderData,
-                                            selectedCategories,
-                                            companyImages,
-                                            services)));
-                              },
-                              label: const Text(
-                                'Agregar servicio',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Inter',
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AddService(
+                                              widget.registerUserData,
+                                              widget.registerProviderData,
+                                              selectedCategories,
+                                              companyImages,
+                                              services,
+                                              widget.userData)));
+                                },
+                                label: const Text(
+                                  'Agregar servicio',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Inter',
+                                  ),
                                 ),
                               ),
                             ),
@@ -365,7 +367,8 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                             selectedCategories,
                             companyImages,
                             services,
-                            context.read<AuthBloc>()),
+                            context.read<AuthBloc>(),
+                            widget.userData),
                       ),
                     ],
                   ),
@@ -373,7 +376,7 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
               ),
             ),
           ),
-          if (state is CreatingProvider)
+          if (state is CreatingProvider || state is CreatingGoogleProvider)
             loadingWidget(context)
           else if (state is ProviderCreated)
             FutureBuilder(
@@ -382,6 +385,20 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const SignInScreen()));
+              }),
+              builder: (context, snapshot) {
+                return Container();
+              },
+            )
+          else if (state is GoogleProviderCreated)
+            FutureBuilder(
+              future: Future.delayed(Duration.zero, () async {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomeScreen(state.user, 0)),
+                  (route) => false,
+                );
               }),
               builder: (context, snapshot) {
                 return Container();
@@ -396,8 +413,7 @@ class _AddInfoCompanyScreenState extends State<AddInfoCompanyScreen> {
 
   CarouselSlider servicesWidgetCarousel() {
     return CarouselSlider(
-      options:
-          CarouselOptions(enableInfiniteScroll: false, viewportFraction: 1),
+      options: CarouselOptions(enableInfiniteScroll: false, viewportFraction: 1),
       items: [
         for (int index = 0; index < services.length; index++)
           Builder(

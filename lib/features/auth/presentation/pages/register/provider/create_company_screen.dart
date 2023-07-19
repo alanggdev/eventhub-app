@@ -1,19 +1,21 @@
-import 'package:eventhub_app/features/auth/presentation/pages/map_picker_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 import 'package:eventhub_app/assets.dart';
+
+import 'package:eventhub_app/features/auth/presentation/pages/register/provider/map_picker_dialog.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
+import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class CreateCompanyScreen extends StatefulWidget {
   final RegisterUser registerUserData;
-  const CreateCompanyScreen(this.registerUserData, {super.key});
+  final User? userData;
+  const CreateCompanyScreen(this.registerUserData, this.userData, {super.key});
 
   @override
   State<CreateCompanyScreen> createState() => _CreateCompanyScreenState();
@@ -117,6 +119,7 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                         elevation: 3,
                       ),
                       onPressed: () async {
+                        FocusManager.instance.primaryFocus?.unfocus();
                         Location location = Location();
                   
                         bool serviceEnabled;
@@ -267,7 +270,8 @@ class _CreateCompanyScreenState extends State<CreateCompanyScreen> {
                     _selectedDays,
                     openTime,
                     closeTime,
-                    companyLocation),
+                    companyLocation,
+                    widget.userData),
               ),
             ],
           ),

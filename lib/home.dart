@@ -1,6 +1,8 @@
 // ignore_for_file: library_prefixes
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'package:eventhub_app/assets.dart';
@@ -63,37 +65,25 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!socket!.active) {
       socket!.connect();
       socket!.onConnect((data) {
-        // print("SOCKET CONNECTADO");
+        print("SOCKET CONNECTADO");
       });
-    } else {
-      // socket.on('server:load-chats', (data) {
-      //   print("Cargando chats");
-      //   context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
-      // });
-
-      // socket.on('server:new-chat', (data) {
-      //   print("Nuevo chat recibido");
-      //   if (data == widget.user.userinfo['pk'].toString()) {
-      //     print("recargando");
-      //     context.read<ChatBloc>().add(NewChatReceived(userId: widget.user.userinfo['pk'].toString()));
-      //   }
-      // });
-
-      // socket.on('server:new-message', (data) {
-      //   print("Nuevo mensaje recibido desde mensajes");
-      //   if (data == widget.user.userinfo['pk'].toString()) {
-      //     print("recargando");
-      //     context.read<ChatBloc>().add(LoadHomePage(userId: widget.user.userinfo['pk'].toString()));
-      //   }
-      // });
     }
 
     socket!.onError((err) {
-      // print(err);
-      setState(() {
-        socket = null;
-      });
+      print(err);
     });
+  }
+
+  Future<void> logOut() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('access_token');
+    await prefs.remove('refresh_token');
+    await prefs.remove('user');
+
+    socket?.disconnect();
+
+    final google = GoogleSignIn();
+    google.signOut();
   }
 
   @override
@@ -202,8 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    widget.userinfo
-                                                        .userinfo['full_name'],
+                                                    widget.userinfo.userinfo['full_name'],
                                                     style: const TextStyle(
                                                       fontSize: 23,
                                                       color: Color(0xff242C71),
@@ -373,12 +362,13 @@ class _HomeScreenState extends State<HomeScreen> {
           shadowColor: Colors.black,
           elevation: 6,
         ),
-        onPressed: () {
-          socket?.disconnect();
-          Navigator.pushAndRemoveUntil(
+        onPressed: () async {
+          logOut().then((value) {
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const AuthScreen()),
               (route) => false);
+          });
         },
         child: const Text(
           'Cerrar Sesión',
@@ -402,8 +392,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(context,
               MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.userinfo.userinfo['pk'], widget.userinfo)));
           } else {
-            print(widget.userinfo.userinfo['pk'].toString());
-            print('to create provider');
+            // print(widget.userinfo.userinfo['pk'].toString());
+            // print('to create provider');
           }
         },
         child: Row(

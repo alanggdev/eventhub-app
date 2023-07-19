@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/assets.dart';
+import 'package:eventhub_app/home.dart';
+
+import 'package:eventhub_app/features/auth/presentation/pages/register/user/sign_up_screen.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/text_field.dart';
-import 'package:eventhub_app/features/auth/presentation/pages/sign_up_screen.dart';
-import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/auth/presentation/widgets/alerts.dart';
-import 'package:eventhub_app/home.dart';
+import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
+
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -37,19 +39,21 @@ class _SignInScreenState extends State<SignInScreen> {
 
   unloadLogInState() {
     final authbloc = context.read<AuthBloc>();
-    User userUnload = User(access: 'unload', refresh: 'unload', userinfo: 'unload');
+    User userUnload =
+        User(access: 'unload', refresh: 'unload', userinfo: 'unload');
     authbloc.add(UnloadState(unload: userUnload));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorStyles.baseLightBlue,
-        body: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+      backgroundColor: ColorStyles.baseLightBlue,
+      body: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
           return SafeArea(
-            child: Stack(children: [
-              SingleChildScrollView(
-                child: Padding(
+            child: Stack(
+              children: [
+                Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(
                     children: [
@@ -96,9 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height * 0.45,
+                      Expanded(
                         child: Column(
                           children: [
                             textField(context, Icons.email, 'Correo electrónico', emailController, TextInputType.text),
@@ -128,7 +130,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                     onPressed: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SignUpScreen()),
                                       );
                                     },
                                     child: const Text(
@@ -152,29 +156,32 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                 ),
-              ),
-              if (state is LoggingInUser)
-                loadingWidget(context)
-              else if (state is UserLoggedIn)
-                if (state.user.userinfo == 'error')
-                  errorAlert(context, 'Verifique las credenciales de acceso')
-                else if (state.user.userinfo == 'unload')
-                  Container()
-                else if ((state.user.userinfo != 'error'))
-                  FutureBuilder(
-                    future: Future.delayed(Duration.zero, () async {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen(state.user, 0)),
-                          (route) => false);
-                    }),
-                    builder: (context, snapshot) {
-                      return Container();
-                    },
-                  )
-            ]),
+                if (state is LoggingInUser)
+                  loadingWidget(context)
+                else if (state is UserLoggedIn)
+                  if (state.user.userinfo == 'error')
+                    errorAlert(context, 'Verifique las credenciales de acceso')
+                  else if (state.user.userinfo == 'unload')
+                    Container()
+                  else if ((state.user.userinfo != 'error'))
+                    FutureBuilder(
+                      future: Future.delayed(Duration.zero, () async {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    HomeScreen(state.user, 0)),
+                            (route) => false);
+                      }),
+                      builder: (context, snapshot) {
+                        return Container();
+                      },
+                    )
+              ],
+            ),
           );
-        }));
+        },
+      ),
+    );
   }
 }

@@ -26,4 +26,14 @@ class AuthUserRepositoryImpl implements AuthUserRepository {
   Future<String> registerProvider(RegisterProvider registerProviderData) async {
     return await authUserDataSource.registerProvider(registerProviderData);
   }
+
+  @override
+  Future<User> googleLogin() async {
+    return await authUserDataSource.googleLogin();
+  }
+
+  @override
+  Future<User> updateUser(User userData, RegisterUser registerUserData) async {
+    return await authUserDataSource.updateUser(userData, registerUserData);
+  }
 }
