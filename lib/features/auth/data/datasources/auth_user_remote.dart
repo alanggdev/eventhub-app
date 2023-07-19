@@ -91,7 +91,14 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
         await http.post(url, body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
       var jsonDecoded = convert.jsonDecode(response.body);
+
+      await prefs.setString('user', convert.jsonEncode(jsonDecoded['user']));
+      await prefs.setString('access_token', jsonDecoded['access']);
+      await prefs.setString('refresh_token', jsonDecoded['refresh']);
+
       return UserModel.fromJson(jsonDecoded);
     } else if (response.statusCode == 400) {
       var error = convert.jsonDecode(response.body);
@@ -192,6 +199,11 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
 
         if (response.statusCode == 200) {
           await prefs.setInt('userid', response.data['user']['pk']);
+
+          await prefs.setString('user', convert.jsonEncode(response.data['user']));
+          await prefs.setString('access_token', response.data['access']);
+          await prefs.setString('refresh_token', response.data['refresh']);
+
           return UserModel.fromJson(response.data);
         } else {
           throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');

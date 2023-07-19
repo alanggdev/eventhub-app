@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'package:eventhub_app/assets.dart';
@@ -70,10 +71,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
     socket!.onError((err) {
       print(err);
-      // setState(() {
-      //   socket = null;
-      // });
     });
+  }
+
+  Future<void> logOut() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('access_token');
+    await prefs.remove('refresh_token');
+    await prefs.remove('user');
+
+    socket?.disconnect();
+
+    final google = GoogleSignIn();
+    google.signOut();
   }
 
   @override
@@ -352,16 +362,13 @@ class _HomeScreenState extends State<HomeScreen> {
           shadowColor: Colors.black,
           elevation: 6,
         ),
-        onPressed: () {
-          socket?.disconnect();
-          socket?.destroy();
-          socket?.dispose();
-          final google = GoogleSignIn();
-          google.signOut();
-          Navigator.pushAndRemoveUntil(
+        onPressed: () async {
+          logOut().then((value) {
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const AuthScreen()),
               (route) => false);
+          });
         },
         child: const Text(
           'Cerrar Sesión',
