@@ -64,9 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initSocket() {
     if (!socket!.active) {
       socket!.connect();
-      socket!.onConnect((data) {
-        print("SOCKET CONNECTADO");
-      });
+      socket!.onConnect((data) {});
     }
 
     socket!.onError((err) {

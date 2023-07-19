@@ -86,12 +86,10 @@ class _EventScreenState extends State<EventScreen> {
                                       color: ColorStyles.primaryGrayBlue),
                                 ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 6),
+                                  padding: const EdgeInsets.symmetric(vertical: 6),
                                   child: Wrap(
                                     spacing: 8,
-                                    children: widget.userEvent.categories
-                                        .map((category) {
+                                    children: widget.userEvent.categories.map((category) {
                                       return eventCategoryLabel(category);
                                     }).toList(),
                                     //
@@ -105,15 +103,14 @@ class _EventScreenState extends State<EventScreen> {
                                       size: 20,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 6),
+                                      padding: const EdgeInsets.symmetric(horizontal: 6),
                                       child: Text(
                                         widget.userEvent.date,
                                         style: const TextStyle(
-                                            fontSize: 18,
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w500,
-                                            color: ColorStyles.primaryGrayBlue),
+                                          fontSize: 18,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w500,
+                                          color: ColorStyles.primaryGrayBlue),
                                       ),
                                     )
                                   ],
@@ -129,46 +126,22 @@ class _EventScreenState extends State<EventScreen> {
                                 Text(
                                   'Empresas colaboradoras',
                                   style: TextStyle(
-                                      fontSize: 22,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorStyles.primaryGrayBlue),
+                                    fontSize: 22,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorStyles.primaryGrayBlue),
                                 ),
                                 Divider(
                                   color: ColorStyles.baseLightBlue,
                                 ),
                                 Text(
-                                    'Aun no tiene empresas que colaboren',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w500,
-                                        color: ColorStyles.primaryGrayBlue),
-                                  ),
-                                // if (widget.userEvent.providersID.isNotEmpty)
-                                //   CarouselSlider(
-                                //     options: CarouselOptions(
-                                //         enableInfiniteScroll: false,
-                                //         viewportFraction: 1,
-                                //         height: 250),
-                                //     items: [
-                                //       for (int index = 0; index < 3; index++)
-                                //         Builder(
-                                //           builder: (BuildContext context) {
-                                //             return providerWidget(context);
-                                //           },
-                                //         ),
-                                //     ],
-                                //   )
-                                // else
-                                //   const Text(
-                                //     'Aun no tiene empresas que colaboren',
-                                //     style: TextStyle(
-                                //         fontSize: 14,
-                                //         fontFamily: 'Inter',
-                                //         fontWeight: FontWeight.w500,
-                                //         color: ColorStyles.primaryGrayBlue),
-                                //   ),
+                                  'Aun no tiene empresas que colaboren',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorStyles.primaryGrayBlue),
+                                ),
                               ],
                             ),
                           ),
@@ -186,17 +159,12 @@ class _EventScreenState extends State<EventScreen> {
                                       color: ColorStyles.primaryGrayBlue),
                                 ),
                                 CarouselSlider(
-                                  options: CarouselOptions(
-                                      enableInfiniteScroll: false),
+                                  options: CarouselOptions(enableInfiniteScroll: false),
                                   items: [
-                                    for (int index = 0;
-                                        index <
-                                            widget.userEvent.imagePaths!.length;
-                                        index++)
+                                    for (int index = 0; index < widget.userEvent.imagePaths!.length; index++)
                                       Builder(
                                         builder: (BuildContext context) {
-                                          return eventImage(widget
-                                              .userEvent.imagePaths![index]);
+                                          return eventImage(widget.userEvent.imagePaths![index]);
                                         },
                                       ),
                                   ],
