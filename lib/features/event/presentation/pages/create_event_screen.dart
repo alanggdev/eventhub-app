@@ -389,7 +389,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             ),
           ),
           if (state is CreatingEvent)
-            loadingEventWidget(context)
+            loading(context)
           else if (state is EventCreated)
             FutureBuilder(
               future: Future.delayed(Duration.zero, () async {

@@ -95,21 +95,34 @@ Chip eventCategoryLabel(dynamic category) {
   );
 }
 
-AspectRatio eventImage(dynamic image) {
-  return AspectRatio(
-    aspectRatio: 64 / 25,
-    child: Padding(
-      padding: const EdgeInsets.all(4),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: FadeInImage(
-          fit: BoxFit.fitWidth,
-          alignment: FractionalOffset.center,
-          image: NetworkImage('$serverURL$image'),
-          placeholder: const AssetImage(Images.eventPlaceholder),
-          imageErrorBuilder: (context, error, stackTrace) {
-            return const Center(child: Text('event image'));
-          },
+Container eventImage(dynamic image) {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          spreadRadius: 0,
+          blurRadius: 5,
+          offset: const Offset(0, 1),
+        ),
+      ],
+    ),
+    child: AspectRatio(
+      aspectRatio: 64 / 25,
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: FadeInImage(
+            fit: BoxFit.fitWidth,
+            alignment: FractionalOffset.center,
+            image: NetworkImage('$serverURL$image'),
+            placeholder: const AssetImage(Images.eventPlaceholder),
+            imageErrorBuilder: (context, error, stackTrace) {
+              return const Center(child: Text('event image'));
+            },
+          ),
         ),
       ),
     ),

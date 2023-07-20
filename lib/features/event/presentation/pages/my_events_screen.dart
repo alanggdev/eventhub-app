@@ -6,7 +6,6 @@ import 'package:eventhub_app/features/event/presentation/widgets/event.dart';
 import 'package:eventhub_app/features/event/presentation/pages/create_event_screen.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
-import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
 
 class MyEventsScreen extends StatefulWidget {
   final User user;
@@ -63,7 +62,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                   Column(
                     children: [
                       if (state is Error)
-                        errorEventWidget(context, state.error.substring(11)),
+                        errorWidget(context, state.error.substring(11)),
                       if (state is UserEventGotten)
                         if (state.userEvents.isNotEmpty)
                           Column(
@@ -72,7 +71,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                             }).toList(),
                           )
                         else
-                          emptyEventWidget(context),
+                          emptyWidget(context, 'No tienes eventos próximos', Images.emptyEvents),
                     ],
                   ),
                 ],

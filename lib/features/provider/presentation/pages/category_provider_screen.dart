@@ -44,7 +44,7 @@ class _CategoryProviderScreenState extends State<CategoryProviderScreen> {
                     headerSliverBuilder: (context, innerBoxIsScrolled) => [
                       SliverAppBar(
                         automaticallyImplyLeading: false,
-                        toolbarHeight: 70,
+                        toolbarHeight: 55,
                         backgroundColor: ColorStyles.primaryBlue,
                         title: GestureDetector(
                           onTap: () {
