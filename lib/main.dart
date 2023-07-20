@@ -1,5 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:eventhub_app/usecase_config.dart';
 import 'package:eventhub_app/welcome.dart';
@@ -13,7 +16,10 @@ import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
 
 UseCaseConfig usecaseConfig = UseCaseConfig();
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -30,7 +36,8 @@ class MyApp extends StatelessWidget {
               loginUserUseCase: usecaseConfig.loginUserUseCase!,
               registerProviderUseCase: usecaseConfig.registerProviderUseCase!,
               googleLoginUseCase: usecaseConfig.googleLoginUseCase!,
-              updateUserUseCase: usecaseConfig.updateUserUseCase!),
+              updateUserUseCase: usecaseConfig.updateUserUseCase!,
+              logOutUseCase: usecaseConfig.logOutUseCase!),
         ),
         BlocProvider<EventBloc>(
           create: (BuildContext context) => EventBloc(

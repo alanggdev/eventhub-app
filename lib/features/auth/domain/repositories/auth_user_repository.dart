@@ -9,4 +9,5 @@ abstract class AuthUserRepository {
   Future<String> registerProvider(RegisterProvider registerProviderData);
   Future<User> googleLogin();
   Future<User> updateUser(User userData, RegisterUser registerUserData);
+  Future<String> logOut(User userData);
 }

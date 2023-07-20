@@ -2,6 +2,7 @@ import 'package:eventhub_app/features/auth/data/datasources/auth_user_remote.dar
 import 'package:eventhub_app/features/auth/data/repositories/auth_user_repository_impl.dart';
 import 'package:eventhub_app/features/auth/domain/usecases/google_login.dart';
 import 'package:eventhub_app/features/auth/domain/usecases/login_user.dart';
+import 'package:eventhub_app/features/auth/domain/usecases/logout.dart';
 import 'package:eventhub_app/features/auth/domain/usecases/register_provider.dart';
 import 'package:eventhub_app/features/auth/domain/usecases/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/usecases/update_user.dart';
@@ -40,6 +41,7 @@ class UseCaseConfig {
   RegisterProviderUseCase? registerProviderUseCase;
   GoogleLoginUseCase? googleLoginUseCase;
   UpdateUserUseCase? updateUserUseCase;
+  LogOutUseCase? logOutUseCase;
 
   EventDataSourceImpl? eventDataSourceImpl;
   EventRepositoryImpl? eventRepositoryImpl;
@@ -75,6 +77,7 @@ class UseCaseConfig {
     registerProviderUseCase = RegisterProviderUseCase(authUserRepositoryImpl!);
     googleLoginUseCase = GoogleLoginUseCase(authUserRepositoryImpl!);
     updateUserUseCase = UpdateUserUseCase(authUserRepositoryImpl!);
+    logOutUseCase = LogOutUseCase(authUserRepositoryImpl!);
 
     eventDataSourceImpl = EventDataSourceImpl();
     eventRepositoryImpl = EventRepositoryImpl(eventDataSource: eventDataSourceImpl!);

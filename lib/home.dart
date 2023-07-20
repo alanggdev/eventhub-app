@@ -1,6 +1,8 @@
 // ignore_for_file: library_prefixes
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -21,6 +23,17 @@ import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.
 
 import 'package:eventhub_app/features/chat/presentation/pages/messages_screen.dart';
 
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description:
+      'This channel is used for important notifications.', // description
+  importance: Importance.high,
+  playSound: true,
+);
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 class HomeScreen extends StatefulWidget {
   final User userinfo;
   final int index;
@@ -35,9 +48,39 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = [];
 
+  Future<void> loadFCM() async {
+    // await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      // ?.createNotificationChannel(channel);
+      
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true,badge: true, sound: true);
+
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+    
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    setState(() {
+      _selectedIndex = 3;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    loadFCM();
     loadIndex();
     unloadLoginState();
     initSocket();
@@ -79,6 +122,12 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.remove('user');
 
     socket?.disconnect();
+
+    await FirebaseMessaging.instance.deleteToken();
+
+    Future.microtask((() {
+      context.read<AuthBloc>().add(LogOut(user: widget.userinfo));
+    }));
 
     final google = GoogleSignIn();
     google.signOut();

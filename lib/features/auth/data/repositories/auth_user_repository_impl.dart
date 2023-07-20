@@ -36,4 +36,9 @@ class AuthUserRepositoryImpl implements AuthUserRepository {
   Future<User> updateUser(User userData, RegisterUser registerUserData) async {
     return await authUserDataSource.updateUser(userData, registerUserData);
   }
+
+  @override
+  Future<String> logOut(User user) async {
+    return await authUserDataSource.logOut(user);
+  }
 }
