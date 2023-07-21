@@ -28,10 +28,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> requestPerms() async {
     await Permission.notification.isDenied.then((value) {
-    if (value) {
-      Permission.notification.request();
-    }
-  });
+      if (value) {
+        Permission.notification.request();
+      }
+    });
   }
 
   @override

@@ -101,6 +101,8 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
       await prefs.setString('access_token', jsonDecoded['access']);
       await prefs.setString('refresh_token', jsonDecoded['refresh']);
 
+      await setFCMToken(jsonDecoded['access']);
+
       return UserModel.fromJson(jsonDecoded);
     } else if (response.statusCode == 400) {
       var error = convert.jsonDecode(response.body);

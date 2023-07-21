@@ -23,17 +23,6 @@ import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.
 
 import 'package:eventhub_app/features/chat/presentation/pages/messages_screen.dart';
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description:
-      'This channel is used for important notifications.', // description
-  importance: Importance.high,
-  playSound: true,
-);
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
 class HomeScreen extends StatefulWidget {
   final User userinfo;
   final int index;
@@ -48,11 +37,31 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = [];
 
+  @override
+  void initState() {
+    super.initState();
+    loadFCM();
+    loadIndex();
+    unloadLoginState();
+    initSocket();
+  }
+
+  void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => HomeScreen(widget.userinfo, 3)),
+      // (route) => false
+    );
+}
+
   Future<void> loadFCM() async {
-    // await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      // ?.createNotificationChannel(channel);
-      
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true,badge: true, sound: true);
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    InitializationSettings initializationSettings = const InitializationSettings(android: initializationSettingsAndroid);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
 
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
@@ -61,29 +70,27 @@ class _HomeScreenState extends State<HomeScreen> {
     
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-      }
-    });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails('channel id', 'channel name',
+            importance: Importance.max,
+            priority: Priority.high);
+      const NotificationDetails notificationDetails =
+          NotificationDetails(android: androidNotificationDetails);
+      await flutterLocalNotificationsPlugin.show(
+      0, message.notification!.title, message.notification!.body, notificationDetails);
+      });
   }
 
   void _handleMessage(RemoteMessage message) {
-    setState(() {
-      _selectedIndex = 3;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loadFCM();
-    loadIndex();
-    unloadLoginState();
-    initSocket();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => HomeScreen(widget.userinfo, 3)),
+      // (route) => false
+    );
   }
 
   void loadIndex() {
