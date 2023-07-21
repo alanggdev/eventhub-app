@@ -23,6 +23,8 @@ import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.
 
 import 'package:eventhub_app/features/chat/presentation/pages/messages_screen.dart';
 
+import 'package:eventhub_app/features/notification/presentation/pages/notifications_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   final User userinfo;
   final int index;
@@ -146,11 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
       MyEventsScreen(widget.userinfo),
       ExploreCategoriesScreen(widget.userinfo),
       MessagesScreen(widget.userinfo, socket),
-      const Center(
-          child: Text(
-        'Notifications Screen',
-        style: TextStyle(color: Colors.white),
-      ))
+      NotificationsScreen(widget.userinfo),
     ];
 
     return LoadingOverlay(

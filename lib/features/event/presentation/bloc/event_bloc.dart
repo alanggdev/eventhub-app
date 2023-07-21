@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:eventhub_app/features/event/domain/usecases/delete_event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/features/event/domain/usecases/create_event.dart';
 import 'package:eventhub_app/features/event/domain/entities/event.dart';
 import 'package:eventhub_app/features/event/domain/usecases/get_user_events.dart';
+import 'package:eventhub_app/features/event/domain/usecases/delete_event.dart';
 
 part 'event_event.dart';
 part 'event_state.dart';

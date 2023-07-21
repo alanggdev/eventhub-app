@@ -11,6 +11,7 @@ import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/provider/presentation/bloc/provider_bloc.dart';
 import 'package:eventhub_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
+import 'package:eventhub_app/features/notification/presentation/bloc/notification_bloc.dart';
 
 UseCaseConfig usecaseConfig = UseCaseConfig();
 
@@ -62,6 +63,11 @@ class MyApp extends StatelessWidget {
             initSocketUseCase: usecaseConfig.initSocketUseCase!,
             loadChatsUseCase: usecaseConfig.loadChatsUseCase!,
             sendMessageUseCase: usecaseConfig.sendMessageUseCase!
+          ),
+        ),
+        BlocProvider<NotificationBloc>(
+          create: (BuildContext context) => NotificationBloc(
+            getNotifsUseCase: usecaseConfig.getNotifsUseCase!,
           ),
         ),
       ],

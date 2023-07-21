@@ -45,6 +45,8 @@ class Images {
   static const String providerDetailPlaceholder = 'assets/images/provider/provider_placeholder_detail.png';
 
   static const String emptychat = 'assets/images/chat/emptyChat.png';
+
+  static const String emptyNotif = 'assets/images/notification/emptyNotif.png';
 }
 
 class CustomIcons {
