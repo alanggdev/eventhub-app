@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -26,6 +27,7 @@ abstract class AuthUserDataSource {
   Future<String> registerProvider(RegisterProvider registerProviderData);
   Future<User> googleLogin();
   Future<User> updateUser(User userData, RegisterUser registerUserData);
+  Future<String> logOut(User user);
 }
 
 class AuthUserDataSourceImpl extends AuthUserDataSource {
@@ -98,6 +100,8 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
       await prefs.setString('user', convert.jsonEncode(jsonDecoded['user']));
       await prefs.setString('access_token', jsonDecoded['access']);
       await prefs.setString('refresh_token', jsonDecoded['refresh']);
+
+      await setFCMToken(jsonDecoded['access']);
 
       return UserModel.fromJson(jsonDecoded);
     } else if (response.statusCode == 400) {
@@ -204,6 +208,8 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
           await prefs.setString('access_token', response.data['access']);
           await prefs.setString('refresh_token', response.data['refresh']);
 
+          await setFCMToken(response.data['access']);
+
           return UserModel.fromJson(response.data);
         } else {
           throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
@@ -211,6 +217,32 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
       } else {
         throw Exception('Inicio con google cancelado');
       }
+
+    } else {
+      throw Exception('Sin conexión a internet');
+    }
+  }
+
+  Future<void> setFCMToken(String accessToken) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+      FirebaseMessaging.instance.getToken().then((token) async {
+        var body = {
+          'firebase_token': token.toString(),
+        };
+
+        dio.options.headers["Content-Type"] = "application/json";
+        dio.options.headers["Authorization"] = "Bearer $accessToken";
+
+        await dio.patch(
+          '$serverURL/auth/user/',
+          data: convert.jsonEncode(body),
+        );
+
+      }).catchError((error) {
+        throw Exception(error.toString());
+      });
 
     } else {
       throw Exception('Sin conexión a internet');
@@ -243,6 +275,38 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
           userData.userinfo = newResponse.data;
         }
         return userData;
+      } else {
+        throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+      }
+
+    } else {
+      throw Exception('Sin conexión a internet');
+    }
+  }
+
+  @override
+  Future<String> logOut(User user) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+      var body = {
+        'firebase_token': 'none',
+      };
+
+      dio.options.headers["Content-Type"] = "application/json";
+      dio.options.headers["Authorization"] = "Bearer ${user.access}";
+
+      Response response = await dio.patch(
+        '$serverURL/auth/user/',
+        data: convert.jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        Response newResponse = await dio.get('$serverURL/auth/user/');
+        if (newResponse.statusCode == 200) {
+          return "Success";
+        }
+        return "Fail";
       } else {
         throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
       }

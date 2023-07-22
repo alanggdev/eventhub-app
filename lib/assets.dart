@@ -45,6 +45,18 @@ class Images {
   static const String providerDetailPlaceholder = 'assets/images/provider/provider_placeholder_detail.png';
 
   static const String emptychat = 'assets/images/chat/emptyChat.png';
+
+  static const String emptyNotif = 'assets/images/notification/emptyNotif.png';
+
+  static const String alimentos = 'assets/images/provider/alimentos_y_bebidas.png';
+  static const String ambiente = 'assets/images/provider/ambiente_y_decoracion.png';
+  static const String comunicacion = 'assets/images/provider/comunicacion_y_promocion.png';
+  static const String entretenimiento = 'assets/images/provider/entretenimiento.png';
+  static const String fotografia = 'assets/images/provider/fotografia_y_video.png';
+  static const String locacion = 'assets/images/provider/locacion.png';
+  static const String organizacion = 'assets/images/provider/organizacion.png';
+  static const String vestuario = 'assets/images/provider/vestuario_y_estilo.png';
+  
 }
 
 class CustomIcons {
