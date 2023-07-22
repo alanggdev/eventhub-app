@@ -34,21 +34,28 @@ Padding eventWidget(BuildContext context, Event userEvent, User user) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    userEvent.name,
-                    style: const TextStyle(
-                      color: ColorStyles.primaryGrayBlue,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
+                  Flexible(
+                    flex: 2,
+                    child: Text(
+                      userEvent.name,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: ColorStyles.primaryGrayBlue,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   ),
-                  Text(
-                    userEvent.date,
-                    style: const TextStyle(
-                      color: ColorStyles.primaryGrayBlue,
-                      fontSize: 12,
-                      fontFamily: 'Inter',
+                  Flexible(
+                    flex: 1,
+                    child: Text(
+                      userEvent.date,
+                      style: const TextStyle(
+                        color: ColorStyles.primaryGrayBlue,
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   ),
                 ],

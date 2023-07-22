@@ -36,6 +36,7 @@ import 'package:eventhub_app/features/chat/domain/usecases/send_message_usecase.
 import 'package:eventhub_app/features/notification/data/repositories/notif_repository_impl.dart';
 import 'package:eventhub_app/features/notification/data/datasources/notif_remote.dart';
 import 'package:eventhub_app/features/notification/domain/usecases/get_notifs.dart';
+import 'package:eventhub_app/features/notification/domain/usecases/send_notif.dart';
 
 class UseCaseConfig {
   AuthUserDataSourceImpl? authUserDataSourceImpl;
@@ -76,6 +77,7 @@ class UseCaseConfig {
   NotifRepositoryImpl? notifRepositoryImpl;
   NotifDataSourceImpl? notifDataSourceImpl;
   GetNotifsUseCase? getNotifsUseCase;
+  SendNotifUseCase? sendNotifUseCase;
 
   UseCaseConfig() {
     authUserDataSourceImpl = AuthUserDataSourceImpl();
@@ -116,5 +118,6 @@ class UseCaseConfig {
     notifDataSourceImpl = NotifDataSourceImpl();
     notifRepositoryImpl = NotifRepositoryImpl(notifDataSource: notifDataSourceImpl!);
     getNotifsUseCase = GetNotifsUseCase(notifRepositoryImpl!);
+    sendNotifUseCase = SendNotifUseCase(notifRepositoryImpl!);
   }
 }

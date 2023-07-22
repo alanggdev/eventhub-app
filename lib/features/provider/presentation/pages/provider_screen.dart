@@ -275,8 +275,14 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    providerOptionButton(context, 'Invitar a evento'),
-                                    sendMessageToPorivderButton(context, 'Contactar', widget.user, state.providerData),
+                                    Flexible(
+                                      flex: 2,
+                                      child: providerInviteButton(context, 'Invitar a evento', widget.user, state.providerData),
+                                    ),
+                                    Flexible(
+                                      flex: 2,
+                                      child: sendMessageToPorivderButton(context, 'Contactar', widget.user, state.providerData),
+                                    ),
                                   ],
                                 )
                               else if (widget.providerUserId != null && widget.providerUserId == state.providerData.userid)

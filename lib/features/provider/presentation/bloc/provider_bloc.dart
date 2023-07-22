@@ -25,16 +25,15 @@ class ProviderBloc extends Bloc<ProviderEvent, ProviderState> {
   final GetProviderServicesUseCase getProviderServicesUseCase;
   final GetCategoryProvidersUseCase getCategoryProvidersUseCase;
 
-  ProviderBloc({
-      required this.getCategoryProvidersUseCase,
+  ProviderBloc(
+      {required this.getCategoryProvidersUseCase,
       required this.getProviderServicesUseCase,
       required this.getProviderByIdUseCase,
       required this.getProviderByUseridUseCase,
       required this.updateProviderDataUseCase,
       required this.createServiceUseCase,
       required this.deleteServiceUseCase,
-      required this.updateServiceUseCase
-      })
+      required this.updateServiceUseCase})
       : super(InitialState()) {
     on<ProviderEvent>((event, emit) async {
       if (event is UpdateProviderService) {
@@ -61,7 +60,7 @@ class ProviderBloc extends Bloc<ProviderEvent, ProviderState> {
         } catch (error) {
           emit(Error(error: error.toString()));
         }
-      } if (event is UpdateProviderData) {
+      } else if (event is UpdateProviderData) {
         try {
           emit(UpdatingProviderData());
           String status = await updateProviderDataUseCase.execute(event.providerData);

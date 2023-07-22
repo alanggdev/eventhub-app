@@ -11,4 +11,9 @@ class NotifRepositoryImpl implements NotifRepository {
   Future<List<Notification>> getNotifications(int userid) async {
     return await notifDataSource.getNotifications(userid);
   }
+
+  @override
+  Future<String> sendNotification(Notification notification, String receiverToken) async {
+    return await notifDataSource.sendNotification(notification, receiverToken);
+  }
 }

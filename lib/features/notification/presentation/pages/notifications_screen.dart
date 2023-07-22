@@ -8,6 +8,8 @@ import 'package:eventhub_app/features/notification/presentation/bloc/notificatio
 
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 
+import 'package:eventhub_app/features/chat/presentation/widgets/alerts.dart';
+
 class NotificationsScreen extends StatefulWidget {
   final User user;
   const NotificationsScreen(this.user, {super.key});
@@ -71,7 +73,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               if (state is LoadingNotifications)
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.45,
-                  child: loading(context),
+                  child: loadingChatWidget(context),
                 ),
               if (state is NotificationsLoaded)
                 if (state.notifications.isNotEmpty)
@@ -81,9 +83,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       vertical: 5,
                     ),
                     child: Column(
-                      children: [
-                        notificationWidget(context),
-                      ],
+                      children: state.notifications.map((notif) {
+                        return notificationWidget(context, notif);
+                      },).toList(),
                     ),
                   )
                 else if (state.notifications.isEmpty)

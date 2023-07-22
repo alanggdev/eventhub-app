@@ -4,6 +4,13 @@ abstract class NotificationState {}
 
 class InitialState extends NotificationState {}
 
+class SendingNotification extends NotificationState {}
+class NotificationSent extends NotificationState {
+  final String status;
+
+  NotificationSent({required this.status});
+}
+
 class LoadingNotifications extends NotificationState {}
 class NotificationsLoaded extends NotificationState {
   final List<Notification> notifications;
@@ -11,8 +18,8 @@ class NotificationsLoaded extends NotificationState {
   NotificationsLoaded({required this.notifications});
 }
 
-class Error extends NotificationState {
+class NotifError extends NotificationState {
   final String error;
 
-  Error({required this.error});
+  NotifError({required this.error});
 }

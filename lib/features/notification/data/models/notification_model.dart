@@ -36,4 +36,16 @@ class NotificationModel extends Notification {
       status: json['status'],
     );
   }
+
+  static Map<String, dynamic> fromEntityToJson(Notification data) {
+    return {
+      'senderId': data.senderId,
+      'receiverId': data.receiverId,
+      'title': data.title,
+      'body': data.body,
+      'providerName': data.providerName,
+      'eventName': data.eventName,
+      'type': data.type,
+    };
+  }
 }

@@ -451,7 +451,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              snackBar('No se permiten cambios vacios'),
+                              snackBar('No se permiten cambios vacios', Colors.red),
                             );
                           }
                         },

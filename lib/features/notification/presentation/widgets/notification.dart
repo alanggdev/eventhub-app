@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
+import 'package:eventhub_app/features/notification/domain/entities/notification.dart' as notif;
 
-Padding notificationWidget(BuildContext context) {
+Padding notificationWidget(BuildContext context, notif.Notification notification) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8),
     child: GestureDetector(
       onTap: () {
-        invitationWidget(context);
+        invitationWidget(context, notification);
       },
       child: Container(
         width: double.infinity,
@@ -28,30 +29,36 @@ Padding notificationWidget(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: const [
-                  Icon(
+                children: [
+                  const Icon(
                     Icons.notifications,
                     color: ColorStyles.secondaryColor2,
-                    size: 28,
+                    size: 24,
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    'Notificación',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      color: ColorStyles.secondaryColor1,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 22,
+                  // const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      notification.title.toString(),
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        color: ColorStyles.secondaryColor1,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                 ],
               ),
-              const Text(
-                'Contenido de la notificación.',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  color: ColorStyles.secondaryColor2,
-                  fontSize: 18,
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Text(
+                  notification.body.toString(),
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    color: ColorStyles.secondaryColor2,
+                    fontSize: 16,
+                  ),
                 ),
               )
             ],
@@ -62,7 +69,7 @@ Padding notificationWidget(BuildContext context) {
   );
 }
 
-Future<void> invitationWidget(BuildContext context) {
+Future<void> invitationWidget(BuildContext context, notif.Notification notification) {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
@@ -78,13 +85,13 @@ Future<void> invitationWidget(BuildContext context) {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children: [
                 Padding(
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: Text(
-                    '¿Deseas aceptar la invitación como colaborador al evento: {event_name}? *',
+                    '¿Deseas aceptar la invitación como colaborador al evento: ${notification.eventName}? *',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: ColorStyles.black,
                       fontWeight: FontWeight.w600,
                       fontFamily: 'Inter',
@@ -92,7 +99,7 @@ Future<void> invitationWidget(BuildContext context) {
                     ),
                   ),
                 ),
-                Text(
+                const Text(
                   '* Al aceptar colaborar en un evento, tu empresa aparecerá en la sección de Empresas colaboradoras. Solo el creador del evento podrá ver esta información. Puedes deshacer la colaboración mas tarde.',
                   textAlign: TextAlign.justify,
                   style: TextStyle(
