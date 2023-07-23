@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/notification/domain/entities/notification.dart' as notif;
+import 'package:eventhub_app/features/notification/presentation/bloc/notification_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 Padding notificationWidget(BuildContext context, notif.Notification notification) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8),
     child: GestureDetector(
       onTap: () {
-        invitationWidget(context, notification);
+        if (notification.status == null && notification.title.toString() != 'Colaboración aceptada' && notification.title.toString() != 'Colaboración rechazada') {
+          invitationWidget(context, notification);
+        }
       },
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: ColorStyles.white,
+          color: ColorStyles.white, //notification.status == false ? ColorStyles.secondaryColor4.withOpacity(0.2) : ColorStyles.white,
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
@@ -44,7 +48,7 @@ Padding notificationWidget(BuildContext context, notif.Notification notification
                         fontFamily: 'Inter',
                         color: ColorStyles.secondaryColor1,
                         fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                        fontSize: 18,
                       ),
                     ),
                   ),
@@ -57,10 +61,33 @@ Padding notificationWidget(BuildContext context, notif.Notification notification
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     color: ColorStyles.secondaryColor2,
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 ),
-              )
+              ),
+              if (notification.title.toString() != 'Colaboración aceptada' && notification.title.toString() != 'Colaboración rechazada')
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Estado: ',
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        color: ColorStyles.secondaryColor2,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: notification.status == null ? 'Pendiente' : notification.status! ? 'Aceptado' : 'Rechazado',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                          )
+                        )
+                      ]
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -134,6 +161,7 @@ Future<void> invitationWidget(BuildContext context, notif.Notification notificat
                       elevation: 3,
                     ),
                     onPressed: () {
+                      context.read<NotificationBloc>().add(ResponseNotification(notification: notification, response: 'Deny'));
                       Navigator.of(context).pop();
                     },
                   ),
@@ -158,6 +186,7 @@ Future<void> invitationWidget(BuildContext context, notif.Notification notificat
                       elevation: 3,
                     ),
                     onPressed: () {
+                      context.read<NotificationBloc>().add(ResponseNotification(notification: notification, response: 'Accept'));
                       Navigator.of(context).pop();
                     },
                   ),

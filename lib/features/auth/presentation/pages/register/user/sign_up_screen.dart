@@ -133,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 Expanded(
                                   child: ListTile(
                                     title: const Text(
-                                      'Usuario estandar',
+                                      'Usuario',
                                       style: TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 14,
@@ -154,7 +154,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 Expanded(
                                   child: ListTile(
                                     title: const Text(
-                                      'Organizador Proveedor',
+                                      'Proveedor',
                                       style: TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 14,

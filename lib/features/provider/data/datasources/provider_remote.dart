@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:io';
+import 'dart:convert' as convert;
 
 import 'package:eventhub_app/keys.dart';
 
@@ -28,8 +29,8 @@ class ProviderDataSourceImpl extends ProviderDataSource {
   Future<List<Provider>> getCategoryProviders(String category) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-      Response response;
-      response = await dio.get('$serverURL/providers/categories/$category');
+      var body = {"categories": [category]};
+      Response response = await dio.post('$serverURL/providers/categories/', data: convert.jsonEncode(body));
 
       if (response.statusCode == 200) {
         List<Provider> categoryProviders = [];
@@ -53,8 +54,7 @@ class ProviderDataSourceImpl extends ProviderDataSource {
   Future<List<Service>> getProviderServices(int providerid) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-      Response response;
-      response = await dio.get('$serverURL/services/provider/$providerid');
+      Response response = await dio.get('$serverURL/services/provider/$providerid');
 
       if (response.statusCode == 200) {
         List<Service> providerServices = [];

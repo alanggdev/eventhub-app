@@ -10,7 +10,9 @@ class NotificationModel extends Notification {
     String? providerName,
     String? eventName,
     String? type,
-    String? status,
+    bool? status,
+    int? eventId,
+    int? providerId,
   }) : super(
           id: id,
           senderId: senderId,
@@ -21,6 +23,8 @@ class NotificationModel extends Notification {
           eventName: eventName,
           type: type,
           status: status,
+          eventId: eventId,
+          providerId: providerId
         );
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,8 @@ class NotificationModel extends Notification {
       eventName: json['eventName'],
       type: json['type'],
       status: json['status'],
+      eventId: json['eventId'],
+      providerId: json['providerId'],
     );
   }
 
@@ -46,6 +52,8 @@ class NotificationModel extends Notification {
       'providerName': data.providerName,
       'eventName': data.eventName,
       'type': data.type,
+      'eventId': data.eventId,
+      'providerId': data.providerId,
     };
   }
 }

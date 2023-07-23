@@ -157,65 +157,55 @@ Padding providerInviteButton(BuildContext context, String label, User user, Prov
           context: context,
           builder: (context) {
             return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
-              return BlocBuilder<NotificationBloc, NotificationState>(builder: (context, notiState) {
-                return AlertDialog(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  content: SizedBox(
-                    height: 300,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(bottom: 10),
-                            child: Text(
-                              'Eventos disponibles',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
-                                color: ColorStyles.textSecondary1,
-                              ),
+              return AlertDialog(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                content: SizedBox(
+                  height: 300,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            'Eventos disponibles',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: ColorStyles.textSecondary1,
                             ),
                           ),
-                          if (state is GettingUserEvents || notiState is SendingNotification)
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: const [
-                                Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: CircularProgressIndicator(),
-                                ),
-                                Text(
-                                  'Cargando...',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 18,
-                                    color: ColorStyles.primaryBlue,
-                                  ),
-                                ),
-                              ],
-                            )
-                          else if (state is UserEventGotten && notiState is! NotificationSent)
-                            Column(
-                              children: state.userEvents.map((event) {
-                                return userEventWidget(context, event, user, provider);
-                              },).toList(),
-                            )
-                          else if (state is NotifError)
-                            const Text(
-                              'No se pudo invitar al evento, intenta más tarde.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 18,
-                                color: ColorStyles.primaryBlue,
+                        ),
+                        if (state is GettingUserEvents)
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: const [
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: CircularProgressIndicator(),
                               ),
-                            )
-                          else if (notiState is NotificationSent)
-                            FutureBuilder(
+                              Text(
+                                'Cargando...',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 18,
+                                  color: ColorStyles.primaryBlue,
+                                ),
+                              ),
+                            ],
+                          )
+                        else if (state is UserEventGotten)
+                          Column(
+                            children: state.userEvents.map((event) {
+                              return userEventWidget(context, event, user, provider);
+                            },).toList(),
+                          ),
+                        BlocBuilder<NotificationBloc, NotificationState>(builder: (context, notiState) {
+                          if (notiState is NotificationSent) {
+                            return FutureBuilder(
                               future: Future.delayed(Duration.zero, () async {
                                 Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -225,13 +215,26 @@ Padding providerInviteButton(BuildContext context, String label, User user, Prov
                               builder: (context, snapshot) {
                                 return Container();
                               },
-                            )
-                        ],
-                      ),
+                            );
+                          } else if (notiState is NotifError) {
+                            return Text(
+                              notiState.error,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 16,
+                                color: ColorStyles.primaryBlue,
+                              ),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        })
+                      ],
                     ),
                   ),
-                );
-              });
+                ),
+              );
             });
           },
         );
@@ -288,20 +291,21 @@ Padding userEventWidget(BuildContext context, Event event, User user, Provider p
                   flex: 1,
                   child: TextButton(
                     onPressed: () {
-                      // Navigator.pop(context);
-                      invitateWidget(context, event, user, provider);
+                      if (!event.providersID.contains(provider.providerId)) {
+                        invitateWidget(context, event, user, provider);
+                      }
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: ColorStyles.primaryBlue,
+                      backgroundColor: event.providersID.contains(provider.providerId) ? ColorStyles.primaryGrayBlue : ColorStyles.primaryBlue,
                       minimumSize: const Size(double.infinity, 20),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text(
-                      'Invitar',
-                      style: TextStyle(
+                    child: Text(
+                      event.providersID.contains(provider.providerId) ? 'Ya invitado' : 'Invitar',
+                      style: const TextStyle(
                         fontFamily: 'Inter',
                       ),
                     ),
@@ -329,34 +333,36 @@ Future<void> invitateWidget(BuildContext context, Event event, User user, Provid
           padding: const EdgeInsets.all(8),
           child: SizedBox(
             height: 130,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    '¿Deseas invitar como colaborador de tu evento a ${provider.companyName}? *',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: ColorStyles.black,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
-                      fontSize: 18,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      '¿Deseas invitar como colaborador de tu evento a ${provider.companyName}? *',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: ColorStyles.black,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                        fontSize: 18,
+                      ),
                     ),
                   ),
-                ),
-                const Text(
-                  '* Al invitar como colaborador a una empresa/proveedor aceptas compartir información de tu evento tal como el nombre del evento, descripción, fecha e imagenes anexas. Puedes deshacer la colaboración mas tarde.',
-                  textAlign: TextAlign.justify,
-                  style: TextStyle(
-                    color: ColorStyles.warningCancel,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Inter',
-                    fontSize: 10,
+                  const Text(
+                    '* Al invitar como colaborador a una empresa/proveedor aceptas compartir información de tu evento tal como el nombre del evento, descripción, fecha e imagenes anexas. Puedes deshacer la colaboración mas tarde.',
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      color: ColorStyles.warningCancel,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                      fontSize: 10,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -369,7 +375,7 @@ Future<void> invitateWidget(BuildContext context, Event event, User user, Provid
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: TextButton.icon(
                     icon: const Icon(Icons.close),
-                    label: const Text('Rechazar'),
+                    label: const Text('Cancelar'),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 40),
                       foregroundColor: Colors.white,
@@ -408,13 +414,15 @@ Future<void> invitateWidget(BuildContext context, Event event, User user, Provid
                       Notif.Notification notif = Notif.Notification(
                         senderId: user.userinfo['pk'],
                         receiverId: provider.userid,
-                        title: 'Haz sido invitado a colaborar en un evento',
+                        title: 'Has sido invitado a colaborar en un evento',
                         body: '${user.userinfo['full_name']} te ha invitado a colaborar al evento ${event.name}',
                         providerName: provider.companyName,
                         eventName: event.name,
                         type: 'Invitation',
+                        eventId: event.id,
+                        providerId: provider.providerId,
                       );
-                      context.read<NotificationBloc>().add(SendNotification(notification: notif, receiverToken: 'none'));
+                      context.read<NotificationBloc>().add(SendNotification(notification: notif));
                       Navigator.pop(context);
                     },
                   ),

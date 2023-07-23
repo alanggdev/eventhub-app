@@ -7,7 +7,9 @@ class Notification {
   final String? providerName;
   final String? eventName;
   final String? type;
-  final String? status;
+  final bool? status;
+  final int? eventId;
+  final int? providerId;
 
   Notification({
     this.id,
@@ -19,5 +21,7 @@ class Notification {
     this.eventName,
     this.type,
     this.status,
+    this.eventId,
+    this.providerId,
   });
 }

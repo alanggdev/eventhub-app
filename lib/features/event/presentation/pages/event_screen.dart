@@ -228,33 +228,35 @@ class _EventScreenState extends State<EventScreen> {
               content: Padding(
                 padding: const EdgeInsets.all(8),
                 child: SizedBox(
-                  height: 80,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          '¿Deseas eliminar este servicio?',
+                  height: 100,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            '¿Deseas eliminar este servicio?',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: ColorStyles.black,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Inter',
+                                fontSize: 20),
+                          ),
+                        ),
+                        Text(
+                          'Una vez eliminado la información del servicio no podrá ser recuperada.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              color: ColorStyles.black,
-                              fontWeight: FontWeight.w600,
+                              color: ColorStyles.warningCancel,
+                              fontWeight: FontWeight.w500,
                               fontFamily: 'Inter',
-                              fontSize: 20),
+                              fontSize: 16),
                         ),
-                      ),
-                      Text(
-                        'Una vez eliminado la información del servicio no podrá ser recuperada.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: ColorStyles.warningCancel,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Inter',
-                            fontSize: 16),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

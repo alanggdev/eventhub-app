@@ -29,9 +29,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   void loadData() {
     user = widget.user;
-    context
-        .read<NotificationBloc>()
-        .add(GetNotifications(userid: user!.userinfo['pk']));
+    context.read<NotificationBloc>().add(GetNotifications(userid: user!.userinfo['pk']));
   }
 
   @override
@@ -70,10 +68,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   ),
                 ),
               ),
-              if (state is LoadingNotifications)
+              if (state is LoadingNotifications || state is UpdatingNotificationStatus)
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.45,
                   child: loadingChatWidget(context),
+                ),
+              if (state is NotificationStatusUpdated)
+                FutureBuilder(
+                  future: Future.delayed(Duration.zero, () async {
+                    context.read<NotificationBloc>().add(GetNotifications(userid: user!.userinfo['pk']));
+                  }),
+                  builder: (context, snapshot) {
+                    return Container();
+                  },
                 ),
               if (state is NotificationsLoaded)
                 if (state.notifications.isNotEmpty)
@@ -90,6 +97,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   )
                 else if (state.notifications.isEmpty)
                   emptyWidget(context, 'No tienes notificaciones', Images.emptychat),
+              if (state is NotifError)
+                errorWidget(context, state.error.toString())
             ],
           ),
         ),

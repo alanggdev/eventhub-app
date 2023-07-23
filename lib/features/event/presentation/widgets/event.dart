@@ -35,7 +35,6 @@ Padding eventWidget(BuildContext context, Event userEvent, User user) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    flex: 2,
                     child: Text(
                       userEvent.name,
                       overflow: TextOverflow.ellipsis,
@@ -47,15 +46,12 @@ Padding eventWidget(BuildContext context, Event userEvent, User user) {
                       ),
                     ),
                   ),
-                  Flexible(
-                    flex: 1,
-                    child: Text(
-                      userEvent.date,
-                      style: const TextStyle(
-                        color: ColorStyles.primaryGrayBlue,
-                        fontSize: 12,
-                        fontFamily: 'Inter',
-                      ),
+                  Text(
+                    userEvent.date,
+                    style: const TextStyle(
+                      color: ColorStyles.primaryGrayBlue,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
                     ),
                   ),
                 ],

@@ -2,5 +2,6 @@ import 'package:eventhub_app/features/notification/domain/entities/notification.
 
 abstract class NotifRepository {
   Future<List<Notification>> getNotifications(int userid);
-  Future<String> sendNotification(Notification notification, String receiverToken);
+  Future<String> sendNotification(Notification notification);
+  Future<String> responseNotification(Notification notification, String response);
 }

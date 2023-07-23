@@ -244,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    widget.userinfo.userinfo['full_name'],
+                                                    widget.userinfo.userinfo['full_name'].toString(),
                                                     style: const TextStyle(
                                                       fontSize: 23,
                                                       color: Color(0xff242C71),

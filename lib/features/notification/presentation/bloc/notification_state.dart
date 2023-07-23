@@ -4,6 +4,13 @@ abstract class NotificationState {}
 
 class InitialState extends NotificationState {}
 
+class UpdatingNotificationStatus extends NotificationState {}
+class NotificationStatusUpdated extends NotificationState {
+  final String status;
+
+  NotificationStatusUpdated({required this.status});
+}
+
 class SendingNotification extends NotificationState {}
 class NotificationSent extends NotificationState {
   final String status;

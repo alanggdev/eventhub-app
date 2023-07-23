@@ -55,105 +55,105 @@ class _SignInScreenState extends State<SignInScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(15),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height * 0.25,
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    Images.logoURL,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.15,
-                                  ),
-                                  const Text(
-                                    'eventhub',
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.25,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      Images.logoURL,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.15,
+                                    ),
+                                    const Text(
+                                      'eventhub',
+                                      style: TextStyle(
+                                        color: ColorStyles.textPrimary1,
+                                        fontSize: 42,
+                                        fontFamily: 'Righteous',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: Text(
+                                    'Bienvenido, por favor, ingresa tus datos para iniciar sesión.',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      color: ColorStyles.textPrimary1,
-                                      fontSize: 42,
-                                      fontFamily: 'Righteous',
+                                      color: ColorStyles.textPrimary2,
+                                      fontSize: 18,
+                                      fontFamily: 'Inter',
                                     ),
                                   ),
-                                ],
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
-                                child: Text(
-                                  'Bienvenido, por favor, ingresa tus datos para iniciar sesión.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: ColorStyles.textPrimary2,
-                                    fontSize: 18,
-                                    fontFamily: 'Inter',
-                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Column(
+                        Column(
                           children: [
                             textField(context, Icons.email, 'Correo electrónico', emailController, TextInputType.text),
                             textFieldPass(context, Icons.lock, 'Contraseña', passController, hidePass, changePassVisibility),
                           ],
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    '¿No tienes una cuenta?',
-                                    style: TextStyle(
-                                      color: ColorStyles.secondaryColor3,
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SignUpScreen()),
-                                      );
-                                    },
-                                    child: const Text(
-                                      'Regístrate',
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      '¿No tienes una cuenta?',
                                       style: TextStyle(
-                                          // color: Colors.black,
-                                          color: ColorStyles.textPrimary2,
-                                          fontFamily: 'Inter',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
+                                        color: ColorStyles.secondaryColor3,
+                                        fontFamily: 'Inter',
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              formButtonSignIn(context, emailController,
-                                  passController, context.read<AuthBloc>()),
-                            ],
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const SignUpScreen()),
+                                        );
+                                      },
+                                      child: const Text(
+                                        'Regístrate',
+                                        style: TextStyle(
+                                            // color: Colors.black,
+                                            color: ColorStyles.textPrimary2,
+                                            fontFamily: 'Inter',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                formButtonSignIn(context, emailController,
+                                    passController, context.read<AuthBloc>()),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 if (state is LoggingInUser)

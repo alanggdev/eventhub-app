@@ -192,19 +192,19 @@ Padding providerDaysInfo(IconData icon, List<dynamic> daysAvailability,
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: Text(
-            'De ${hoursAvailability[0]} a ${hoursAvailability[1]}',
-            textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: ColorStyles.primaryGrayBlue,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Inter',
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 6),
+        //   child: Text(
+        //     'De ${hoursAvailability[0]} a ${hoursAvailability[1]}',
+        //     textAlign: TextAlign.start,
+        //     style: const TextStyle(
+        //       color: ColorStyles.primaryGrayBlue,
+        //       fontSize: 16,
+        //       fontWeight: FontWeight.w500,
+        //       fontFamily: 'Inter',
+        //     ),
+        //   ),
+        // ),
       ],
     ),
   );
@@ -285,7 +285,7 @@ Column providerServiceWidget(BuildContext context, Service service) {
                             ),
                           ),
                           SizedBox(
-                            height: 120,
+                            height: 100,
                             child: SingleChildScrollView(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

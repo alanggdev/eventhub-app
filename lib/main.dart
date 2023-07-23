@@ -69,6 +69,7 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => NotificationBloc(
             getNotifsUseCase: usecaseConfig.getNotifsUseCase!,
             sendNotifUseCase: usecaseConfig.sendNotifUseCase!,
+            responseNotifUseCase: usecaseConfig.responseNotifUseCase!
           ),
         ),
       ],

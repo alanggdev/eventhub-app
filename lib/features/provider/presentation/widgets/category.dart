@@ -91,8 +91,7 @@ Padding categoryWidget(
                   image,
                   width: 85,
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
+                Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(12),
                     child: SingleChildScrollView(
@@ -102,6 +101,8 @@ Padding categoryWidget(
                         children: [
                           Text(
                             category,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
                             style: const TextStyle(
                               color: ColorStyles.textPrimary2,
                               fontSize: 16,
@@ -113,6 +114,8 @@ Padding categoryWidget(
                             padding: const EdgeInsets.only(top: 10),
                             child: Text(
                               description,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
                               style: const TextStyle(
                                 color: ColorStyles.textPrimary1,
                                 fontSize: 10,

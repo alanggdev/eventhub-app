@@ -13,7 +13,12 @@ class NotifRepositoryImpl implements NotifRepository {
   }
 
   @override
-  Future<String> sendNotification(Notification notification, String receiverToken) async {
-    return await notifDataSource.sendNotification(notification, receiverToken);
+  Future<String> sendNotification(Notification notification) async {
+    return await notifDataSource.sendNotification(notification);
+  }
+
+  @override
+  Future<String> responseNotification(Notification notification, String response) async {
+    return await notifDataSource.responseNotification(notification, response);
   }
 }
