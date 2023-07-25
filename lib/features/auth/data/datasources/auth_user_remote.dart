@@ -208,7 +208,7 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
         if (response.statusCode == 200) {
           await prefs.setInt('userid', response.data['user']['pk']);
 
-          await prefs.setString('user', convert.jsonEncode(response.data['user']));
+          // await prefs.setString('user', convert.jsonEncode(response.data['user']));
           await prefs.setString('access_token', response.data['access']);
           await prefs.setString('refresh_token', response.data['refresh']);
 
@@ -218,7 +218,16 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
 
           await setFCMToken(response.data['access']);
 
-          return UserModel.fromJson(response.data);
+          Response userInfoUpdated = await dio.get('$serverURL/auth/user/');
+          if (userInfoUpdated.statusCode == 200) {
+            await prefs.setString('user', convert.jsonEncode(userInfoUpdated.data));
+            User user = UserModel.fromJson(response.data);
+            user.userinfo = userInfoUpdated.data;
+            return user;
+          } else {
+            throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+          }
+          // return UserModel.fromJson(response.data);
         } else {
           throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
         }
