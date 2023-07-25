@@ -32,33 +32,6 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    color: ColorStyles.primaryBlue,
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: ColorStyles.baseLightBlue,
-                        border: Border.all(color: ColorStyles.baseLightBlue),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(22),
-                          topRight: Radius.circular(22),
-                        ),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          'Mis eventos',
-                          style: TextStyle(
-                            color: ColorStyles.primaryGrayBlue,
-                            fontSize: 26,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                   Column(
                     children: [
                       if (state is Error)
@@ -71,7 +44,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                             }).toList(),
                           )
                         else
-                          emptyWidget(context, 'No tienes eventos próximos', Images.emptyEvents),
+                          Center(child: emptyWidget(context, 'No tienes eventos próximos', Images.emptyEvents)),
                     ],
                   ),
                 ],

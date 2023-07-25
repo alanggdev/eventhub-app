@@ -11,7 +11,9 @@ import 'package:eventhub_app/features/event/data/datasources/event_remote.dart';
 import 'package:eventhub_app/features/event/data/repositories/event_repository_impl.dart';
 import 'package:eventhub_app/features/event/domain/usecases/create_event.dart';
 import 'package:eventhub_app/features/event/domain/usecases/delete_event.dart';
+import 'package:eventhub_app/features/event/domain/usecases/get_provider_events.dart';
 import 'package:eventhub_app/features/event/domain/usecases/get_user_events.dart';
+import 'package:eventhub_app/features/event/domain/usecases/remove_provider.dart';
 
 import 'package:eventhub_app/features/provider/data/datasources/provider_remote.dart';
 import 'package:eventhub_app/features/provider/data/repositories/provider_repository_impl.dart';
@@ -54,6 +56,8 @@ class UseCaseConfig {
   CreateEventUseCase? createEventUseCase;
   GetUserEventsUseCase? getUserEventsUseCase;
   DeleteEventUseCase? deleteEventUseCase;
+  GetProviderEventsUseCase? getProviderEventsUseCase;
+  RemoveProviderUseCase? removeProviderUseCase;
 
   ProviderDataSourceImpl? providerDataSourceImpl;
   ProviderRepositoryImpl? providerRepositoryImpl;
@@ -96,6 +100,8 @@ class UseCaseConfig {
     createEventUseCase = CreateEventUseCase(eventRepositoryImpl!);
     getUserEventsUseCase = GetUserEventsUseCase(eventRepositoryImpl!);
     deleteEventUseCase = DeleteEventUseCase(eventRepositoryImpl!);
+    getProviderEventsUseCase = GetProviderEventsUseCase(eventRepositoryImpl!);
+    removeProviderUseCase = RemoveProviderUseCase(eventRepositoryImpl!);
 
     providerDataSourceImpl = ProviderDataSourceImpl();
     providerRepositoryImpl = ProviderRepositoryImpl(providerDataSource: providerDataSourceImpl!);

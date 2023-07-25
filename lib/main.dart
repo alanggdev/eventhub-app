@@ -42,7 +42,9 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => EventBloc(
               createEventUseCase: usecaseConfig.createEventUseCase!,
               getUserEventsUseCase: usecaseConfig.getUserEventsUseCase!,
-              deleteEventUseCase: usecaseConfig.deleteEventUseCase!),
+              deleteEventUseCase: usecaseConfig.deleteEventUseCase!,
+              getProviderEventsUseCase: usecaseConfig.getProviderEventsUseCase!,
+              removeProviderUseCase: usecaseConfig.removeProviderUseCase!),
         ),
         BlocProvider<ProviderBloc>(
           create: (BuildContext context) => ProviderBloc(

@@ -21,4 +21,14 @@ class EventRepositoryImpl implements EventRepository {
   Future<String> deleteEvent(int eventid) async {
     return await eventDataSource.deleteEvent(eventid);
   }
+
+  @override
+  Future<List<Event>> getProviderEvents(int userid) async {
+    return await eventDataSource.getProviderEvents(userid);
+  }
+
+  @override
+  Future<String> removeProvider(int eventid) async {
+    return await eventDataSource.removeProvider(eventid);
+  }
 }

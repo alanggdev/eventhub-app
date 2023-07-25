@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:eventhub_app/features/event/domain/usecases/get_provider_events.dart';
+import 'package:eventhub_app/features/event/domain/usecases/remove_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/features/event/domain/usecases/create_event.dart';
@@ -10,18 +12,38 @@ part 'event_event.dart';
 part 'event_state.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
+  final RemoveProviderUseCase removeProviderUseCase;
+  final GetProviderEventsUseCase getProviderEventsUseCase;
   final DeleteEventUseCase deleteEventUseCase;
   final CreateEventUseCase createEventUseCase;
   final GetUserEventsUseCase getUserEventsUseCase;
 
-  EventBloc(
-      {required this.createEventUseCase,
-      required this.getUserEventsUseCase,
-      required this.deleteEventUseCase})
-      : super(InitialState()) {
+  EventBloc({
+    required this.createEventUseCase,
+    required this.getUserEventsUseCase,
+    required this.deleteEventUseCase,
+    required this.getProviderEventsUseCase,
+    required this.removeProviderUseCase
+    }) : super(InitialState()) {
     on<EventEvent>(
       (event, emit) async {
-        if (event is DeleteUserEvent) {
+        if (event is RemoveProvider) {
+          try {
+            emit(RemovingProvider());
+            String status = await removeProviderUseCase.execute(event.eventid);
+            emit(ProviderRemoved(status: status));
+          } catch (error) {
+            emit(Error(error: error.toString()));
+          }
+        } else if (event is GetProviderEvents) {
+          try {
+            emit(GettingUserEvents());
+            List<Event> providerEvents = await getProviderEventsUseCase.execute(event.userid);
+            emit(ProviderEventsLoaded(providerEvents: providerEvents));
+          } catch (error) {
+            emit(Error(error: error.toString()));
+          }
+        } else if (event is DeleteUserEvent) {
           try {
             emit(DeletingUserEvent());
             String eventDeletionStatus = await deleteEventUseCase.execute(event.eventid);

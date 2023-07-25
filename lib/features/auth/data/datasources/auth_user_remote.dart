@@ -101,6 +101,10 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
       await prefs.setString('access_token', jsonDecoded['access']);
       await prefs.setString('refresh_token', jsonDecoded['refresh']);
 
+      if (jsonDecoded['user']['is_provider']) {
+        await setProviderId(jsonDecoded['user']['pk'], prefs);
+      }
+      
       await setFCMToken(jsonDecoded['access']);
 
       return UserModel.fromJson(jsonDecoded);
@@ -208,6 +212,10 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
           await prefs.setString('access_token', response.data['access']);
           await prefs.setString('refresh_token', response.data['refresh']);
 
+          if (response.data['user']['is_provider']) {
+            await setProviderId(response.data['user']['pk'], prefs);
+          }
+
           await setFCMToken(response.data['access']);
 
           return UserModel.fromJson(response.data);
@@ -220,6 +228,20 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
 
     } else {
       throw Exception('Sin conexión a internet');
+    }
+  }
+
+  Future<void> setProviderId(int userid, SharedPreferences prefs) async {
+    Response response = await dio.get('$serverURL/providers/user/$userid');
+
+    if (response.statusCode == 200) {
+      dynamic data = response.data;
+      int providerid = data['providerId'];
+
+      await prefs.setInt('providerId', providerid);
+
+    } else {
+      throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
     }
   }
 

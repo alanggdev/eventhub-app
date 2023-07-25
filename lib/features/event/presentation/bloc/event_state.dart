@@ -4,6 +4,20 @@ abstract class EventState {}
 
 class InitialState extends EventState {}
 
+class RemovingProvider extends EventState {}
+class ProviderRemoved extends EventState {
+  final String status;
+
+  ProviderRemoved({required this.status});
+}
+
+class LoadingProviderEvents extends EventState {}
+class ProviderEventsLoaded extends EventState {
+  final List<Event> providerEvents;
+
+  ProviderEventsLoaded({required this.providerEvents});
+}
+
 class DeletingUserEvent extends EventState {}
 class UserEventDeleted extends EventState {
   final String eventDeletionStatus;

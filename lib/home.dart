@@ -20,6 +20,7 @@ import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
 import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
 import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.dart';
+import 'package:eventhub_app/features/event/presentation/pages/home_events.dart';
 
 import 'package:eventhub_app/features/chat/presentation/pages/messages_screen.dart';
 
@@ -145,7 +146,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     _widgetOptions = <Widget>[
-      MyEventsScreen(widget.userinfo),
+      HomeEvents(widget.userinfo),
+      // MyEventsScreen(widget.userinfo),
       ExploreCategoriesScreen(widget.userinfo),
       MessagesScreen(widget.userinfo, socket),
       NotificationsScreen(widget.userinfo),

@@ -2,6 +2,18 @@ part of 'event_bloc.dart';
 
 abstract class EventEvent {}
 
+class RemoveProvider extends EventEvent {
+  final int eventid;
+
+  RemoveProvider({required this.eventid});
+}
+
+class GetProviderEvents extends EventEvent {
+  final int userid;
+
+  GetProviderEvents({required this.userid});
+}
+
 class DeleteUserEvent extends EventEvent {
   final int eventid;
 
