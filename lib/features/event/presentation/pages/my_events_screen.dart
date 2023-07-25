@@ -53,7 +53,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
             floatingActionButton: Wrap(
               direction: Axis.vertical,
               alignment: WrapAlignment.end,
-              crossAxisAlignment: WrapCrossAlignment.end,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
