@@ -101,7 +101,7 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
       await prefs.setString('access_token', jsonDecoded['access']);
       await prefs.setString('refresh_token', jsonDecoded['refresh']);
 
-      if (jsonDecoded['user']['is_provider']) {
+      if (jsonDecoded['user']['is_provider'] && jsonDecoded['user']['is_provider'] != Null) {
         await setProviderId(jsonDecoded['user']['pk'], prefs);
       }
       
@@ -206,23 +206,27 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
         );
 
         if (response.statusCode == 200) {
-          await prefs.setInt('userid', response.data['user']['pk']);
-
-          // await prefs.setString('user', convert.jsonEncode(response.data['user']));
-          await prefs.setString('access_token', response.data['access']);
-          await prefs.setString('refresh_token', response.data['refresh']);
-
-          if (response.data['user']['is_provider']) {
-            await setProviderId(response.data['user']['pk'], prefs);
-          }
+          Response userInfoUpdated = await dio.get(
+            '$serverURL/auth/user/',
+            options: Options(headers: {HttpHeaders.contentTypeHeader: "application/json", HttpHeaders.authorizationHeader: "Bearer ${response.data['access']}"})
+          );
 
           await setFCMToken(response.data['access']);
 
-          Response userInfoUpdated = await dio.get('$serverURL/auth/user/');
           if (userInfoUpdated.statusCode == 200) {
+
+            await prefs.setInt('userid', response.data['user']['pk']);
             await prefs.setString('user', convert.jsonEncode(userInfoUpdated.data));
+            await prefs.setString('access_token', response.data['access']);
+            await prefs.setString('refresh_token', response.data['refresh']);
+
+            if (response.data['user']['is_provider'] != null && response.data['user']['is_provider']) {
+              await setProviderId(response.data['user']['pk'], prefs);
+            }
+
             User user = UserModel.fromJson(response.data);
             user.userinfo = userInfoUpdated.data;
+
             return user;
           } else {
             throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
@@ -263,11 +267,12 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
           'firebase_token': token.toString(),
         };
 
-        dio.options.headers["Content-Type"] = "application/json";
-        dio.options.headers["Authorization"] = "Bearer $accessToken";
+        // dio.options.headers["Content-Type"] = "application/json";
+        // dio.options.headers["Authorization"] = "Bearer $accessToken";
 
         await dio.patch(
           '$serverURL/auth/user/',
+          options: Options(headers: {HttpHeaders.contentTypeHeader: "application/json", HttpHeaders.authorizationHeader: "Bearer $accessToken"}),
           data: convert.jsonEncode(body),
         );
 
@@ -288,7 +293,6 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
       var body = {
         'full_name': registerUserData.fullname,
         'is_provider': registerUserData.isprovider,
-        'firebase_token': 'pending',
         'terms_conditions' : true
       };
 

@@ -19,7 +19,6 @@ import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
 import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
 import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
-import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.dart';
 import 'package:eventhub_app/features/event/presentation/pages/home_events.dart';
 
 import 'package:eventhub_app/features/chat/presentation/pages/messages_screen.dart';
