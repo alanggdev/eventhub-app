@@ -2,6 +2,18 @@ part of 'event_bloc.dart';
 
 abstract class EventEvent {}
 
+class RemoveProviderAssociated extends EventEvent{
+  final int eventid, providerid;
+
+  RemoveProviderAssociated({required this.eventid, required this.providerid});
+}
+
+class GetProvidersAssociated extends EventEvent{
+  final int eventid;
+
+  GetProvidersAssociated({required this.eventid});
+}
+
 class RemoveProvider extends EventEvent {
   final int eventid;
 

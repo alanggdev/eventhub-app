@@ -130,16 +130,18 @@ Padding providerInfo(IconData icon, String label) {
           color: ColorStyles.primaryBlue,
           size: 20,
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: Text(
-            label,
-            textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: ColorStyles.primaryGrayBlue,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Inter',
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: Text(
+              label,
+              textAlign: TextAlign.start,
+              style: const TextStyle(
+                color: ColorStyles.primaryGrayBlue,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Inter',
+              ),
             ),
           ),
         ),
@@ -192,19 +194,21 @@ Padding providerDaysInfo(IconData icon, List<dynamic> daysAvailability,
             },
           ),
         ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 6),
-        //   child: Text(
-        //     'De ${hoursAvailability[0]} a ${hoursAvailability[1]}',
-        //     textAlign: TextAlign.start,
-        //     style: const TextStyle(
-        //       color: ColorStyles.primaryGrayBlue,
-        //       fontSize: 16,
-        //       fontWeight: FontWeight.w500,
-        //       fontFamily: 'Inter',
-        //     ),
-        //   ),
-        // ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: Text(
+              'De ${hoursAvailability[0]} a ${hoursAvailability[1]}',
+              textAlign: TextAlign.start,
+              style: const TextStyle(
+                color: ColorStyles.primaryGrayBlue,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
+        ),
       ],
     ),
   );

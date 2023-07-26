@@ -1,6 +1,7 @@
 import 'package:eventhub_app/features/event/data/datasources/event_remote.dart';
 import 'package:eventhub_app/features/event/domain/entities/event.dart';
 import 'package:eventhub_app/features/event/domain/repositories/event_repository.dart';
+import 'package:eventhub_app/features/provider/domain/entities/provider.dart';
 
 class EventRepositoryImpl implements EventRepository {
   final EventDataSource eventDataSource;
@@ -30,5 +31,15 @@ class EventRepositoryImpl implements EventRepository {
   @override
   Future<String> removeProvider(int eventid) async {
     return await eventDataSource.removeProvider(eventid);
+  }
+
+  @override
+  Future<List<Provider>> getProviderAssociated(int eventid) async {
+    return await eventDataSource.getProviderAssociated(eventid);
+  }
+
+  @override
+  Future<String> removeProviderAssociated(int eventid, int providerid) async {
+    return await eventDataSource.removeProviderAssociated(eventid, providerid);
   }
 }

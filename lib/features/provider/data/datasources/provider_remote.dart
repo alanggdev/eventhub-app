@@ -30,7 +30,11 @@ class ProviderDataSourceImpl extends ProviderDataSource {
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
       var body = {"categories": [category]};
-      Response response = await dio.post('$serverURL/providers/categories/', data: convert.jsonEncode(body));
+      Response response = await dio.post(
+        '$serverURL/providers/categories/',
+        options: Options(headers: {HttpHeaders.contentTypeHeader: "application/json"}),
+        data: convert.jsonEncode(body)
+      );
 
       if (response.statusCode == 200) {
         List<Provider> categoryProviders = [];
