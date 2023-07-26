@@ -9,4 +9,5 @@ abstract class EventRepository {
   Future<String> removeProvider(int eventid);
   Future<List<Provider>> getProviderAssociated(int eventid);
   Future<String> removeProviderAssociated(int eventid, int providerid);
+  Future<List<Provider>> getSuggestions(String text);
 }

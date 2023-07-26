@@ -1,3 +1,4 @@
+import 'package:eventhub_app/features/event/presentation/pages/suggestions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,6 +15,7 @@ import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 import 'package:eventhub_app/features/event/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateEventScreen extends StatefulWidget {
   final User user;
@@ -393,11 +395,26 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           else if (state is EventCreated)
             FutureBuilder(
               future: Future.delayed(Duration.zero, () async {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomeScreen(widget.user, 0)),
-                    (route) => false);
+                final SharedPreferences prefs = await SharedPreferences.getInstance();
+                final String? action = prefs.getString('action');
+
+                if (action == 'Normal') {
+                  Future.microtask((() {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen(widget.user, 0)),
+                      (route) => false,
+                    );
+                  }));
+                } else {
+                  Future.microtask((() {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => SuggestionsScreen(widget.user, eventDescriptionController.text.trim())),
+                      (route) => false,
+                    );
+                  }));
+                }
               }),
               builder: (context, snapshot) {
                 return Container();

@@ -13,6 +13,7 @@ import 'package:eventhub_app/features/event/domain/usecases/create_event.dart';
 import 'package:eventhub_app/features/event/domain/usecases/delete_event.dart';
 import 'package:eventhub_app/features/event/domain/usecases/get_provider_associated.dart';
 import 'package:eventhub_app/features/event/domain/usecases/get_provider_events.dart';
+import 'package:eventhub_app/features/event/domain/usecases/get_suggestions.dart';
 import 'package:eventhub_app/features/event/domain/usecases/get_user_events.dart';
 import 'package:eventhub_app/features/event/domain/usecases/remove_provider.dart';
 import 'package:eventhub_app/features/event/domain/usecases/remove_provider_associated.dart';
@@ -62,6 +63,7 @@ class UseCaseConfig {
   RemoveProviderUseCase? removeProviderUseCase;
   GetProvidersAsscoaitedUseCase? getProvidersAsscoaitedUseCase;
   RemoveProviderAssociatedUseCase? removeProviderAssociatedUseCase;
+  GetSuggestionsUseCase? getSuggestionsUseCase;
 
   ProviderDataSourceImpl? providerDataSourceImpl;
   ProviderRepositoryImpl? providerRepositoryImpl;
@@ -108,6 +110,7 @@ class UseCaseConfig {
     removeProviderUseCase = RemoveProviderUseCase(eventRepositoryImpl!);
     getProvidersAsscoaitedUseCase = GetProvidersAsscoaitedUseCase(eventRepositoryImpl!);
     removeProviderAssociatedUseCase = RemoveProviderAssociatedUseCase(eventRepositoryImpl!);
+    getSuggestionsUseCase = GetSuggestionsUseCase(eventRepositoryImpl!);
 
     providerDataSourceImpl = ProviderDataSourceImpl();
     providerRepositoryImpl = ProviderRepositoryImpl(providerDataSource: providerDataSourceImpl!);

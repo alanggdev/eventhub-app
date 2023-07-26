@@ -4,6 +4,12 @@ abstract class EventState {}
 
 class InitialState extends EventState {}
 
+class LoadingSuggestions extends EventState {}
+class SuggestionsLoaded extends EventState {
+  final List<Provider> providersSuggest;
+
+  SuggestionsLoaded({required this.providersSuggest});
+}
 
 class LoadingProvidersAssociated extends EventState {}
 class ProvidersAssociatedLoaded extends EventState {

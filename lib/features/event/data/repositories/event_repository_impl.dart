@@ -42,4 +42,9 @@ class EventRepositoryImpl implements EventRepository {
   Future<String> removeProviderAssociated(int eventid, int providerid) async {
     return await eventDataSource.removeProviderAssociated(eventid, providerid);
   }
+
+  @override
+  Future<List<Provider>> getSuggestions(String text) async {
+    return await eventDataSource.getSuggestions(text);
+  }
 }

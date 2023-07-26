@@ -46,7 +46,8 @@ class MyApp extends StatelessWidget {
               getProviderEventsUseCase: usecaseConfig.getProviderEventsUseCase!,
               removeProviderUseCase: usecaseConfig.removeProviderUseCase!,
               getProvidersAsscoaitedUseCase: usecaseConfig.getProvidersAsscoaitedUseCase!,
-              removeProviderAssociatedUseCase: usecaseConfig.removeProviderAssociatedUseCase!),
+              removeProviderAssociatedUseCase: usecaseConfig.removeProviderAssociatedUseCase!,
+              getSuggestionsUseCase: usecaseConfig.getSuggestionsUseCase!),
         ),
         BlocProvider<ProviderBloc>(
           create: (BuildContext context) => ProviderBloc(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:eventhub_app/features/event/domain/usecases/get_suggestions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/features/event/domain/usecases/get_provider_associated.dart';
@@ -15,6 +16,7 @@ part 'event_event.dart';
 part 'event_state.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
+  final GetSuggestionsUseCase getSuggestionsUseCase;
   final RemoveProviderAssociatedUseCase removeProviderAssociatedUseCase;
   final GetProvidersAsscoaitedUseCase getProvidersAsscoaitedUseCase;
   final RemoveProviderUseCase removeProviderUseCase;
@@ -31,10 +33,19 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     required this.removeProviderUseCase,
     required this.getProvidersAsscoaitedUseCase,
     required this.removeProviderAssociatedUseCase,
+    required this.getSuggestionsUseCase,
     }) : super(InitialState()) {
     on<EventEvent>(
       (event, emit) async {
-        if (event is RemoveProviderAssociated) {
+        if (event is GetSuggestions) {
+          try {
+            emit(LoadingSuggestions());
+            List<Provider> providersSuggest = await getSuggestionsUseCase.execute(event.text);
+            emit(SuggestionsLoaded(providersSuggest: providersSuggest));
+          } catch (error) {
+            emit(Error(error: error.toString()));
+          }
+        } else if (event is RemoveProviderAssociated) {
           try {
             emit(LoadingProvidersAssociated());
             String status = await removeProviderAssociatedUseCase.execute(event.eventid, event.providerid);

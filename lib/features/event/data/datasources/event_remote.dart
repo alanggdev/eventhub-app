@@ -19,6 +19,7 @@ abstract class EventDataSource {
   Future<String> removeProvider(int eventid);
   Future<List<Provider>> getProviderAssociated(int eventid);
   Future<String> removeProviderAssociated(int eventid, int providerid);
+  Future<List<Provider>> getSuggestions(String text);
 }
 
 class EventDataSourceImpl extends EventDataSource {
@@ -300,6 +301,65 @@ class EventDataSourceImpl extends EventDataSource {
         }
 
         return 'Updated';
+      } else {
+        throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+      }
+
+    } else {
+      throw Exception('Sin conexión a internet.');
+    }
+  }
+
+  @override
+  Future<List<Provider>> getSuggestions(String text) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+      var body = {"text": text};
+      
+      Response response = await dio.post(
+        '$suggURL/suggestions/run',
+        options: Options(headers: {HttpHeaders.contentTypeHeader: "application/json"}),
+        data: convert.jsonEncode(body)
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        
+        var body = {"content": data};
+
+        Response resCategories = await dio.post(
+          '$serverURL/services/content/',
+          options: Options(headers: {HttpHeaders.contentTypeHeader: "application/json"}),
+          data: convert.jsonEncode(body)
+        );
+
+        if (resCategories.statusCode == 200) {
+
+          var body = {"ids": resCategories.data};
+          Response resProviders = await dio.post(
+            '$serverURL/providers/ids/',
+            options: Options(headers: {HttpHeaders.contentTypeHeader: "application/json"}),
+            data: convert.jsonEncode(body)
+          );
+
+          if (resProviders.statusCode == 200) {
+            List<Provider> categoryProviders = [];
+            List<dynamic> data = resProviders.data;
+
+            for (var eventData in data) {
+              Provider eventModel = ProviderModel.fromJson(eventData);
+              categoryProviders.add(eventModel);
+            }
+
+            return categoryProviders;
+          } else {
+            throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+          }
+
+        } else {
+          throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+        }
       } else {
         throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
       }

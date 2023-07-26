@@ -206,78 +206,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SizedBox(
-                                height: 310,
+                                height: widget.userinfo.userinfo['is_provider'] ? 250 : 190,
                                 child: Center(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 10),
-                                        child: Row(
-                                          children: [
-                                            Center(
-                                              child: Container(
-                                                width: 60,
-                                                height: 60,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.2),
-                                                      blurRadius: 5,
-                                                      offset: const Offset(0, 2),
-                                                    ),
-                                                  ],
-                                                  image: const DecorationImage(
-                                                      fit: BoxFit.fill,
-                                                      image: AssetImage(
-                                                          Images.logoURL)),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.only(left: 20),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    widget.userinfo.userinfo['full_name'].toString(),
-                                                    style: const TextStyle(
-                                                      fontSize: 23,
-                                                      color: Color(0xff242C71),
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 12),
-                                                    child: Text(
-                                                      '@${widget.userinfo.userinfo['username']}',
-                                                      style: const TextStyle(
-                                                        fontSize: 15,
-                                                        color: Color(0xff242C71),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const Divider(
-                                        color: Color(0xff3B47B6),
-                                      ),
-                                      menuOption(context, 'Mi perfil', Images.profilePlaceholder, false),
-                                      menuOption(context, 'Mi empresa', Images.companyPlaceholder, widget.userinfo.userinfo['is_provider']),
-                                      logoutButton(context)
-                                    ],
-                                  ),
+                                  child: userInfo(context),
                                 ),
                               ),
                             );
@@ -398,6 +329,73 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Column userInfo(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: Row(
+            children: [
+              Center(
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                    image: const DecorationImage(
+                        fit: BoxFit.fill, image: AssetImage(Images.logoURL)),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.userinfo.userinfo['full_name'].toString(),
+                      style: const TextStyle(
+                        fontSize: 23,
+                        color: Color(0xff242C71),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Text(
+                        '${widget.userinfo.userinfo['email']}',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: Color(0xff242C71),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Divider(
+          color: Color(0xff3B47B6),
+        ),
+        // menuOption(context, 'Mi perfil', Images.profilePlaceholder, false),
+        widget.userinfo.userinfo['is_provider'] ?
+        menuOption(context, 'Mi empresa', Images.companyPlaceholder,
+            widget.userinfo.userinfo['is_provider']) : Container(),
+        logoutButton(context)
+      ],
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Padding eventOptionButton(
     BuildContext context, String label, int eventid, EventBloc eventBloc) {
@@ -85,7 +86,7 @@ TextButton createEventBotton(
       shadowColor: Colors.grey.withOpacity(0.5),
       elevation: 3,
     ),
-    onPressed: () {
+    onPressed: () async {
       // Unfocus keyboard
       FocusManager.instance.primaryFocus?.unfocus();
       // Get event data
@@ -97,6 +98,8 @@ TextButton createEventBotton(
           eventDate.isNotEmpty && eventDate != 'Seleccionar fecha' &&
           selectedCategories.isNotEmpty &&
           eventImages.isNotEmpty) {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('type', 'Normal');
         // Bloc event
         eventBloc.add(CreateEvent(
             name: eventName,
@@ -143,7 +146,7 @@ TextButton createAndViewEventBotton(
       shadowColor: Colors.grey.withOpacity(0.5),
       elevation: 3,
     ),
-    onPressed: () {
+    onPressed: () async {
       // Unfocus keyboard
       FocusManager.instance.primaryFocus?.unfocus();
       // Get event data
@@ -155,6 +158,8 @@ TextButton createAndViewEventBotton(
           eventDate.isNotEmpty && eventDate != 'Seleccionar fecha' &&
           selectedCategories.isNotEmpty &&
           eventImages.isNotEmpty) {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('type', 'Suggestions');
         // Bloc event
         eventBloc.add(CreateEvent(
             name: eventName,
