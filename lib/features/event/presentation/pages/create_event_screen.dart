@@ -396,10 +396,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             FutureBuilder(
               future: Future.delayed(Duration.zero, () async {
                 final SharedPreferences prefs = await SharedPreferences.getInstance();
-                final String? action = prefs.getString('action');
+                final String? type = prefs.getString('type');
 
-                if (action == 'Normal') {
-                  Future.microtask((() {
+                if (type == 'Normal') {
+                  await prefs.remove('type');
+                  Future.microtask((() async {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => HomeScreen(widget.user, 0)),
@@ -407,6 +408,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     );
                   }));
                 } else {
+                  await prefs.remove('type');
                   Future.microtask((() {
                     Navigator.pushAndRemoveUntil(
                       context,

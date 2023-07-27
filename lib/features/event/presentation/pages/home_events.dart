@@ -80,6 +80,7 @@ class _HomeEventsState extends State<HomeEvents> with TickerProviderStateMixin {
         ),
         Expanded(
           child: TabBarView(
+            physics: widget.user.userinfo['is_provider'] ? const AlwaysScrollableScrollPhysics() : const NeverScrollableScrollPhysics(),
             controller: _tabController,
             children: <Widget>[
               MyEventsScreen(widget.user),
