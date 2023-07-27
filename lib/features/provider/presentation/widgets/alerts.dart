@@ -119,12 +119,12 @@ Padding errorProviderWidget(BuildContext context, String error) {
   );
 }
 
-SnackBar snackBar(String alert) {
+SnackBar snackBar(String alert, MaterialColor green) {
   return SnackBar(
     duration: const Duration(seconds: 3),
     content: Text(
       alert,
     ),
-    backgroundColor: Colors.red,
+    backgroundColor: green,
   );
 }

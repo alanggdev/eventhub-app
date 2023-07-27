@@ -105,79 +105,77 @@ class _GoogleSignUpScreenState extends State<GoogleSignUpScreen> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            textFieldMaxLength(context, Icons.person, 'Nombre completo', fullnameController, 35),
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: ListTile(
-                                    title: const Text(
-                                      'Usuario estandar',
-                                      style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 14,
-                                        color: ColorStyles.textPrimary2,
-                                      ),
-                                    ),
-                                    leading: Radio<AccountTypes>(
-                                      value: AccountTypes.normal,
-                                      groupValue: accountType,
-                                      onChanged: (AccountTypes? value) {
-                                        setState(() {
-                                          accountType = value;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ListTile(
-                                    title: const Text(
-                                      'Organizador Proveedor',
-                                      style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 14,
-                                        color: ColorStyles.textPrimary2,
-                                      ),
-                                    ),
-                                    leading: Radio<AccountTypes>(
-                                      value: AccountTypes.supplier,
-                                      groupValue: accountType,
-                                      onChanged: (AccountTypes? value) {
-                                        setState(() {
-                                          accountType = value;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  '¿No sabes que opción elegir? Pulsa en el icono',
-                                  style: TextStyle(
-                                    color: ColorStyles.textPrimary2,
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    tooltip(context);
-                                  },
-                                  icon: const Icon(Icons.help_outline,
+                      Column(
+                        children: [
+                          textFieldMaxLength(context, Icons.person, 'Nombre completo', fullnameController, 35),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: ListTile(
+                                  title: const Text(
+                                    'Usuario',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
                                       color: ColorStyles.textPrimary2,
-                                      size: 22),
+                                    ),
+                                  ),
+                                  leading: Radio<AccountTypes>(
+                                    value: AccountTypes.normal,
+                                    groupValue: accountType,
+                                    onChanged: (AccountTypes? value) {
+                                      setState(() {
+                                        accountType = value;
+                                      });
+                                    },
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                              Expanded(
+                                child: ListTile(
+                                  title: const Text(
+                                    'Proveedor',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      color: ColorStyles.textPrimary2,
+                                    ),
+                                  ),
+                                  leading: Radio<AccountTypes>(
+                                    value: AccountTypes.supplier,
+                                    groupValue: accountType,
+                                    onChanged: (AccountTypes? value) {
+                                      setState(() {
+                                        accountType = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                '¿No sabes que opción elegir? Pulsa en el icono',
+                                style: TextStyle(
+                                  color: ColorStyles.textPrimary2,
+                                  fontFamily: 'Inter',
+                                  fontSize: 12,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  tooltip(context);
+                                },
+                                icon: const Icon(Icons.help_outline,
+                                    color: ColorStyles.textPrimary2,
+                                    size: 22),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:eventhub_app/assets.dart';
 
@@ -9,8 +10,29 @@ import 'package:eventhub_app/features/auth/presentation/pages/register/user/goog
 import 'package:eventhub_app/features/auth/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 
-class AuthScreen extends StatelessWidget {
+class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
+
+  @override
+  State<AuthScreen> createState() => _AuthScreenState();
+}
+
+class _AuthScreenState extends State<AuthScreen> {
+  
+  @override
+  void initState() {
+    super.initState();
+
+    requestPerms();
+  }
+
+  Future<void> requestPerms() async {
+    await Permission.notification.isDenied.then((value) {
+      if (value) {
+        Permission.notification.request();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -247,36 +247,45 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                   ),
                                 ),
                               ),
-                              CarouselSlider(
-                                options: CarouselOptions(
-                                  enableInfiniteScroll: false, viewportFraction: 1,
-                                  onPageChanged: (index, reason) {
-                                    setState(() {
-                                      currentIndexServices = index;
-                                    });
-                                  }
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: CarouselSlider(
+                                  options: CarouselOptions(
+                                    enableInfiniteScroll: false, viewportFraction: 1,
+                                    onPageChanged: (index, reason) {
+                                      setState(() {
+                                        currentIndexServices = index;
+                                      });
+                                    }
+                                  ),
+                                  items: [
+                                    for (int index = 0; index < state.providerServices.length; index++)
+                                      Builder(
+                                        builder: (BuildContext context) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceScreen(state.providerServices[index])));
+                                            },
+                                            child: providerServiceWidget(context, state.providerServices[index])
+                                          );
+                                        },
+                                      ),
+                                  ],
                                 ),
-                                items: [
-                                  for (int index = 0; index < state.providerServices.length; index++)
-                                    Builder(
-                                      builder: (BuildContext context) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceScreen(state.providerServices[index])));
-                                          },
-                                          child: providerServiceWidget(context, state.providerServices[index])
-                                        );
-                                      },
-                                    ),
-                                ],
                               ),
                               showMoreButton(context, 'Ver todos los servicios', state.providerData, state.providerServices, widget.providerUserId, widget.user),
                               if (widget.providerUserId == null)
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    providerOptionButton(context, 'Invitar a evento'),
-                                    sendMessageToPorivderButton(context, 'Contactar', widget.user, state.providerData),
+                                    Flexible(
+                                      flex: 2,
+                                      child: providerInviteButton(context, 'Invitar a evento', widget.user, state.providerData),
+                                    ),
+                                    Flexible(
+                                      flex: 2,
+                                      child: sendMessageToPorivderButton(context, 'Contactar', widget.user, state.providerData),
+                                    ),
                                   ],
                                 )
                               else if (widget.providerUserId != null && widget.providerUserId == state.providerData.userid)

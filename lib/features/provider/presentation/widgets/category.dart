@@ -8,55 +8,49 @@ import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 List<Map<String, dynamic>> allCategories = [
   {
     'id': 1,
-    'image': Images.categoryPlaceholder,
+    'image': Images.locacion,
     'name': 'Locación',
     'description': 'Lugares, salones y espacios'
   },
   {
     'id': 2,
-    'image': Images.categoryPlaceholder,
+    'image': Images.ambiente,
     'name': 'Ambiente y Decoración',
     'description': 'Ambiente temático y decoración creativa'
   },
   {
     'id': 3,
-    'image': Images.categoryPlaceholder,
+    'image': Images.comunicacion,
     'name': 'Comunicación y Promoción',
     'description': 'Publicidad y promoción del evento'
   },
   {
     'id': 4,
-    'image': Images.categoryPlaceholder,
+    'image': Images.vestuario,
     'name': 'Vestuario y Estilo',
     'description': 'Ropa y estilo de los participantes'
   },
   {
     'id': 5,
-    'image': Images.categoryPlaceholder,
+    'image': Images.alimentos,
     'name': 'Alimentos y Bebidas',
     'description': 'Catering y opciones de bebidas'
   },
   {
     'id': 6,
-    'image': Images.categoryPlaceholder,
+    'image': Images.entretenimiento,
     'name': 'Entretenimiento',
     'description': 'Actividades y shows para los asistentes'
   },
   {
     'id': 7,
-    'image': Images.categoryPlaceholder,
+    'image': Images.organizacion,
     'name': 'Organización',
     'description': 'Planificación y logística del evento'
   },
   {
     'id': 8,
-    'image': Images.categoryPlaceholder,
-    'name': 'Seguridad y Emergencias',
-    'description': 'Medidas de seguridad y protocolos de emergencia'
-  },
-  {
-    'id': 9,
-    'image': Images.categoryPlaceholder,
+    'image': Images.fotografia,
     'name': 'Fotografía y video',
     'description': 'Cobertura fotográfica y videográfica del evento'
   },
@@ -97,8 +91,7 @@ Padding categoryWidget(
                   image,
                   width: 85,
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
+                Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(12),
                     child: SingleChildScrollView(
@@ -108,6 +101,8 @@ Padding categoryWidget(
                         children: [
                           Text(
                             category,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
                             style: const TextStyle(
                               color: ColorStyles.textPrimary2,
                               fontSize: 16,
@@ -119,6 +114,8 @@ Padding categoryWidget(
                             padding: const EdgeInsets.only(top: 10),
                             child: Text(
                               description,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
                               style: const TextStyle(
                                 color: ColorStyles.textPrimary1,
                                 fontSize: 10,

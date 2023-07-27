@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "865672629912",
+    "project_id": "eventhub-auth",
+    "storage_bucket": "eventhub-auth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865672629912:android:92fb76b3974ac62abe0aed",
+        "android_client_info": {
+          "package_name": "com.alanggdev.eventhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865672629912-5678aud4n0t2jhsreaqvajiuqm6bmslq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alanggdev.eventhub",
+            "certificate_hash": "503d87ff4147bf06d5a0da07481d9d66656cd439"
+          }
+        },
+        {
+          "client_id": "865672629912-3at54kcbncank5f0lrp6obsq7udvrctl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFVW4NndDK5U4J7brw4RJyH1CZlpkW6Bo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865672629912-3at54kcbncank5f0lrp6obsq7udvrctl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

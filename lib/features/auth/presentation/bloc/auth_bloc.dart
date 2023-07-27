@@ -4,6 +4,7 @@ import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/login_user.dart';
 import 'package:eventhub_app/features/auth/domain/entities/register_provider.dart';
+import 'package:eventhub_app/features/auth/domain/usecases/logout.dart';
 
 import 'package:eventhub_app/features/auth/domain/usecases/register_user.dart';
 import 'package:eventhub_app/features/auth/domain/usecases/login_user.dart';
@@ -15,6 +16,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final LogOutUseCase logOutUseCase;
   final UpdateUserUseCase updateUserUseCase;
   final GoogleLoginUseCase googleLoginUseCase;
   final RegisterProviderUseCase registerProviderUseCase;
@@ -26,11 +28,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       required this.loginUserUseCase,
       required this.registerProviderUseCase,
       required this.googleLoginUseCase,
-      required this.updateUserUseCase})
+      required this.updateUserUseCase,
+      required this.logOutUseCase})
       : super(InitialState()) {
     on<AuthEvent>(
       (event, emit) async {
-        if (event is CompleteProviderGoogleLogIn) {
+        if (event is LogOut) {
+          await logOutUseCase.execute(event.user);
+        } else if (event is CompleteProviderGoogleLogIn) {
           // Complete google log in with provider user
           try {
             emit(CreatingGoogleProvider());

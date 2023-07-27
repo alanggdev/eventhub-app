@@ -1,6 +1,8 @@
 // ignore_for_file: library_prefixes
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -17,9 +19,11 @@ import 'package:eventhub_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eventhub_app/features/auth/presentation/pages/auth_screen.dart';
 import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
 import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
-import 'package:eventhub_app/features/event/presentation/pages/my_events_screen.dart';
+import 'package:eventhub_app/features/event/presentation/pages/home_events.dart';
 
 import 'package:eventhub_app/features/chat/presentation/pages/messages_screen.dart';
+
+import 'package:eventhub_app/features/notification/presentation/pages/notifications_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final User userinfo;
@@ -38,9 +42,57 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    loadFCM();
     loadIndex();
     unloadLoginState();
     initSocket();
+  }
+
+  void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => HomeScreen(widget.userinfo, 3)),
+      // (route) => false
+    );
+}
+
+  Future<void> loadFCM() async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    InitializationSettings initializationSettings = const InitializationSettings(android: initializationSettingsAndroid);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+    
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails('channel id', 'channel name',
+            importance: Importance.max,
+            priority: Priority.high);
+      const NotificationDetails notificationDetails =
+          NotificationDetails(android: androidNotificationDetails);
+      await flutterLocalNotificationsPlugin.show(
+      0, message.notification!.title, message.notification!.body, notificationDetails);
+      });
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => HomeScreen(widget.userinfo, 3)),
+      // (route) => false
+    );
   }
 
   void loadIndex() {
@@ -64,9 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initSocket() {
     if (!socket!.active) {
       socket!.connect();
-      socket!.onConnect((data) {
-        print("SOCKET CONNECTADO");
-      });
+      socket!.onConnect((data) {});
     }
 
     socket!.onError((err) {
@@ -82,6 +132,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     socket?.disconnect();
 
+    await FirebaseMessaging.instance.deleteToken();
+
+    Future.microtask((() {
+      context.read<AuthBloc>().add(LogOut(user: widget.userinfo));
+    }));
+
     final google = GoogleSignIn();
     google.signOut();
   }
@@ -89,14 +145,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     _widgetOptions = <Widget>[
-      MyEventsScreen(widget.userinfo),
+      HomeEvents(widget.userinfo),
+      // MyEventsScreen(widget.userinfo),
       ExploreCategoriesScreen(widget.userinfo),
       MessagesScreen(widget.userinfo, socket),
-      const Center(
-          child: Text(
-        'Notifications Screen',
-        style: TextStyle(color: Colors.white),
-      ))
+      NotificationsScreen(widget.userinfo),
     ];
 
     return LoadingOverlay(
@@ -153,78 +206,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SizedBox(
-                                height: 310,
+                                height: widget.userinfo.userinfo['is_provider'] ? 250 : 190,
                                 child: Center(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 10),
-                                        child: Row(
-                                          children: [
-                                            Center(
-                                              child: Container(
-                                                width: 60,
-                                                height: 60,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.2),
-                                                      blurRadius: 5,
-                                                      offset: const Offset(0, 2),
-                                                    ),
-                                                  ],
-                                                  image: const DecorationImage(
-                                                      fit: BoxFit.fill,
-                                                      image: AssetImage(
-                                                          Images.logoURL)),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.only(left: 20),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    widget.userinfo.userinfo['full_name'],
-                                                    style: const TextStyle(
-                                                      fontSize: 23,
-                                                      color: Color(0xff242C71),
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 12),
-                                                    child: Text(
-                                                      '@${widget.userinfo.userinfo['username']}',
-                                                      style: const TextStyle(
-                                                        fontSize: 15,
-                                                        color: Color(0xff242C71),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const Divider(
-                                        color: Color(0xff3B47B6),
-                                      ),
-                                      menuOption(context, 'Mi perfil', Images.profilePlaceholder, false),
-                                      menuOption(context, 'Mi empresa', Images.companyPlaceholder, widget.userinfo.userinfo['is_provider']),
-                                      logoutButton(context)
-                                    ],
-                                  ),
+                                  child: userInfo(context),
                                 ),
                               ),
                             );
@@ -345,6 +329,73 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Column userInfo(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: Row(
+            children: [
+              Center(
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                    image: const DecorationImage(
+                        fit: BoxFit.fill, image: AssetImage(Images.logoURL)),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.userinfo.userinfo['full_name'].toString(),
+                      style: const TextStyle(
+                        fontSize: 23,
+                        color: Color(0xff242C71),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Text(
+                        '${widget.userinfo.userinfo['email']}',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: Color(0xff242C71),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Divider(
+          color: Color(0xff3B47B6),
+        ),
+        // menuOption(context, 'Mi perfil', Images.profilePlaceholder, false),
+        widget.userinfo.userinfo['is_provider'] ?
+        menuOption(context, 'Mi empresa', Images.companyPlaceholder,
+            widget.userinfo.userinfo['is_provider']) : Container(),
+        logoutButton(context)
+      ],
     );
   }
 

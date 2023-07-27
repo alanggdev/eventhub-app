@@ -1,3 +1,4 @@
+import 'package:eventhub_app/features/event/presentation/pages/providers_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eventhub_app/assets.dart';
 import 'package:eventhub_app/features/event/presentation/widgets/event.dart';
 import 'package:eventhub_app/features/event/domain/entities/event.dart';
-import 'package:eventhub_app/features/event/presentation/widgets/button.dart';
 import 'package:eventhub_app/features/event/presentation/bloc/event_bloc.dart';
 import 'package:eventhub_app/features/event/presentation/widgets/alerts.dart';
 import 'package:eventhub_app/home.dart';
@@ -22,79 +22,117 @@ class EventScreen extends StatefulWidget {
 }
 
 class _EventScreenState extends State<EventScreen> {
+  int currentIndexGalley = 0;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: ColorStyles.baseLightBlue,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen(widget.user, 0)),
+          (Route<dynamic> route) => route.isFirst,
+        );
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: ColorStyles.primaryBlue,
         body: BlocBuilder<EventBloc, EventState>(builder: (context, state) {
           return SafeArea(
             child: Stack(
               children: [
-                NestedScrollView(
-                  floatHeaderSlivers: true,
-                  headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                    SliverAppBar(
-                      automaticallyImplyLeading: false,
-                      toolbarHeight: 65,
-                      backgroundColor: ColorStyles.baseLightBlue,
-                      title: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.arrow_back_ios,
-                                color: ColorStyles.primaryGrayBlue,
-                                size: 16,
+                Container(
+                  color: ColorStyles.baseLightBlue,
+                  child: NestedScrollView(
+                    floatHeaderSlivers: true,
+                    headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                      SliverAppBar(
+                        automaticallyImplyLeading: false,
+                        toolbarHeight: 55,
+                        backgroundColor: ColorStyles.primaryBlue,
+                        title: TextButton.icon(
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            color: ColorStyles.white,
+                            size: 15,
+                          ),
+                          label: const Text(
+                            'Regresar',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              color: ColorStyles.white,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => HomeScreen(widget.user, 0)),
+                              (Route<dynamic> route) => route.isFirst,
+                            );
+                          },
+                        ),
+                        actions: [
+                          options(context, widget.userEvent.id!, widget.userEvent.userID == widget.user.userinfo['pk'] ? 'User' : 'Provider'),
+                        ],
+                      ),
+                    ],
+                    body: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            color: ColorStyles.primaryBlue,
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: ColorStyles.baseLightBlue,
+                                border: Border.all(color: ColorStyles.baseLightBlue),
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(22),
+                                  topRight: Radius.circular(22),
+                                ),
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                              child: Padding(
+                                padding: const EdgeInsets.all(15),
                                 child: Text(
                                   widget.userEvent.name,
                                   style: const TextStyle(
-                                      fontSize: 28,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      color: ColorStyles.primaryGrayBlue),
+                                    color: ColorStyles.primaryGrayBlue,
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Inter',
+                                  ),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ],
-                  body: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(18),
-                      child: Column(
-                        children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   widget.userEvent.description,
                                   style: const TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'Inter',
-                                      color: ColorStyles.primaryGrayBlue),
+                                    fontSize: 16,
+                                    fontFamily: 'Inter',
+                                    color: ColorStyles.primaryGrayBlue,
+                                  ),
                                 ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 6),
-                                  child: Wrap(
-                                    spacing: 8,
-                                    children: widget.userEvent.categories
-                                        .map((category) {
-                                      return eventCategoryLabel(category);
-                                    }).toList(),
-                                    //
+                                  padding: const EdgeInsets.symmetric(vertical: 6),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Wrap(
+                                      spacing: 8,
+                                      children:
+                                          widget.userEvent.categories.map((category) {
+                                        return eventCategoryLabel(category);
+                                      }).toList(),
+                                      //
+                                    ),
                                   ),
                                 ),
                                 Row(
@@ -105,8 +143,7 @@ class _EventScreenState extends State<EventScreen> {
                                       size: 20,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 6),
+                                      padding: const EdgeInsets.symmetric(horizontal: 6),
                                       child: Text(
                                         widget.userEvent.date,
                                         style: const TextStyle(
@@ -118,101 +155,90 @@ class _EventScreenState extends State<EventScreen> {
                                     )
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
-                                  'Empresas colaboradoras',
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorStyles.primaryGrayBlue),
-                                ),
-                                Divider(
-                                  color: ColorStyles.baseLightBlue,
-                                ),
-                                Text(
-                                    'Aun no tiene empresas que colaboren',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w500,
-                                        color: ColorStyles.primaryGrayBlue),
-                                  ),
-                                // if (widget.userEvent.providersID.isNotEmpty)
-                                //   CarouselSlider(
-                                //     options: CarouselOptions(
-                                //         enableInfiniteScroll: false,
-                                //         viewportFraction: 1,
-                                //         height: 250),
-                                //     items: [
-                                //       for (int index = 0; index < 3; index++)
-                                //         Builder(
-                                //           builder: (BuildContext context) {
-                                //             return providerWidget(context);
-                                //           },
-                                //         ),
-                                //     ],
-                                //   )
-                                // else
-                                //   const Text(
-                                //     'Aun no tiene empresas que colaboren',
-                                //     style: TextStyle(
-                                //         fontSize: 14,
-                                //         fontFamily: 'Inter',
-                                //         fontWeight: FontWeight.w500,
-                                //         color: ColorStyles.primaryGrayBlue),
-                                //   ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Imágenes del evento',
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorStyles.primaryGrayBlue),
-                                ),
-                                CarouselSlider(
-                                  options: CarouselOptions(
-                                      enableInfiniteScroll: false),
-                                  items: [
-                                    for (int index = 0;
-                                        index <
-                                            widget.userEvent.imagePaths!.length;
-                                        index++)
-                                      Builder(
-                                        builder: (BuildContext context) {
-                                          return eventImage(widget
-                                              .userEvent.imagePaths![index]);
-                                        },
+                                // === //
+                                // Empresas que colaborran si existen
+                                // === //
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Imágenes del evento ${currentIndexGalley+1}/${widget.userEvent.imagePaths!.length}',
+                                        style: const TextStyle(
+                                          fontSize: 22,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w500,
+                                          color: ColorStyles.primaryGrayBlue),
                                       ),
-                                  ],
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        child: CarouselSlider(
+                                          options: CarouselOptions(
+                                            enableInfiniteScroll: false, viewportFraction: 1,
+                                            onPageChanged: (index, reason) {
+                                              setState(() {
+                                                currentIndexGalley = index;
+                                              });
+                                            }
+                                          ),
+                                          items: [
+                                            for (int index = 0; index < widget.userEvent.imagePaths!.length; index++)
+                                              Builder(
+                                                builder: (BuildContext context) {
+                                                  return eventImage(widget.userEvent.imagePaths![index]);
+                                                },
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                          eventOptionButton(context, 'Eliminar evento', widget.userEvent.id!, context.read<EventBloc>()),
+                          if (widget.userEvent.userID == widget.user.userinfo['pk'])
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15),
+                              child: TextButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: ColorStyles.textSecondary1,
+                                  minimumSize: const Size(double.infinity, 40),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  shadowColor: Colors.black,
+                                  elevation: 3,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProviderListScreen(widget.userEvent.id!)),
+                                    // (route) => false
+                                  );
+                                },
+                                child: const Text(
+                                  'Administrar colaboradores',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Inter',
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),
                   ),
                 ),
-                if (state is DeletingUserEvent)
-                  loadingEventWidget(context)
-                else if (state is UserEventDeleted)
+                if (state is DeletingUserEvent || state is RemovingProvider)
+                  loading(context)
+                else if (state is UserEventDeleted || state is ProviderRemoved)
                   FutureBuilder(
                     future: Future.delayed(Duration.zero, () async {
                       Navigator.pushAndRemoveUntil(
@@ -227,9 +253,11 @@ class _EventScreenState extends State<EventScreen> {
                   )
                 else if (state is Error)
                   errorEventAlert(context, state.error)
-              ],
+              ]
             ),
           );
-        }));
+        }),
+      ),
+    );
   }
 }
