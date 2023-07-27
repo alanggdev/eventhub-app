@@ -41,4 +41,14 @@ class AuthUserRepositoryImpl implements AuthUserRepository {
   Future<String> logOut(User user) async {
     return await authUserDataSource.logOut(user);
   }
+
+  @override
+  Future<User> updateFullName(User userData, String fullName) async {
+    return await authUserDataSource.updateFullName(userData, fullName);
+  }
+
+  @override
+  Future<String> deleteUser(String username) async {
+    return await authUserDataSource.deleteUser(username);
+  }
 }

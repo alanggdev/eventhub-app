@@ -1,3 +1,5 @@
+import 'package:eventhub_app/features/auth/domain/usecases/delete_user.dart';
+import 'package:eventhub_app/features/auth/domain/usecases/update_full_name.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eventhub_app/features/auth/domain/entities/register_user.dart';
@@ -16,6 +18,8 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final DeleteUserUseCase deleteUserUseCase;
+  final UpdateFullNameUseCase updateFullNameUseCase;
   final LogOutUseCase logOutUseCase;
   final UpdateUserUseCase updateUserUseCase;
   final GoogleLoginUseCase googleLoginUseCase;
@@ -29,11 +33,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       required this.registerProviderUseCase,
       required this.googleLoginUseCase,
       required this.updateUserUseCase,
-      required this.logOutUseCase})
+      required this.logOutUseCase,
+      required this.updateFullNameUseCase,
+      required this.deleteUserUseCase})
       : super(InitialState()) {
     on<AuthEvent>(
       (event, emit) async {
-        if (event is LogOut) {
+        if (event is DeleteUser) {
+          try {
+            emit(UpdatingUser());
+            String status = await deleteUserUseCase.execute(event.username);
+            emit(UserDeleted(status: status));
+          } catch (error) {
+            emit(Error(error: error.toString()));
+          }
+        } else if (event is UpdateName) {
+          try {
+            emit(UpdatingUser());
+            User user = await updateFullNameUseCase.execute(event.user, event.fullName);
+            emit(UserUpdated(user: user));
+          } catch (error) {
+            emit(Error(error: error.toString()));
+          }
+        } else if (event is LogOut) {
           await logOutUseCase.execute(event.user);
         } else if (event is CompleteProviderGoogleLogIn) {
           // Complete google log in with provider user

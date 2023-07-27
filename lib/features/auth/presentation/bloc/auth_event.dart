@@ -2,6 +2,19 @@ part of 'auth_bloc.dart';
 
 abstract class AuthEvent {}
 
+class DeleteUser extends AuthEvent {
+  final String username;
+
+  DeleteUser({required this.username});
+}
+
+class UpdateName extends AuthEvent {
+  final User user;
+  final String fullName;
+
+  UpdateName({required this.user, required this.fullName});
+}
+
 class LogOut extends AuthEvent {
   final User user;
 

@@ -4,6 +4,19 @@ abstract class AuthState {}
 
 class InitialState extends AuthState {}
 
+class UpdatingUser extends AuthState {}
+class UserUpdated extends AuthState {
+  final User user;
+
+  UserUpdated({required this.user});
+}
+
+class UserDeleted extends AuthState {
+  final String status;
+
+  UserDeleted({required this.status});
+}
+
 class CreatingGoogleProvider extends AuthState {}
 class GoogleProviderCreated extends AuthState {
   final String providerCreationStatus;

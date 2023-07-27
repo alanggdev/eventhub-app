@@ -1,4 +1,5 @@
 // ignore_for_file: library_prefixes
+import 'package:eventhub_app/features/auth/presentation/pages/user/user_info_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -206,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SizedBox(
-                                height: widget.userinfo.userinfo['is_provider'] ? 250 : 190,
+                                height: widget.userinfo.userinfo['is_provider'] ? 320 : 260,
                                 child: Center(
                                   child: userInfo(context),
                                 ),
@@ -358,30 +359,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.userinfo.userinfo['full_name'].toString(),
-                      style: const TextStyle(
-                        fontSize: 23,
-                        color: Color(0xff242C71),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12),
-                      child: Text(
-                        '${widget.userinfo.userinfo['email']}',
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.userinfo.userinfo['full_name'].toString(),
                         style: const TextStyle(
-                          fontSize: 15,
+                          fontSize: 23,
                           color: Color(0xff242C71),
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: Text(
+                          '${widget.userinfo.userinfo['email']}',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: Color(0xff242C71),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -390,10 +393,8 @@ class _HomeScreenState extends State<HomeScreen> {
         const Divider(
           color: Color(0xff3B47B6),
         ),
-        // menuOption(context, 'Mi perfil', Images.profilePlaceholder, false),
-        widget.userinfo.userinfo['is_provider'] ?
-        menuOption(context, 'Mi empresa', Images.companyPlaceholder,
-            widget.userinfo.userinfo['is_provider']) : Container(),
+        menuOption(context, 'Mi perfil', Images.profilePlaceholder, false),
+        widget.userinfo.userinfo['is_provider'] ? menuOption(context, 'Mi empresa', Images.companyPlaceholder, widget.userinfo.userinfo['is_provider']) : Container(),
         logoutButton(context)
       ],
     );
@@ -442,9 +443,11 @@ class _HomeScreenState extends State<HomeScreen> {
           if (isProvider) {
             Navigator.push(context,
               MaterialPageRoute(builder: (context) => ProviderScreen(null, widget.userinfo.userinfo['pk'], widget.userinfo)));
-          } else {
-            // print(widget.userinfo.userinfo['pk'].toString());
-            // print('to create provider');
+          } else if (label == 'Mi perfil') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UserInfoScreen(widget.userinfo))
+            );
           }
         },
         child: Row(

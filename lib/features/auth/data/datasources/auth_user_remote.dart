@@ -28,6 +28,8 @@ abstract class AuthUserDataSource {
   Future<User> googleLogin();
   Future<User> updateUser(User userData, RegisterUser registerUserData);
   Future<String> logOut(User user);
+  Future<User> updateFullName(User userData, String fullName);
+  Future<String> deleteUser(String username);
 }
 
 class AuthUserDataSourceImpl extends AuthUserDataSource {
@@ -342,6 +344,67 @@ class AuthUserDataSourceImpl extends AuthUserDataSource {
           return "Success";
         }
         return "Fail";
+      } else {
+        throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+      }
+
+    } else {
+      throw Exception('Sin conexión a internet');
+    }
+  }
+
+  @override
+  Future<User> updateFullName(User userData, String fullName) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+      var body = {
+        'full_name': fullName
+      };
+
+      dio.options.headers["Content-Type"] = "application/json";
+      dio.options.headers["Authorization"] = "Bearer ${userData.access}";
+
+      Response response = await dio.patch(
+        '$serverURL/auth/user/',
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer ${userData.access}"
+        }),
+        data: convert.jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        Response newResponse = await dio.get('$serverURL/auth/user/');
+        if (newResponse.statusCode == 200) {
+          userData.userinfo = newResponse.data;
+        }
+        return userData;
+      } else {
+        throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
+      }
+
+    } else {
+      throw Exception('Sin conexión a internet');
+    }
+  }
+
+  @override
+  Future<String> deleteUser(String username) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? accessToken = prefs.getString('access_token');
+
+      Response response = await dio.delete(
+        '$serverURL/auth/delete/$username',
+        options: Options(headers: {
+          HttpHeaders.authorizationHeader: "Bearer $accessToken"
+        })
+      );
+
+      if (response.statusCode == 200) {
+        return 'Deleted';
       } else {
         throw Exception('Ha ocurrido un error en nuestros servicios. Intentelo más tarde.');
       }

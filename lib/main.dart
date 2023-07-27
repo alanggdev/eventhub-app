@@ -36,7 +36,9 @@ class MyApp extends StatelessWidget {
               registerProviderUseCase: usecaseConfig.registerProviderUseCase!,
               googleLoginUseCase: usecaseConfig.googleLoginUseCase!,
               updateUserUseCase: usecaseConfig.updateUserUseCase!,
-              logOutUseCase: usecaseConfig.logOutUseCase!),
+              logOutUseCase: usecaseConfig.logOutUseCase!,
+              updateFullNameUseCase: usecaseConfig.updateFullNameUseCase!,
+              deleteUserUseCase: usecaseConfig.deleteUserUseCase!),
         ),
         BlocProvider<EventBloc>(
           create: (BuildContext context) => EventBloc(
